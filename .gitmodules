@@ -1,0 +1,3 @@
+[submodule "aimp_dlna/lib/Platinum"]
+	path = aimp_dlna/lib/Platinum
+	url = https://github.com/plutinosoft/Platinum
