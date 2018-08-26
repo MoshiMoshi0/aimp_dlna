@@ -1,0 +1,4 @@
+LIBRARY "aimp_dlna"
+
+EXPORTS
+   AIMPPluginGetHeader
