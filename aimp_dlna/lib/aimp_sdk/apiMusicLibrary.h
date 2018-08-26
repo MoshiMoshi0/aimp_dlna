@@ -374,7 +374,7 @@ class IAIMPMLGroupingTreeSelection : public IUnknown
 {
 	public:
 		virtual int WINAPI GetCount() = 0;
-		virtual HRESULT WINAPI GetValue(int Index, IAIMPString** FieldName, VARIANT** Value) = 0;
+		virtual HRESULT WINAPI GetValue(int Index, IAIMPString** FieldName, VARIANT* Value) = 0;
 };
 
 /* IAIMPMLGroupingTreeDataProviderSelection */
@@ -385,7 +385,7 @@ class IAIMPMLGroupingTreeDataProviderSelection : public IUnknown
 		virtual HRESULT WINAPI GetDisplayValue(IAIMPString** S) = 0;
 		virtual DWORD WINAPI GetFlags() = 0;
 		virtual HRESULT WINAPI GetImageIndex(int* Index) = 0;
-		virtual HRESULT WINAPI GetValue(IAIMPString** FieldName, VARIANT** Value) = 0;
+		virtual HRESULT WINAPI GetValue(IAIMPString** FieldName, VARIANT* Value) = 0;
 		virtual BOOL WINAPI NextRow() = 0;
 };
 
