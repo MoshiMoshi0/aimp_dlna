@@ -112,10 +112,6 @@ HRESULT WINAPI AimpDlnaDataStorage::GetValueAsObject(int PropertyID, REFIID IID,
 
 //IUnknown
 HRESULT WINAPI AimpDlnaDataStorage::QueryInterface(REFIID riid, LPVOID* ppvObject) {
-	if (!ppvObject) {
-		return E_POINTER;
-	}
-
 	if (riid == IID_IAIMPMLExtensionDataStorage) {
 		*ppvObject = this;
 		AddRef();
@@ -128,5 +124,5 @@ HRESULT WINAPI AimpDlnaDataStorage::QueryInterface(REFIID riid, LPVOID* ppvObjec
 		return S_OK;
 	}
 
-	return E_NOINTERFACE;
+	return Base::QueryInterface(riid, ppvObject);
 }

@@ -2,6 +2,11 @@
 
 template <typename T>
 class IUnknownInterfaceImpl : public T {
+protected:
+	typedef IUnknownInterfaceImpl<T> Base;
+
+	ULONG reference_count_;
+
 public:
 	IUnknownInterfaceImpl()
 		: reference_count_(0) {
@@ -14,7 +19,7 @@ public:
 			return E_POINTER;
 		}
 
-		if (IID_IUnknown == riid) {
+		if (riid == IID_IUnknown) {
 			*ppvObj = this;
 			AddRef();
 			return S_OK;
@@ -36,8 +41,4 @@ public:
 
 		return reference_count;
 	}
-
-private:
-
-	ULONG reference_count_;
 };

@@ -21,6 +21,8 @@ public:
 	AimpDlnaGroupingTreeDataProviderSelection(vector<AimpDlnaGroupingTreeDataProviderNode> nodes) {
 		this->nodes = nodes;
 		this->index = 0;
+
+		AddRef();
 	}
 
 	HRESULT WINAPI GetDisplayValue(IAIMPString** S);
@@ -28,4 +30,6 @@ public:
 	HRESULT WINAPI GetImageIndex(int* Index);
 	HRESULT WINAPI GetValue(IAIMPString** FieldName, VARIANT* Value);
 	BOOL WINAPI NextRow();
+
+	HRESULT WINAPI QueryInterface(REFIID riid, LPVOID* ppvObject);
 };

@@ -51,3 +51,13 @@ BOOL WINAPI AimpDlnaGroupingTreeDataProviderSelection::NextRow() {
 
 	return result;
 }
+
+HRESULT WINAPI AimpDlnaGroupingTreeDataProviderSelection::QueryInterface(REFIID riid, LPVOID* ppvObject) {
+	if (riid == IID_IAIMPMLGroupingTreeDataProviderSelection) {
+		*ppvObject = this;
+		AddRef();
+		return S_OK;
+	}
+
+	return Base::QueryInterface(riid, ppvObject);
+}
