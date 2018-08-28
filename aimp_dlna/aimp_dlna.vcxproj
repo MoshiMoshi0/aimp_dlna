@@ -159,10 +159,10 @@
     <ClInclude Include="AimpDlnaDataStorage.h" />
     <ClInclude Include="AimpDlnaGroupingTreeDataProvider.h" />
     <ClInclude Include="AimpDlnaGroupingTreeDataProviderSelection.h" />
+    <ClInclude Include="AimpGenericDataProviderSelection.h" />
     <ClInclude Include="AimpString.h" />
     <ClInclude Include="AimpDlnaMusicLibrary.h" />
     <ClInclude Include="IUnknownInterfaceImpl.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -171,6 +171,7 @@
     <ClCompile Include="AimpDlnaDataStorage.cpp" />
     <ClCompile Include="AimpDlnaGroupingTreeDataProvider.cpp" />
     <ClCompile Include="AimpDlnaGroupingTreeDataProviderSelection.cpp" />
+    <ClCompile Include="AimpGenericDataProviderSelection.cpp" />
     <ClCompile Include="AimpString.cpp" />
     <ClCompile Include="aimp_dlna.cpp" />
     <ClCompile Include="dllmain.cpp" />

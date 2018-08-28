@@ -15,6 +15,9 @@
 #include <vector>
 #include <tchar.h>
 #include <comdef.h>
+#include <codecvt>
+#include <functional>
+
 #include "apiPlugin.h"
 #include "apiCore.h"
 #include "apiObjects.h"

@@ -5,7 +5,19 @@
 AimpDlnaDataStorage* AimpDlnaDataStorage::singleton = nullptr;
 
 void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {}
-void AimpDlnaDataStorage::Finalize() {}
+
+void AimpDlnaDataStorage::Finalize() {
+	if(upnp.IsRunning())
+		upnp.Stop();
+	ctrlPoint.Detach();
+
+	if(dataProvider != nullptr)
+		dataProvider->Release();
+	if (groupingTreeDataProvider != nullptr)
+		groupingTreeDataProvider->Release();
+	if (mediaBrowser != nullptr)
+		delete mediaBrowser;
+}
 
 void AimpDlnaDataStorage::FlushCache(int Reserved) {}
 HRESULT AimpDlnaDataStorage::ConfigLoad(IAIMPConfig* Config, IAIMPString* Section) { return S_OK; }

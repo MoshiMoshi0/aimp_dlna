@@ -1,8 +1,16 @@
 #pragma once
 
 class AimpDlnaGroupingTreeDataProvider : public IUnknownInterfaceImpl<IAIMPMLGroupingTreeDataProvider> {
+private:
+	PLT_SyncMediaBrowser* mediaBrowser;
+
+	HRESULT GetRootData(IAIMPMLGroupingTreeDataProviderSelection** Data);
+	HRESULT GetChildrenData(IAIMPMLGroupingTreeSelection* Selection, IAIMPMLGroupingTreeDataProviderSelection** Data);
+
 public:
 	AimpDlnaGroupingTreeDataProvider(PLT_SyncMediaBrowser* mediaBrowser) {
+		this->mediaBrowser = mediaBrowser;
+
 		AddRef();
 	}
 

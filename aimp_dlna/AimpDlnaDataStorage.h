@@ -16,11 +16,27 @@ private:
 	IAIMPMLDataProvider* dataProvider;
 	IAIMPMLGroupingTreeDataProvider* groupingTreeDataProvider;
 
-	AimpDlnaDataStorage() : manager(nullptr) {
-		AddRef();
+	PLT_UPnP upnp;
+	PLT_CtrlPointReference ctrlPoint;
+	PLT_SyncMediaBrowser* mediaBrowser;
 
-		dataProvider = new AimpDlnaDataProvider();
-		groupingTreeDataProvider = new AimpDlnaGroupingTreeDataProvider();
+	AimpDlnaDataStorage() : manager(nullptr), dataProvider(nullptr), groupingTreeDataProvider(nullptr), mediaBrowser(nullptr) {
+		upnp = PLT_UPnP();
+		ctrlPoint = PLT_CtrlPointReference(new PLT_CtrlPoint());
+		mediaBrowser = new PLT_SyncMediaBrowser(ctrlPoint);
+
+		upnp.AddCtrlPoint(ctrlPoint);
+		upnp.Start();
+
+		ctrlPoint->Discover();
+
+		dataProvider = new AimpDlnaDataProvider(mediaBrowser);
+		groupingTreeDataProvider = new AimpDlnaGroupingTreeDataProvider(mediaBrowser);
+
+		//dataProvider->AddRef();
+		//groupingTreeDataProvider->AddRef();
+
+		AddRef();
 	}
 public:
 	static AimpDlnaDataStorage* instance() {
