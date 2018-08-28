@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>lib\aimp_sdk;lib\Platinum\Source\Platinum;lib\Platinum\Source\Core;lib\Platinum\Source\Extras;lib\Platinum\Source\Devices\MediaServer;lib\Platinum\Source\Devices\MediaRenderer;lib\Platinum\Source\Devices\MediaConnect;lib\Platinum\ThirdParty\Neptune\Source\Core;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -186,6 +186,11 @@
   <ItemGroup>
     <None Include="aimp_dlna.def" />
     <None Include="Langs\english.lng" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="lib\Platinum\Build\Targets\x86-microsoft-win32-vs2010\Platinum\Platinum.vcxproj">
+      <Project>{568611d3-afa7-4294-99c1-e9aed0d8057e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

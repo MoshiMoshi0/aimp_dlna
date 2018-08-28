@@ -15,12 +15,14 @@
 #include <vector>
 #include <tchar.h>
 #include <comdef.h>
+#include "apiPlugin.h"
+#include "apiCore.h"
+#include "apiObjects.h"
+#include "apiMUI.h"
+#include "apiMusicLibrary.h"
 
-#include "lib/aimp_sdk/apiPlugin.h"
-#include "lib/aimp_sdk/apiCore.h"
-#include "lib/aimp_sdk/apiObjects.h"
-#include "lib/aimp_sdk/apiMUI.h"
-#include "lib/aimp_sdk/apiMusicLibrary.h"
+#include "Platinum.h"
+#include "Neptune.h"
 
 #include "IUnknownInterfaceImpl.h"
 #include "AimpString.h"
