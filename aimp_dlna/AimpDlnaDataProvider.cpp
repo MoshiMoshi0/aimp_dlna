@@ -82,11 +82,13 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 			if (field.compare(EVDS_TrackFileName) == 0) {
 				if (item->m_Resources.GetItemCount() == 0)
 					return nullptr;
-
+				
 				auto resource = item->m_Resources[0];
 				result = resource.m_Uri;
-			} else if (field.compare(EVDS_TrackId) == 0 || field.compare(EVDS_NodeId) == 0) {
+			} else if (field.compare(EVDS_NodeId) == 0) {
 				result = item->m_ObjectID;
+			} else if (field.compare(EVDS_TrackId) == 0) {
+				result = item->m_ParentID + ":" + item->m_ObjectID;
 			} else if (field.compare(EVDS_TrackArtist) == 0) {
 				PLT_StringList artists;
 				for (auto person = item->m_People.artists.GetFirstItem(); person; person++) {
@@ -94,7 +96,7 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 				}
 				result = NPT_String::Join(artists, ", ");
 			} else if (field.compare(EVDS_TrackDate) == 0) {
-				result = item->m_Date;
+				result = item->m_Date.SubString(0, 10);
 			} else if (field.compare(EVDS_TrackAlbum) == 0) {
 				result = item->m_Affiliation.album;
 			} else if (field.compare(EVDS_TrackTitle) == 0) {
@@ -102,9 +104,8 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 			}
 
 			wstring_convert<codecvt_utf8<wchar_t>, wchar_t> converter;
-			wstring wresult = converter.from_bytes(result.GetChars());
-			*length = wresult.length();
-			return (WCHAR*)wresult.c_str();
+			*length = result.GetLength();
+			return (*AimpString(converter.from_bytes(result.GetChars()))).GetData();
 		}
 	};
 
