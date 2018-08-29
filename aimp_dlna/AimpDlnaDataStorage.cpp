@@ -4,17 +4,33 @@
 
 AimpDlnaDataStorage* AimpDlnaDataStorage::singleton = nullptr;
 
-void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {}
+void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {
+	upnp->AddCtrlPoint(ctrlPointRef);
+	upnp->Start();
+
+	ctrlPoint->Discover();
+}
 
 void AimpDlnaDataStorage::Finalize() {
-	if(upnp.IsRunning())
-		upnp.Stop();
-	ctrlPoint.Detach();
+	if (upnp != nullptr) {
+		if (upnp->IsRunning())
+			upnp->Stop();
+		delete upnp;
+	}
 
-	if(dataProvider != nullptr)
+	ctrlPointRef.Detach();
+	if (ctrlPoint != nullptr) {
+		delete ctrlPoint;
+	}
+
+	if (dataProvider != nullptr) {
 		dataProvider->Release();
-	if (groupingTreeDataProvider != nullptr)
+		dataProvider = nullptr;
+	}
+	if (groupingTreeDataProvider != nullptr) {
 		groupingTreeDataProvider->Release();
+		groupingTreeDataProvider = nullptr;
+	}
 	if (mediaBrowser != nullptr)
 		delete mediaBrowser;
 }

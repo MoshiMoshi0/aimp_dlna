@@ -16,25 +16,19 @@ private:
 	IAIMPMLDataProvider* dataProvider;
 	IAIMPMLGroupingTreeDataProvider* groupingTreeDataProvider;
 
-	PLT_UPnP upnp;
-	PLT_CtrlPointReference ctrlPoint;
+	PLT_UPnP* upnp;
+	PLT_CtrlPoint* ctrlPoint;
 	PLT_SyncMediaBrowser* mediaBrowser;
+	PLT_CtrlPointReference ctrlPointRef;
 
 	AimpDlnaDataStorage() : manager(nullptr), dataProvider(nullptr), groupingTreeDataProvider(nullptr), mediaBrowser(nullptr) {
-		upnp = PLT_UPnP();
-		ctrlPoint = PLT_CtrlPointReference(new PLT_CtrlPoint());
-		mediaBrowser = new PLT_SyncMediaBrowser(ctrlPoint);
-
-		upnp.AddCtrlPoint(ctrlPoint);
-		upnp.Start();
-
-		ctrlPoint->Discover();
+		upnp = new PLT_UPnP();
+		ctrlPoint = new PLT_CtrlPoint();
+		ctrlPointRef = PLT_CtrlPointReference(ctrlPoint);
+		mediaBrowser = new PLT_SyncMediaBrowser(ctrlPointRef, true);
 
 		dataProvider = new AimpDlnaDataProvider(mediaBrowser);
 		groupingTreeDataProvider = new AimpDlnaGroupingTreeDataProvider(mediaBrowser);
-
-		//dataProvider->AddRef();
-		//groupingTreeDataProvider->AddRef();
 
 		AddRef();
 	}
