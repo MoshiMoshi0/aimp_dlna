@@ -9,7 +9,7 @@ private:
 
 	const wstring id{ L"AimpDlna" };
 	const wstring caption{ L"DLNA" };
-	const int capabilities{ 0 };
+	const int capabilities{ AIMPML_DATASTORAGE_CAP_FILTERING };
 
 	bool finalized{ false };
 	IAIMPMLDataStorageManager* manager;
