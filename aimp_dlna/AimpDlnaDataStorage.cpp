@@ -113,11 +113,6 @@ HRESULT WINAPI AimpDlnaDataStorage::GetGroupingPresets(int Schema, IAIMPMLGroupi
 	return S_OK;
 }
 
-//IAIMPPropertyList
-void WINAPI AimpDlnaDataStorage::BeginUpdate() {}
-void WINAPI AimpDlnaDataStorage::EndUpdate() {}
-HRESULT WINAPI AimpDlnaDataStorage::Reset() { return S_OK; }
-
 HRESULT WINAPI AimpDlnaDataStorage::GetValueAsInt32(int PropertyID, int *Value) {
 	if (PropertyID == AIMPML_DATASTORAGE_PROPID_CAPABILITIES) {
 		*Value = capabilities;
@@ -138,7 +133,6 @@ HRESULT WINAPI AimpDlnaDataStorage::GetValueAsObject(int PropertyID, REFIID IID,
 	return S_OK;
 }
 
-//IUnknown
 HRESULT WINAPI AimpDlnaDataStorage::QueryInterface(REFIID riid, LPVOID* ppvObject) {
 	if (riid == IID_IAIMPMLExtensionDataStorage) {
 		*ppvObject = this;

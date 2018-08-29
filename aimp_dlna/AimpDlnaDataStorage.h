@@ -47,7 +47,6 @@ public:
 		singleton = nullptr;
 	}
 
-	//IAIMPMLExtensionDataStorage
 	void WINAPI Initialize(IAIMPMLDataStorageManager* Manager);
 	void WINAPI Finalize();
 
@@ -58,10 +57,9 @@ public:
 	HRESULT WINAPI GetFields(int Schema, IAIMPObjectList** List);
 	HRESULT WINAPI GetGroupingPresets(int Schema, IAIMPMLGroupingPresets* Presets);
 
-	//IAIMPPropertyList
-	void WINAPI BeginUpdate();
-	void WINAPI EndUpdate();
-	HRESULT WINAPI Reset();
+	void WINAPI BeginUpdate() {}
+	void WINAPI EndUpdate() {}
+	HRESULT WINAPI Reset() { return S_OK; }
 
 	HRESULT WINAPI GetValueAsFloat(int PropertyID, double *Value) { return S_OK; }
 	HRESULT WINAPI GetValueAsInt32(int PropertyID, int *Value);
@@ -73,7 +71,6 @@ public:
 	HRESULT WINAPI SetValueAsInt64(int PropertyID, const INT64 Value) { return S_OK; }
 	HRESULT WINAPI SetValueAsObject(int PropertyID, IUnknown *Value) { return S_OK; }
 
-	//IUnknown
 	HRESULT WINAPI QueryInterface(REFIID riid, LPVOID* ppvObject);
 };
 
