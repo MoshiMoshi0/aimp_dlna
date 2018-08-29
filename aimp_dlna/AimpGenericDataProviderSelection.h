@@ -18,7 +18,7 @@ private:
 	vector<wstring> fields;
 	AimpGenericDataProviderSelectionSelectors<T> selectors;
 
-	T* GetCurrentItem() { return &items[index]; }
+	T* GetCurrentItem() { return index >= items.size() ? nullptr : &items[index]; }
 public:
 	AimpGenericDataProviderSelection(vector<T> items, vector<wstring> fields, AimpGenericDataProviderSelectionSelectors<T> selectors) {
 		this->items = items;
