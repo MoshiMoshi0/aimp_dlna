@@ -67,8 +67,10 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 			if (item == nullptr)
 				return int();
 
-			if (field.compare(EVDS_TrackNumber) == 0)
-				return (int)item->m_MiscInfo.original_track_number;
+			if (field.compare(EVDS_TrackNumber) == 0) {
+				auto trackNumber = item->m_MiscInfo.original_track_number;
+				return trackNumber <= 0 ? index : trackNumber;
+			}
 
 			return int();
 		},
