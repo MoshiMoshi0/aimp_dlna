@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "AimpDlnaDataProvider.h"
-#include "AimpGenericDataProviderSelection.h"
-#include "AimpDlnaMusicLibrary.h"
+#include "AimpDlnaDataProviderSelection.h"
 
 HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDataFilter* Filter, IUnknown** Data) { 
 	vector<wstring> breadcrumbs;
@@ -24,11 +23,38 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 	auto containerId = breadcrumbs.size() == 1 ? "0" : converter.to_bytes(breadcrumbs.front());
 
 	PLT_DeviceDataReference device;
-	if (FAILED(mediaBrowser->FindServer(deviceUuid.c_str(), device)))
+	if (NPT_FAILED(mediaBrowser->FindServer(deviceUuid.c_str(), device)))
 		return E_FAIL;
 
-	PLT_MediaObjectListReference objects;
-	if (FAILED(mediaBrowser->BrowseSync(device, containerId.c_str(), objects, false, 0, UINT_MAX)))
+	const auto recursive_browse = [&](const auto& self, const char* currentContainer, PLT_MediaObjectListReference& result, const int depth = 0) -> int {
+		if (depth >= 2)
+			return NPT_SUCCESS;
+
+		PLT_MediaObjectListReference objects;
+		if (NPT_FAILED(mediaBrowser->BrowseSync(device, currentContainer, objects, false)))
+			return NPT_FAILURE;
+
+		if (objects.IsNull())
+			return NPT_SUCCESS;
+
+		for (auto object = objects->GetFirstItem(); object; object++) {
+			if (!(*object)->IsContainer()) {
+				result->Add(*object);
+			} else {
+				if (mediaBrowser->IsCached(device->GetUUID(), (*object)->m_ObjectID.GetChars()))
+					if (NPT_FAILED(self(self, (*object)->m_ObjectID.GetChars(), result, depth + 1)))
+						return NPT_FAILURE;
+			}
+		}
+
+		return NPT_SUCCESS;
+	};
+
+	PLT_MediaObjectListReference objects(new PLT_MediaObjectList());
+	if (NPT_FAILED(recursive_browse(recursive_browse, containerId.c_str(), objects)))
+		return E_FAIL;
+
+	if (objects.IsNull() || objects->GetItemCount() == 0)
 		return E_FAIL;
 
 	vector<wstring> fields;
@@ -39,79 +65,7 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 		}
 	}
 
-	auto list = vector<PLT_MediaItem>();
-	for (auto object = objects->GetFirstItem(); object; object++) {
-		if ((*object)->IsContainer())
-			continue;
-
-		list.push_back(*reinterpret_cast<PLT_MediaItem*>(*object));
-	}
-
-	if (list.size() == 0)
-		return E_FAIL;
-
-	AimpGenericDataProviderSelectionSelectors<PLT_MediaItem> selectors = {
-		[](PLT_MediaItem* item, wstring field, int index) -> DOUBLE {
-			if (item == nullptr)
-				return DOUBLE();
-			if (item->m_Resources.GetItemCount() == 0)
-				return DOUBLE();
-
-			auto resource = item->m_Resources[0];
-			if (field.compare(EVDS_TrackDuration) == 0)
-				return (DOUBLE)resource.m_Duration;
-
-			return DOUBLE();
-		},
-		[](PLT_MediaItem* item, wstring field, int index) -> int {
-			if (item == nullptr)
-				return int();
-
-			if (field.compare(EVDS_TrackNumber) == 0) {
-				auto trackNumber = item->m_MiscInfo.original_track_number;
-				return trackNumber <= 0 ? index : trackNumber;
-			}
-
-			return int();
-		},
-		[](PLT_MediaItem* item, wstring field, int index) -> INT64 { return INT64(); },
-		[](PLT_MediaItem* item, wstring field, int index, int* length) -> WCHAR* {
-			*length = 0;
-			if (item == nullptr)
-				return nullptr;
-
-			NPT_String result;
-			if (field.compare(EVDS_TrackFileName) == 0) {
-				if (item->m_Resources.GetItemCount() == 0)
-					return nullptr;
-				
-				auto resource = item->m_Resources[0];
-				result = resource.m_Uri;
-			} else if (field.compare(EVDS_NodeId) == 0) {
-				result = item->m_ObjectID;
-			} else if (field.compare(EVDS_TrackId) == 0) {
-				result = item->m_ParentID + ":" + item->m_ObjectID;
-			} else if (field.compare(EVDS_TrackArtist) == 0) {
-				PLT_StringList artists;
-				for (auto person = item->m_People.artists.GetFirstItem(); person; person++) {
-					artists.Add((*person).name);
-				}
-				result = NPT_String::Join(artists, ", ");
-			} else if (field.compare(EVDS_TrackDate) == 0) {
-				result = item->m_Date.SubString(0, 10);
-			} else if (field.compare(EVDS_TrackAlbum) == 0) {
-				result = item->m_Affiliation.album;
-			} else if (field.compare(EVDS_TrackTitle) == 0) {
-				result = item->m_Title;
-			}
-
-			wstring_convert<codecvt_utf8<wchar_t>, wchar_t> converter;
-			*length = result.GetLength();
-			return (*AimpString(converter.from_bytes(result.GetChars()))).GetData();
-		}
-	};
-
-	*Data = new AimpGenericDataProviderSelection<PLT_MediaItem>(list, fields, selectors);
+	*Data = new AimpDlnaDataProviderSelection(objects, fields);
 
 	return S_OK;
 }
