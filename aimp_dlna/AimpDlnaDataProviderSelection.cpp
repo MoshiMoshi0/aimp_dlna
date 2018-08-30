@@ -82,7 +82,10 @@ WCHAR* WINAPI AimpDlnaDataProviderSelection::GetValueAsString(int FieldIndex, in
 
 	wstring_convert<codecvt_utf8<wchar_t>, wchar_t> converter;
 	*Length = result.GetLength();
-	return (*AimpString(converter.from_bytes(result.GetChars()))).GetData();
+
+	PWCHAR buffer = new WCHAR[*Length];
+	converter.from_bytes(result.GetChars()).copy(buffer, *Length);
+	return buffer;
 }
 
 BOOL WINAPI AimpDlnaDataProviderSelection::NextRow() {
