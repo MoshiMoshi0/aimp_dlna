@@ -29,7 +29,7 @@ private:
 
 		dataProvider = new AimpDlnaDataProvider(mediaBrowser);
 		groupingTreeDataProvider = new AimpDlnaGroupingTreeDataProvider(mediaBrowser);
-
+		
 		AddRef();
 	}
 public:
