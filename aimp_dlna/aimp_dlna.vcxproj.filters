@@ -42,7 +42,13 @@
     <ClInclude Include="AimpDlnaDataStorage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AimpGenericDataProviderSelection.h">
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AimpDlnaDataProviderSelection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,7 +83,7 @@
     <ClCompile Include="AimpDlnaDataStorage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AimpGenericDataProviderSelection.cpp">
+    <ClCompile Include="AimpDlnaDataProviderSelection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,5 +92,10 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="Langs\english.lng" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="aimp_dlna.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
