@@ -72,7 +72,6 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>lib\aimp_sdk;lib\Platinum\Source\Platinum;lib\Platinum\Source\Core;lib\Platinum\Source\Extras;lib\Platinum\Source\Devices\MediaServer;lib\Platinum\Source\Devices\MediaRenderer;lib\Platinum\Source\Devices\MediaConnect;lib\Platinum\ThirdParty\Neptune\Source\Core;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -91,6 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;AIMPDLNA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>lib\aimp_sdk;lib\Platinum\Source\Platinum;lib\Platinum\Source\Core;lib\Platinum\Source\Extras;lib\Platinum\Source\Devices\MediaServer;lib\Platinum\Source\Devices\MediaRenderer;lib\Platinum\Source\Devices\MediaConnect;lib\Platinum\ThirdParty\Neptune\Source\Core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -126,6 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;AIMPDLNA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>lib\aimp_sdk;lib\Platinum\Source\Platinum;lib\Platinum\Source\Core;lib\Platinum\Source\Extras;lib\Platinum\Source\Devices\MediaServer;lib\Platinum\Source\Devices\MediaRenderer;lib\Platinum\Source\Devices\MediaConnect;lib\Platinum\ThirdParty\Neptune\Source\Core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,6 +135,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>aimp_dlna.def</ModuleDefinitionFile>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(TargetPath)" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\aimp_dlna.dll" /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
