@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "aimp_dlna.h"
 #include "AimpDlnaDataStorage.h"
+#include "AimpDlnaAlbumArtProvider.h"
 
 Plugin* Plugin::singleton = nullptr;
 
@@ -15,6 +16,11 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 	}
 	
 	if (FAILED(core->RegisterExtension(IID_IAIMPServiceMusicLibrary, static_cast<IAIMPMLExtensionDataStorage*>(AimpDlnaDataStorage::instance())))) {
+		Finalize();
+		return E_FAIL;
+	}	
+	
+	if (FAILED(core->RegisterExtension(IID_IAIMPServiceAlbumArt, static_cast<IAIMPExtensionAlbumArtProvider*>(AimpDlnaAlbumArtProvider::instance())))) {
 		Finalize();
 		return E_FAIL;
 	}

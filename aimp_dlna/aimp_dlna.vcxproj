@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AimpDlnaAlbumArtProvider.h" />
     <ClInclude Include="AimpDlnaDataProvider.h" />
     <ClInclude Include="AimpDlnaDataStorage.h" />
     <ClInclude Include="AimpDlnaGroupingTreeDataProvider.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AimpDlnaAlbumArtProvider.cpp" />
     <ClCompile Include="AimpDlnaDataProvider.cpp" />
     <ClCompile Include="AimpDlnaDataStorage.cpp" />
     <ClCompile Include="AimpDlnaGroupingTreeDataProvider.cpp" />
