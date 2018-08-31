@@ -30,6 +30,27 @@ private:
 		
 		AddRef();
 	}
+
+	class DataStorageManagerRefreshTask : public NPT_Thread {
+	private:
+		IAIMPMLDataStorageManager* manager;
+
+	public:
+		DataStorageManagerRefreshTask(IAIMPMLDataStorageManager* Manager) {
+			manager = Manager;
+			manager->AddRef();
+		}
+
+		~DataStorageManagerRefreshTask() {
+			manager->Release();
+			delete this;
+		}
+
+		void Run() {
+			NPT_System::Sleep(1.0);
+			manager->Changed();
+		}
+	};
 public:
 	static AimpDlnaDataStorage* instance() {
 		if (!singleton)

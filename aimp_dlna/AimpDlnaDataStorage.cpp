@@ -12,6 +12,8 @@ void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {
 	upnp->Start();
 
 	ctrlPoint->Discover();
+
+	(new DataStorageManagerRefreshTask(Manager))->Start();
 }
 
 void AimpDlnaDataStorage::Finalize() {
