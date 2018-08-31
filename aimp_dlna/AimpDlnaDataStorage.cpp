@@ -27,15 +27,16 @@ void AimpDlnaDataStorage::Finalize() {
 	ctrlPointRef.Detach();
 	if (ctrlPoint != nullptr) {
 		delete ctrlPoint;
-	}	
+	}
+
+	if (manager != nullptr) {
+		manager->Release();
+		manager = nullptr;
+	}
 
 	if (dataProvider != nullptr) {
 		dataProvider->Release();
 		dataProvider = nullptr;
-	}
-	if (groupingTreeDataProvider != nullptr) {
-		groupingTreeDataProvider->Release();
-		groupingTreeDataProvider = nullptr;
 	}
 }
 
@@ -57,6 +58,7 @@ HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
 			field->SetValueAsInt32(AIMPML_FIELD_PROPID_FLAGS, flags);
 
 			list->Add(field);
+			field->Release();
 		};
 
 		addField(*List, EVDS_TrackId, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_INTERNAL);
@@ -107,14 +109,16 @@ HRESULT WINAPI AimpDlnaDataStorage::GetGroupingPresets(int Schema, IAIMPMLGroupi
 	switch (Schema) {
 	case AIMPML_GROUPINGPRESETS_SCHEMA_BUILTIN: {
 		IAIMPMLGroupingPreset* preset = nullptr;
-		Presets->Add(AimpString(id + L".GroupingPreset"), AimpString(L"Default"), 0, groupingTreeDataProvider, &preset);
-		break;
+		if (SUCCEEDED(Presets->Add(AimpString(id + L".GroupingPreset"), AimpString(L"Default"), 0, new AimpDlnaGroupingTreeDataProvider(mediaBrowser), &preset))) {
+			preset->Release();
+		}
+		return S_OK;
 	}
 	default:
 		break;
 	}
 
-	return S_OK;
+	return E_FAIL;
 }
 
 HRESULT WINAPI AimpDlnaDataStorage::GetValueAsInt32(int PropertyID, int *Value) {

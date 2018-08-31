@@ -35,6 +35,6 @@ AimpString::AimpString(const wchar_t *_string, bool addRef) {
 }
 
 AimpString::~AimpString() {
-	if (string)
+	if (string != nullptr)
 		string->Release();
 }

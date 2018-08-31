@@ -11,7 +11,9 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 			IAIMPString* value = nullptr;
 			if (SUCCEEDED(childFilter->GetValueAsObject(AIMPML_FIELDFILTER_VALUE1, IID_IAIMPString, reinterpret_cast<void**>(&value)))) {
 				breadcrumbs.push_back(wstring(value->GetData()));
-			}				
+				value->Release();
+			}
+			childFilter->Release();
 		}
 	}
 
@@ -62,11 +64,11 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 		IAIMPString* value = nullptr;
 		if (SUCCEEDED(Fields->GetObject(i, IID_IAIMPString, reinterpret_cast<void**>(&value)))) {
 			fields.push_back(wstring(value->GetData()));
+			value->Release();
 		}
 	}
 
 	*Data = new AimpDlnaDataProviderSelection(objects, fields);
-
 	return S_OK;
 }
 

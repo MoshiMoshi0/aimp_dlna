@@ -13,9 +13,14 @@ HRESULT WINAPI AimpDlnaGroupingTreeDataProvider::AppendFilter(IAIMPMLDataFilterG
 
 		if (SUCCEEDED(Selection->GetValue(i, &fieldName, &value))) {
 			IAIMPMLDataFieldFilter* outFilter = nullptr;
-			if (FAILED(Filter->Add(fieldName, &value, &VARIANT(), AIMPML_FIELDFILTER_OPERATION_EQUALS, &outFilter))) {
+			auto result = Filter->Add(fieldName, &value, &VARIANT(), AIMPML_FIELDFILTER_OPERATION_EQUALS, &outFilter);
+
+			fieldName->Release();
+			if (FAILED(result)) {
 				return E_FAIL;
 			}
+
+			outFilter->Release();
 		}
 	}
 	Filter->EndUpdate();
@@ -35,11 +40,10 @@ HRESULT WINAPI AimpDlnaGroupingTreeDataProvider::GetData(IAIMPMLGroupingTreeSele
 }
 
 HRESULT AimpDlnaGroupingTreeDataProvider::GetRootData(IAIMPMLGroupingTreeDataProviderSelection** Data){
-	auto list = vector<AimpDlnaGroupingTreeDataProviderNode>();
-
 	const auto& devices = mediaBrowser->GetMediaServers();
 	NPT_AutoLock lock((NPT_Mutex&)devices);
 
+	auto list = vector<AimpDlnaGroupingTreeDataProviderNode>();
 	wstring_convert<codecvt_utf8<wchar_t>, wchar_t> converter;
 	for (auto device = devices.GetFirstItem(); device; device++) {
 		auto displayName = converter.from_bytes((*device)->GetFriendlyName().GetChars());
@@ -48,6 +52,9 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetRootData(IAIMPMLGroupingTreeDataPro
 		list.push_back(node);
 	}
 
+	if (list.size() == 0)
+		return E_FAIL;
+	
 	*Data = new AimpDlnaGroupingTreeDataProviderSelection(list);
 	return S_OK;
 }
@@ -61,6 +68,7 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetChildrenData(IAIMPMLGroupingTreeSel
 
 		if (SUCCEEDED(Selection->GetValue(i, &fieldName, &value))) {
 			breadcrumbs.push_back(wstring(value.bstrVal));
+			fieldName->Release();
 		}
 	}
 
@@ -75,7 +83,6 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetChildrenData(IAIMPMLGroupingTreeSel
 	if (FAILED(mediaBrowser->FindServer(deviceUuid.c_str(), device)))
 		return E_FAIL;
 
-
 	PLT_MediaObjectListReference objects;
 	if (FAILED(mediaBrowser->BrowseSync(device, containerId.c_str(), objects, false, 0, UINT_MAX)))
 		return E_FAIL;
@@ -89,6 +96,9 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetChildrenData(IAIMPMLGroupingTreeSel
 		auto value = converter.from_bytes((*object)->m_ObjectID.GetChars());
 		list.push_back({ AIMPML_FIELDIMAGE_FOLDER , value, displayName, false, true });
 	}
+
+	if (list.size() == 0)
+		return E_FAIL;
 
 	*Data = new AimpDlnaGroupingTreeDataProviderSelection(list);
 	return S_OK;

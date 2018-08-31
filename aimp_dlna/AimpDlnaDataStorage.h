@@ -14,21 +14,19 @@ private:
 	bool finalized{ false };
 	IAIMPMLDataStorageManager* manager;
 	IAIMPMLDataProvider* dataProvider;
-	IAIMPMLGroupingTreeDataProvider* groupingTreeDataProvider;
 
 	PLT_UPnP* upnp;
 	PLT_CtrlPoint* ctrlPoint;
 	PLT_SyncMediaBrowser* mediaBrowser;
 	PLT_CtrlPointReference ctrlPointRef;
 
-	AimpDlnaDataStorage() : manager(nullptr), dataProvider(nullptr), groupingTreeDataProvider(nullptr), mediaBrowser(nullptr) {
+	AimpDlnaDataStorage() : manager(nullptr), dataProvider(nullptr), mediaBrowser(nullptr) {
 		upnp = new PLT_UPnP();
 		ctrlPoint = new PLT_CtrlPoint();
 		ctrlPointRef = PLT_CtrlPointReference(ctrlPoint);
 		mediaBrowser = new PLT_SyncMediaBrowser(ctrlPointRef, true);
 
 		dataProvider = new AimpDlnaDataProvider(mediaBrowser);
-		groupingTreeDataProvider = new AimpDlnaGroupingTreeDataProvider(mediaBrowser);
 		
 		AddRef();
 	}
