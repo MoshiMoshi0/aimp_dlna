@@ -29,7 +29,7 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 		return E_FAIL;
 
 	const auto recursive_browse = [&](const auto& self, const char* currentContainer, PLT_MediaObjectListReference& result, const int depth = 0) -> int {
-		if (depth >= 2)
+		if (depth >= 3)
 			return NPT_SUCCESS;
 
 		PLT_MediaObjectListReference objects;
