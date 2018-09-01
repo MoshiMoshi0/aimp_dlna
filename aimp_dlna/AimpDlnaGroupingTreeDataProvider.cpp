@@ -5,6 +5,8 @@
 using namespace std;
 
 HRESULT WINAPI AimpDlnaGroupingTreeDataProvider::AppendFilter(IAIMPMLDataFilterGroup* Filter, IAIMPMLGroupingTreeSelection* Selection) {
+	Selection->AddRef();
+	Filter->AddRef();
 	Filter->BeginUpdate();
 	Filter->SetValueAsInt32(AIMPML_FILTERGROUP_OPERATION, AIMPML_FILTERGROUP_OPERATION_AND);
 	for (size_t i = 0; i < Selection->GetCount(); i++) {
@@ -24,6 +26,8 @@ HRESULT WINAPI AimpDlnaGroupingTreeDataProvider::AppendFilter(IAIMPMLDataFilterG
 		}
 	}
 	Filter->EndUpdate();
+	Filter->Release();
+	Selection->Release();
 	return S_OK;
 }
 
@@ -32,11 +36,17 @@ DWORD WINAPI AimpDlnaGroupingTreeDataProvider::GetCapabilities() {
 }
 
 HRESULT WINAPI AimpDlnaGroupingTreeDataProvider::GetData(IAIMPMLGroupingTreeSelection* Selection, IAIMPMLGroupingTreeDataProviderSelection** Data) {
+	Selection->AddRef();
+
+	auto result = S_OK;
 	if (Selection->GetCount() == 0) {
-		return GetRootData(Data);
+		result = GetRootData(Data);
 	} else {
-		return GetChildrenData(Selection, Data);
+		result = GetChildrenData(Selection, Data);
 	}
+
+	Selection->Release();
+	return result;
 }
 
 HRESULT AimpDlnaGroupingTreeDataProvider::GetRootData(IAIMPMLGroupingTreeDataProviderSelection** Data){

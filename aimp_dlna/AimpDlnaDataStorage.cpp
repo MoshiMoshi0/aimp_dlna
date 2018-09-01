@@ -43,8 +43,17 @@ void AimpDlnaDataStorage::Finalize() {
 }
 
 void AimpDlnaDataStorage::FlushCache(int Reserved) {}
-HRESULT AimpDlnaDataStorage::ConfigLoad(IAIMPConfig* Config, IAIMPString* Section) { return S_OK; }
-HRESULT AimpDlnaDataStorage::ConfigSave(IAIMPConfig* Config, IAIMPString* Section) { return S_OK; }
+HRESULT AimpDlnaDataStorage::ConfigLoad(IAIMPConfig* Config, IAIMPString* Section) { 
+	AIMP_UNUSED(Config);
+	AIMP_UNUSED(Section);
+	return S_OK;
+}
+
+HRESULT AimpDlnaDataStorage::ConfigSave(IAIMPConfig* Config, IAIMPString* Section) {
+	AIMP_UNUSED(Config);
+	AIMP_UNUSED(Section);
+	return S_OK;
+}
 
 HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
 	Plugin::instance()->Core()->CreateObject(IID_IAIMPObjectList, reinterpret_cast<void**>(List));
@@ -108,19 +117,24 @@ HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
 }
 
 HRESULT WINAPI AimpDlnaDataStorage::GetGroupingPresets(int Schema, IAIMPMLGroupingPresets* Presets) {
+	Presets->AddRef();
+
+	auto result = E_FAIL;
 	switch (Schema) {
 	case AIMPML_GROUPINGPRESETS_SCHEMA_BUILTIN: {
 		IAIMPMLGroupingPreset* preset = nullptr;
 		if (SUCCEEDED(Presets->Add(AimpString(id + L".GroupingPreset"), AimpString(L"Default"), 0, new AimpDlnaGroupingTreeDataProvider(mediaBrowser), &preset))) {
 			preset->Release();
+			result = S_OK;
 		}
-		return S_OK;
+		break;
 	}
 	default:
 		break;
 	}
 
-	return E_FAIL;
+	Presets->Release();
+	return result;
 }
 
 HRESULT WINAPI AimpDlnaDataStorage::GetValueAsInt32(int PropertyID, int *Value) {

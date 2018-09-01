@@ -32,3 +32,5 @@
 #include "AimpString.h"
 
 #include "aimp_dlna.h"
+
+#define AIMP_UNUSED(x) { x->AddRef(); x->Release(); }

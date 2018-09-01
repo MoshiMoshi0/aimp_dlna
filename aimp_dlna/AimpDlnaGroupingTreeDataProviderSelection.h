@@ -24,7 +24,7 @@ public:
 
 		AddRef();
 	}
-
+	
 	HRESULT WINAPI GetDisplayValue(IAIMPString** S);
 	DWORD WINAPI GetFlags();
 	HRESULT WINAPI GetImageIndex(int* Index);
