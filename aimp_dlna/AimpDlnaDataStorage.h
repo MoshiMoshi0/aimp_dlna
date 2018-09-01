@@ -34,20 +34,31 @@ private:
 	class DataStorageManagerRefreshTask : public NPT_Thread {
 	private:
 		IAIMPMLDataStorageManager* manager;
+		PLT_SyncMediaBrowser* mediaBrowser;
 
 	public:
-		DataStorageManagerRefreshTask(IAIMPMLDataStorageManager* Manager) {
+		DataStorageManagerRefreshTask(IAIMPMLDataStorageManager* Manager, PLT_SyncMediaBrowser* MediaBrowser) {
 			manager = Manager;
 			manager->AddRef();
+
+			mediaBrowser = MediaBrowser;
 		}
 
 		~DataStorageManagerRefreshTask() {
 			manager->Release();
+			manager = nullptr;
+			mediaBrowser = nullptr;
+
 			delete this;
 		}
 
 		void Run() {
-			NPT_System::Sleep(1.0);
+			int tries = 10;
+
+			do {
+				NPT_System::Sleep(0.5);
+			} while (mediaBrowser->GetMediaServers().GetItemCount() == 0 && --tries > 0);
+
 			manager->Changed();
 		}
 	};
