@@ -36,20 +36,22 @@ private:
 		IAIMPMLDataStorageManager* manager;
 		PLT_SyncMediaBrowser* mediaBrowser;
 
-	public:
 		DataStorageManagerRefreshTask(IAIMPMLDataStorageManager* Manager, PLT_SyncMediaBrowser* MediaBrowser) {
 			manager = Manager;
 			manager->AddRef();
 
 			mediaBrowser = MediaBrowser;
 		}
+	public:
+		static NPT_Result Start(IAIMPMLDataStorageManager* Manager, PLT_SyncMediaBrowser* MediaBrowser) {
+			auto instance = new DataStorageManagerRefreshTask(Manager, MediaBrowser);
+			return static_cast<NPT_ThreadInterface*>(instance)->Start();
+		}
 
 		~DataStorageManagerRefreshTask() {
 			manager->Release();
 			manager = nullptr;
 			mediaBrowser = nullptr;
-
-			delete this;
 		}
 
 		void Run() {
@@ -60,6 +62,7 @@ private:
 			} while (mediaBrowser->GetMediaServers().GetItemCount() == 0 && --tries > 0);
 
 			manager->Changed();
+			delete this;
 		}
 	};
 public:

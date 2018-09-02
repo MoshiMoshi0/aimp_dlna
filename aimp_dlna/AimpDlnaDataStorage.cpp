@@ -13,7 +13,7 @@ void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {
 
 	ctrlPoint->Discover();
 
-	(new DataStorageManagerRefreshTask(manager, mediaBrowser))->Start();
+	DataStorageManagerRefreshTask::Start(manager, mediaBrowser);
 }
 
 void AimpDlnaDataStorage::Finalize() {
