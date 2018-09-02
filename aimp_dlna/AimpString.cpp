@@ -3,14 +3,14 @@
 
 IAIMPCore *AimpString::core = nullptr;
 
-AimpString::AimpString() {
+AimpString::AimpString() : string(nullptr) {
 	if (!core)
 		return;
 
 	core->CreateObject(IID_IAIMPString, reinterpret_cast<void **>(&string));
 }
 
-AimpString::AimpString(const wstring &_string, bool addRef) {
+AimpString::AimpString(const wstring &_string, bool addRef) : string(nullptr) {
 	if (!core)
 		return;
 
@@ -22,7 +22,7 @@ AimpString::AimpString(const wstring &_string, bool addRef) {
 	}
 }
 
-AimpString::AimpString(const wchar_t *_string, bool addRef) {
+AimpString::AimpString(const wchar_t *_string, bool addRef) : string(nullptr) {
 	if (!core)
 		return;
 
