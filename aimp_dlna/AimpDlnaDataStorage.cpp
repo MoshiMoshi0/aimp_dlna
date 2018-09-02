@@ -45,25 +45,25 @@ void AimpDlnaDataStorage::Finalize() {
 
 void AimpDlnaDataStorage::FlushCache(int Reserved) {}
 HRESULT AimpDlnaDataStorage::ConfigLoad(IAIMPConfig* Config, IAIMPString* Section) { 
-	AIMP_UNUSED(Config);
-	AIMP_UNUSED(Section);
+	AimpUtils::Unused(Config);
+	AimpUtils::Unused(Section);
 	return S_OK;
 }
 
 HRESULT AimpDlnaDataStorage::ConfigSave(IAIMPConfig* Config, IAIMPString* Section) {
-	AIMP_UNUSED(Config);
-	AIMP_UNUSED(Section);
+	AimpUtils::Unused(Config);
+	AimpUtils::Unused(Section);
 	return S_OK;
 }
 
 HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
-	Plugin::instance()->Core()->CreateObject(IID_IAIMPObjectList, reinterpret_cast<void**>(List));
+	AimpUtils::CreateObject(IID_IAIMPObjectList, reinterpret_cast<void**>(List));
 
 	switch (Schema) {
 	case AIMPML_FIELDS_SCHEMA_ALL: {
 		auto addField = [](auto list, wstring name, int type, int flags = 0) {
 			IAIMPMLDataField* field = nullptr;
-			Plugin::instance()->Core()->CreateObject(IID_IAIMPMLDataField, reinterpret_cast<void**>(&field));
+			AimpUtils::CreateObject(IID_IAIMPMLDataField, reinterpret_cast<void**>(&field));
 
 			field->SetValueAsObject(AIMPML_FIELD_PROPID_NAME, AimpString(name));
 			field->SetValueAsInt32(AIMPML_FIELD_PROPID_TYPE, type);

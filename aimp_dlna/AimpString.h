@@ -4,7 +4,6 @@ using namespace std;
 
 class AimpString {
 private:
-	static IAIMPCore *core;
 	IAIMPString *string;
 
 public:
@@ -16,6 +15,4 @@ public:
 
 	operator IAIMPString*() { return string; }
 	IAIMPString* operator->() { return string; }
-
-	static inline void Initialize(IAIMPCore *Core) { core = Core; }
 };

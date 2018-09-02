@@ -55,6 +55,4 @@ public:
 	void WINAPI SystemNotification(int NotifyID, IUnknown* Data) {}
 
 	wstring Lang(const wstring &Key, int Part = -1);
-
-	inline IAIMPCore* Core() { return core; } // TODO: refactor?
 };

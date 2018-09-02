@@ -30,5 +30,4 @@
 
 #include "IUnknownInterfaceImpl.h"
 #include "AimpString.h"
-
-#define AIMP_UNUSED(x) { x->AddRef(); x->Release(); }
+#include "AimpUtils.h"

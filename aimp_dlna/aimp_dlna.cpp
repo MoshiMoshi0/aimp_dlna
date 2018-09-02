@@ -8,7 +8,7 @@ Plugin* Plugin::singleton = nullptr;
 HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 	core = Core;
 
-	AimpString::Initialize(core);
+	AimpUtils::Initialize(core);
 
 	if (FAILED(core->QueryInterface(IID_IAIMPServiceMUI, reinterpret_cast<void**>(&muiService)))) {
 		Finalize();
