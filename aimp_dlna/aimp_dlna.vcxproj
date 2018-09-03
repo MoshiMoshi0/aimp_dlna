@@ -184,9 +184,9 @@
     <ClCompile Include="AimpDlnaDataProviderSelection.cpp" />
     <ClCompile Include="AimpString.cpp" />
     <ClCompile Include="AimpUtils.cpp" />
-    <ClCompile Include="aimp_dlna.cpp" />
+    <ClCompile Include="AimpDlnaPlugin.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="aimp_dlna.h" />
+    <ClCompile Include="AimpDlnaPlugin.h" />
     <ClCompile Include="AimpDlnaMusicLibrary.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

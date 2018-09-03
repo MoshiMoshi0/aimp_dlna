@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "AimpDlnaDataStorage.h"
 #include "AimpDlnaMusicLibrary.h"
-#include "aimp_dlna.h"
+#include "AimpDlnaPlugin.h"
 
 AimpDlnaDataStorage* AimpDlnaDataStorage::singleton = nullptr;
 
