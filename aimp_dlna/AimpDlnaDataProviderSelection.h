@@ -4,12 +4,12 @@ using namespace std;
 
 class AimpDlnaDataProviderSelection : public IUnknownInterfaceImpl<IAIMPMLDataProviderSelection> {
 private:
-	int index;
+	unsigned int index;
 	PLT_MediaObjectListReference items;
 	vector<wstring> fields;
 
-	PLT_MediaObject* GetItem(int index);
-	wstring GetField(int index);
+	PLT_MediaObject* GetItem(unsigned int index);
+	wstring GetField(unsigned int index);
 
 public:
 	AimpDlnaDataProviderSelection(PLT_MediaObjectListReference items, vector<wstring> fields) {

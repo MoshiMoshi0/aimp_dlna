@@ -10,7 +10,7 @@ struct AimpDlnaGroupingTreeDataProviderNode {
 
 class AimpDlnaGroupingTreeDataProviderSelection : public IUnknownInterfaceImpl<IAIMPMLGroupingTreeDataProviderSelection> {
 private:
-	int index;
+	unsigned int index;
 	vector<AimpDlnaGroupingTreeDataProviderNode> nodes;
 
 	inline AimpDlnaGroupingTreeDataProviderNode* GetCurrentNode() {

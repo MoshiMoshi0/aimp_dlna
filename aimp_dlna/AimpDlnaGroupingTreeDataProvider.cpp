@@ -9,7 +9,7 @@ HRESULT WINAPI AimpDlnaGroupingTreeDataProvider::AppendFilter(IAIMPMLDataFilterG
 	Filter->AddRef();
 	Filter->BeginUpdate();
 	Filter->SetValueAsInt32(AIMPML_FILTERGROUP_OPERATION, AIMPML_FILTERGROUP_OPERATION_AND);
-	for (size_t i = 0; i < Selection->GetCount(); i++) {
+	for (size_t i = 0; i < (size_t)Selection->GetCount(); i++) {
 		IAIMPString* fieldName = nullptr;
 		VARIANT value;
 
@@ -71,7 +71,7 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetRootData(IAIMPMLGroupingTreeDataPro
 HRESULT AimpDlnaGroupingTreeDataProvider::GetChildrenData(IAIMPMLGroupingTreeSelection* Selection, IAIMPMLGroupingTreeDataProviderSelection** Data) {
 	vector<wstring> breadcrumbs;
 
-	for (size_t i = 0; i < Selection->GetCount(); i++) {
+	for (size_t i = 0; i < (size_t)Selection->GetCount(); i++) {
 		IAIMPString* fieldName = nullptr;
 		VARIANT value;
 

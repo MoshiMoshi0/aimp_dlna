@@ -2,7 +2,7 @@
 #include "AimpDlnaDataProviderSelection.h"
 #include "AimpDlnaMusicLibrary.h"
 
-PLT_MediaObject* AimpDlnaDataProviderSelection::GetItem(int index) {
+PLT_MediaObject* AimpDlnaDataProviderSelection::GetItem(unsigned int index) {
 	if (index >= items->GetItemCount())
 		return nullptr;
 
@@ -11,7 +11,7 @@ PLT_MediaObject* AimpDlnaDataProviderSelection::GetItem(int index) {
 	return item;
 }
 
-wstring AimpDlnaDataProviderSelection::GetField(int index) {
+wstring AimpDlnaDataProviderSelection::GetField(unsigned int index) {
 	if (index >= fields.size())
 		return L"";
 

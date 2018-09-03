@@ -5,7 +5,7 @@
 HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDataFilter* Filter, IUnknown** Data) { 
 	vector<wstring> breadcrumbs;
 
-	for (size_t i = 0; i < Filter->GetChildCount(); i++) {
+	for (size_t i = 0; i < (size_t)Filter->GetChildCount(); i++) {
 		IAIMPMLDataFieldFilter* childFilter = nullptr;
 		if (SUCCEEDED(Filter->GetChild(i, IID_IAIMPMLDataFieldFilter, reinterpret_cast<void**>(&childFilter)))) {
 			IAIMPString* value = nullptr;
@@ -59,7 +59,7 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 		return E_FAIL;
 
 	vector<wstring> fields;
-	for (size_t i = 0; i < Fields->GetCount(); i++) {
+	for (size_t i = 0; i < (size_t)Fields->GetCount(); i++) {
 		IAIMPString* value = nullptr;
 		if (SUCCEEDED(Fields->GetObject(i, IID_IAIMPString, reinterpret_cast<void**>(&value)))) {
 			fields.push_back(wstring(value->GetData()));
