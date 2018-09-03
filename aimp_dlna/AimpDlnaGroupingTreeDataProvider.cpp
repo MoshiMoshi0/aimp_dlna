@@ -54,10 +54,9 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetRootData(IAIMPMLGroupingTreeDataPro
 	NPT_AutoLock lock((NPT_Mutex&)devices);
 
 	auto list = vector<AimpDlnaGroupingTreeDataProviderNode>();
-	wstring_convert<codecvt_utf8<wchar_t>, wchar_t> converter;
 	for (auto device = devices.GetFirstItem(); device; device++) {
-		auto displayName = converter.from_bytes((*device)->GetFriendlyName().GetChars());
-		auto value = converter.from_bytes((*device)->GetUUID().GetChars());
+		auto displayName = StringUtils::ToWideString((*device)->GetFriendlyName());
+		auto value = StringUtils::ToWideString((*device)->GetUUID());
 		AimpDlnaGroupingTreeDataProviderNode node = { AIMPML_FIELDIMAGE_NOTE, value, displayName, true, true };
 		list.push_back(node);
 	}
@@ -85,9 +84,8 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetChildrenData(IAIMPMLGroupingTreeSel
 	if (breadcrumbs.size() == 0)
 		return E_FAIL;
 
-	wstring_convert<codecvt_utf8<wchar_t>, wchar_t> converter;
-	auto deviceUuid = converter.to_bytes(breadcrumbs.back());
-	auto containerId = breadcrumbs.size() == 1 ? "0" : converter.to_bytes(breadcrumbs.front());
+	auto deviceUuid = StringUtils::ToString(breadcrumbs.back());
+	auto containerId = breadcrumbs.size() == 1 ? "0" : StringUtils::ToString(breadcrumbs.front());
 
 	PLT_DeviceDataReference device;
 	if (FAILED(mediaBrowser->FindServer(deviceUuid.c_str(), device)))
@@ -102,8 +100,8 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetChildrenData(IAIMPMLGroupingTreeSel
 		if (!(*object)->IsContainer())
 			continue;
 
-		auto displayName = converter.from_bytes((*object)->m_Title.GetChars());
-		auto value = converter.from_bytes((*object)->m_ObjectID.GetChars());
+		auto displayName = StringUtils::ToWideString((*object)->m_Title);
+		auto value = StringUtils::ToWideString((*object)->m_ObjectID);
 		list.push_back({ AIMPML_FIELDIMAGE_FOLDER , value, displayName, false, true });
 	}
 

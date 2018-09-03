@@ -15,7 +15,6 @@
 #include <vector>
 #include <tchar.h>
 #include <comdef.h>
-#include <codecvt>
 #include <functional>
 
 #include "apiPlugin.h"
@@ -31,3 +30,4 @@
 #include "IUnknownInterfaceImpl.h"
 #include "AimpString.h"
 #include "AimpUtils.h"
+#include "StringUtils.h"

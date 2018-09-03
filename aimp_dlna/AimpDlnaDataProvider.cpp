@@ -20,9 +20,8 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 	if (breadcrumbs.size() == 0)
 		return E_FAIL;
 
-	wstring_convert<codecvt_utf8<wchar_t>, wchar_t> converter;
-	auto deviceUuid = converter.to_bytes(breadcrumbs.back());
-	auto containerId = breadcrumbs.size() == 1 ? "0" : converter.to_bytes(breadcrumbs.front());
+	auto deviceUuid = StringUtils::ToString(breadcrumbs.back());
+	auto containerId = breadcrumbs.size() == 1 ? "0" : StringUtils::ToString(breadcrumbs.front());
 
 	PLT_DeviceDataReference device;
 	if (NPT_FAILED(mediaBrowser->FindServer(deviceUuid.c_str(), device)))
