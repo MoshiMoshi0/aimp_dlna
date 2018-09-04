@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #include "AIMPString.h"
 
-AimpString::AimpString() : string(nullptr) {
-	AimpUtils::CreateObject(IID_IAIMPString, reinterpret_cast<void **>(&string));
+AimpString::AimpString(bool addRef) : string(nullptr) {
+	if (SUCCEEDED(AimpUtils::CreateObject(IID_IAIMPString, reinterpret_cast<void **>(&string)))) {
+		if(addRef)
+			string->AddRef();
+	}
 }
 
 AimpString::AimpString(const wstring &_string, bool addRef) : string(nullptr) {
