@@ -12,7 +12,7 @@ void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {
 	upnp->AddCtrlPoint(ctrlPointRef);
 	upnp->Start();
 
-	ctrlPoint->Discover();
+	ctrlPoint->Discover(NPT_HttpUrl("239.255.255.250", 1900, "*"), "ssdp:all", 5, 0.0, 0.0);
 
 	DataStorageManagerRefreshTask::Start(manager, mediaBrowser);
 }
