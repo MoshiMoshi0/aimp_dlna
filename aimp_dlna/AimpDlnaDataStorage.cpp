@@ -57,13 +57,16 @@ HRESULT AimpDlnaDataStorage::ConfigSave(IAIMPConfig* Config, IAIMPString* Sectio
 }
 
 HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
-	AimpUtils::CreateObject(IID_IAIMPObjectList, reinterpret_cast<void**>(List));
+	*List = AimpUtils::CreateObject<IAIMPObjectList>(IID_IAIMPObjectList);
+	if ((*List) == nullptr)
+		return E_FAIL;
 
 	switch (Schema) {
 	case AIMPML_FIELDS_SCHEMA_ALL: {
 		auto addField = [](auto list, wstring name, int type, int flags = 0) {
-			IAIMPMLDataField* field = nullptr;
-			AimpUtils::CreateObject(IID_IAIMPMLDataField, reinterpret_cast<void**>(&field));
+			IAIMPMLDataField* field = AimpUtils::CreateObject<IAIMPMLDataField>(IID_IAIMPMLDataField);
+			if (field == nullptr)
+				return;
 
 			field->SetValueAsObject(AIMPML_FIELD_PROPID_NAME, AimpString(name));
 			field->SetValueAsInt32(AIMPML_FIELD_PROPID_TYPE, type);
@@ -83,7 +86,7 @@ HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
 		addField(*List, EVDS_TrackTitle, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_FILTERING);
 		addField(*List, EVDS_TrackDuration, AIMPML_FIELDTYPE_DURATION, AIMPML_FIELDFLAG_INTERNAL);
 
-		addField(*List, EVDS_NodeId, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_INTERNAL);
+		addField(*List, EVDS_NodeId, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_INTERNAL | AIMPML_FIELDFLAG_REQUIRED);
 		break;
 	}
 	case AIMPML_FIELDS_SCHEMA_TABLE_VIEW_ALBUMTHUMBNAILS:
