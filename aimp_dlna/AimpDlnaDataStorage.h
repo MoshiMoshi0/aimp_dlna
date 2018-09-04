@@ -61,7 +61,8 @@ private:
 				NPT_System::Sleep(0.5);
 			} while (mediaBrowser->GetMediaServers().GetItemCount() == 0 && --tries > 0);
 
-			manager->Changed();
+			if(mediaBrowser->GetMediaServers().GetItemCount() > 0)
+				manager->Changed();
 			delete this;
 		}
 	};
