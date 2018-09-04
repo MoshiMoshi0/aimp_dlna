@@ -56,12 +56,13 @@ private:
 
 		void Run() {
 			int tries = 10;
-
+			unsigned int count = 0;
 			do {
 				NPT_System::Sleep(0.5);
-			} while (mediaBrowser->GetMediaServers().GetItemCount() == 0 && --tries > 0);
+				count = mediaBrowser->GetMediaServers().GetItemCount();
+			} while (count == 0 && --tries > 0);
 
-			if(mediaBrowser->GetMediaServers().GetItemCount() > 0)
+			if(count > 0)
 				manager->Changed();
 			delete this;
 		}
