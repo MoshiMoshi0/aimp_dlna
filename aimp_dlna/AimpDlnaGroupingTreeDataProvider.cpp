@@ -88,11 +88,14 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetChildrenData(IAIMPMLGroupingTreeSel
 	auto containerId = breadcrumbs.size() == 1 ? "0" : StringUtils::ToString(breadcrumbs.front());
 
 	PLT_DeviceDataReference device;
-	if (FAILED(mediaBrowser->FindServer(deviceUuid.c_str(), device)))
+	if (NPT_FAILED(mediaBrowser->FindServer(deviceUuid.c_str(), device)))
 		return E_FAIL;
 
 	PLT_MediaObjectListReference objects;
-	if (FAILED(mediaBrowser->BrowseSync(device, containerId.c_str(), objects, false, 0, UINT_MAX)))
+	if (NPT_FAILED(mediaBrowser->BrowseSync(device, containerId.c_str(), objects, false, 0, UINT_MAX)))
+		return E_FAIL;
+
+	if (objects.IsNull())
 		return E_FAIL;
 
 	auto list = vector<AimpDlnaGroupingTreeDataProviderNode>();
