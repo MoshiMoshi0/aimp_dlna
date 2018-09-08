@@ -90,9 +90,13 @@ HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
 		break;
 	}
 	case AIMPML_FIELDS_SCHEMA_TABLE_VIEW_ALBUMTHUMBNAILS:
-	case AIMPML_FIELDS_SCHEMA_TABLE_VIEW_GROUPDETAILS:
+	case AIMPML_FIELDS_SCHEMA_TABLE_VIEW_GROUPDETAILS: {
+		(*List)->Add(AimpString(EVDS_TrackNumber));
+		(*List)->Add(AimpString(EVDS_TrackTitle));
+		(*List)->Add(AimpString(EVDS_TrackDuration));
+		break;
+	}
 	case AIMPML_FIELDS_SCHEMA_TABLE_VIEW_DEFAULT: {
-		(*List)->Add(AimpString(EVDS_TrackFileName));
 		(*List)->Add(AimpString(EVDS_TrackNumber));
 		(*List)->Add(AimpString(EVDS_TrackArtist));
 		(*List)->Add(AimpString(EVDS_TrackDate));
@@ -103,9 +107,9 @@ HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
 	}
 	case AIMPML_FIELDS_SCHEMA_TABLE_GROUPDETAILS: {
 		(*List)->Add(AimpString(EVDS_TrackArtist));
-		(*List)->Add(AimpString(EVDS_TrackDate));
 		(*List)->Add(AimpString(EVDS_TrackAlbum));
 		(*List)->Add(AimpString(EVDS_TrackDuration));
+		(*List)->Add(AimpString(EVDS_TrackDate));
 		break;
 	}
 	case AIMPML_FIELDS_SCHEMA_TABLE_GROUPBY: {
