@@ -155,12 +155,12 @@ const int AIMPML_FILTERGROUP_OPERATION_NOTAND = 3;
 const int AIMPML_FIELDFILTERBYARRAY_FIELD = 1;
 
 // Property ID for IAIMPMLDataFilter
-const int AIMPML_FILTER_LIMIT           = 1;
-const int AIMPML_FILTER_OFFSET          = 2;
-const int AIMPML_FILTER_SORTBY          = 3;
-const int AIMPML_FILTER_SORTDIRECTION   = 4; // Refer to the AIMPML_SORTDIRECTION_XXX
-const int AIMPML_FILTER_SEARCHSTRING    = 10; // optional
-const int AIMPML_FILTER_ALPHABETICINDEX = 11; // optional
+const int AIMPML_FILTER_LIMIT           = 11;
+const int AIMPML_FILTER_OFFSET          = 12;
+const int AIMPML_FILTER_SORTBY          = 13;
+const int AIMPML_FILTER_SORTDIRECTION   = 14; // Refer to the AIMPML_SORTDIRECTION_XXX
+const int AIMPML_FILTER_SEARCHSTRING    = 20; // optional
+const int AIMPML_FILTER_ALPHABETICINDEX = 21; // optional
 
 // Sort Direction
 const int AIMPML_SORTDIRECTION_ASCENDING  = 1;
