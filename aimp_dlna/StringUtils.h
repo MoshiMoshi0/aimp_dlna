@@ -15,6 +15,7 @@ public:
 
 	static inline string ToString(const wchar_t* s) { return converter.to_bytes(s); }
 	static inline string ToString(const wstring& s) { return converter.to_bytes(s); }
+	static inline string ToString(const NPT_String& s) { return string(s.GetChars()); }
 	static inline string ToString(IAIMPString& s) { return ToString(s.GetData()); }
 
 	static wchar_t* ToWideCharArray(const NPT_String& s) {

@@ -27,32 +27,8 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 	if (NPT_FAILED(mediaBrowser->FindServer(deviceUuid.c_str(), device)))
 		return E_FAIL;
 
-	const auto recursive_browse = [&](const auto& self, const char* currentContainer, PLT_MediaObjectListReference& result, const int depth = 0) -> int {
-		if (depth >= 3)
-			return NPT_SUCCESS;
-
-		PLT_MediaObjectListReference objects;
-		if (NPT_FAILED(mediaBrowser->BrowseSync(device, currentContainer, objects, false)))
-			return NPT_FAILURE;
-
-		if (objects.IsNull())
-			return NPT_SUCCESS;
-
-		for (auto object = objects->GetFirstItem(); object; object++) {
-			if (!(*object)->IsContainer()) {
-				result->Add(*object);
-			} else {
-				if (mediaBrowser->IsCached(device->GetUUID(), (*object)->m_ObjectID.GetChars()))
-					if (NPT_FAILED(self(self, (*object)->m_ObjectID.GetChars(), result, depth + 1)))
-						return NPT_FAILURE;
-			}
-		}
-
-		return NPT_SUCCESS;
-	};
-
 	PLT_MediaObjectListReference objects(new PLT_MediaObjectList());
-	if (NPT_FAILED(recursive_browse(recursive_browse, containerId.c_str(), objects)))
+	if (NPT_FAILED(RecursiveBrowse(device, containerId, objects)))
 		return E_FAIL;
 
 	if (objects.IsNull() || objects->GetItemCount() == 0)
@@ -69,6 +45,30 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 
 	*Data = new AimpDlnaDataProviderSelection(objects, fields);
 	return S_OK;
+}
+
+int AimpDlnaDataProvider::RecursiveBrowse(PLT_DeviceDataReference& device, const string& currentContainer, PLT_MediaObjectListReference& result, const int depth = 0) {
+	if (depth >= 3)
+		return NPT_SUCCESS;
+
+	PLT_MediaObjectListReference objects;
+	if (NPT_FAILED(mediaBrowser->BrowseSync(device, currentContainer.c_str(), objects, false)))
+		return NPT_FAILURE;
+
+	if (objects.IsNull())
+		return NPT_SUCCESS;
+
+	for (auto object = objects->GetFirstItem(); object; object++) {
+		if (!(*object)->IsContainer()) {
+			result->Add(*object);
+		} else {
+			if (mediaBrowser->IsCached(device->GetUUID(), (*object)->m_ObjectID.GetChars()))
+				if (NPT_FAILED(RecursiveBrowse(device, StringUtils::ToString((*object)->m_ObjectID), result, depth + 1)))
+					return NPT_FAILURE;
+		}
+	}
+
+	return NPT_SUCCESS;
 }
 
 HRESULT WINAPI AimpDlnaDataProvider::QueryInterface(REFIID riid, LPVOID* ppvObject) {
