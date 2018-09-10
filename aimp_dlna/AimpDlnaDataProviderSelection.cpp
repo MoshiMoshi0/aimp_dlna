@@ -27,8 +27,20 @@ DOUBLE WINAPI AimpDlnaDataProviderSelection::GetValueAsFloat(int FieldIndex) {
 		return DOUBLE();
 
 	auto resource = item->m_Resources[0];
-	if (field.compare(EVDS_TrackDuration) == 0)
+	if (field.compare(EVDS_TrackDuration) == 0) {
 		return (DOUBLE)resource.m_Duration;
+	} else if (field.compare(EVDS_TrackDate) == 0) {
+		for (int format = 0; format <= NPT_DateTime::FORMAT_RFC_1036; format++) {
+			NPT_DateTime date;
+			NPT_TimeStamp timestamp;
+			if (NPT_SUCCEEDED(date.FromString(item->m_Date, (NPT_DateTime::Format)format)) &&
+				NPT_SUCCEEDED(date.ToTimeStamp(timestamp))) {
+				return (DOUBLE)(25569.0 + timestamp.ToSeconds() / 86400.0);
+			}
+		}
+
+		return DOUBLE();
+	}
 
 	return DOUBLE();
 }
@@ -72,8 +84,6 @@ WCHAR* WINAPI AimpDlnaDataProviderSelection::GetValueAsString(int FieldIndex, in
 			artists.Add((*person).name);
 		}
 		result = NPT_String::Join(artists, ", ");
-	} else if (field.compare(EVDS_TrackDate) == 0) {
-		result = item->m_Date.SubString(0, 10);
 	} else if (field.compare(EVDS_TrackAlbum) == 0) {
 		result = item->m_Affiliation.album;
 	} else if (field.compare(EVDS_TrackTitle) == 0) {

@@ -81,7 +81,7 @@ HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
 
 		addField(*List, EVDS_TrackNumber, AIMPML_FIELDTYPE_INT32);
 		addField(*List, EVDS_TrackArtist, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_FILTERING);
-		addField(*List, EVDS_TrackDate, AIMPML_FIELDTYPE_STRING);
+		addField(*List, EVDS_TrackDate, AIMPML_FIELDTYPE_DATETIME);
 		addField(*List, EVDS_TrackAlbum, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_FILTERING);
 		addField(*List, EVDS_TrackTitle, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_FILTERING);
 		addField(*List, EVDS_TrackDuration, AIMPML_FIELDTYPE_DURATION);
