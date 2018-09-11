@@ -3,7 +3,7 @@
 #include "AimpDlnaDataProvider.h"
 #include "AimpDlnaGroupingTreeDataProvider.h"
 
-class AimpDlnaDataStorage : public IUnknownInterfaceImpl<IAIMPMLExtensionDataStorage> {
+class AimpDlnaDataStorage : public IUnknownInterfaceImpl<IAIMPMLExtensionDataStorage, IID_IAIMPMLExtensionDataStorage> {
 private:
 	static AimpDlnaDataStorage* singleton;
 

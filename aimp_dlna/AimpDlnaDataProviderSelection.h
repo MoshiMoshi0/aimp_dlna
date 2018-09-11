@@ -2,7 +2,7 @@
 
 using namespace std;
 
-class AimpDlnaDataProviderSelection : public IUnknownInterfaceImpl<IAIMPMLDataProviderSelection> {
+class AimpDlnaDataProviderSelection : public IUnknownInterfaceImpl<IAIMPMLDataProviderSelection, IID_IAIMPMLDataProviderSelection> {
 private:
 	unsigned int index;
 	PLT_MediaObjectListReference items;
@@ -31,7 +31,5 @@ public:
 
 	BOOL WINAPI HasNextPage() { return false; }
 	BOOL WINAPI NextRow();
-
-	HRESULT WINAPI QueryInterface(REFIID riid, LPVOID* ppvObject);
 };
 

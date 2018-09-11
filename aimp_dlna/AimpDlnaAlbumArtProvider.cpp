@@ -13,13 +13,3 @@ HRESULT WINAPI AimpDlnaAlbumArtProvider::Get(IAIMPString *FileURI, IAIMPString *
 
 	return E_FAIL;
 }
-
-HRESULT WINAPI AimpDlnaAlbumArtProvider::QueryInterface(REFIID riid, LPVOID* ppvObject) {
-	if (riid == IID_IAIMPExtensionAlbumArtProvider) {
-		*ppvObject = this;
-		AddRef();
-		return S_OK;
-	}
-
-	return Base::QueryInterface(riid, ppvObject);
-}

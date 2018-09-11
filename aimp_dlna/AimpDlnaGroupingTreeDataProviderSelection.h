@@ -8,7 +8,7 @@ struct AimpDlnaGroupingTreeDataProviderNode {
 	bool HasChildren;
 };
 
-class AimpDlnaGroupingTreeDataProviderSelection : public IUnknownInterfaceImpl<IAIMPMLGroupingTreeDataProviderSelection> {
+class AimpDlnaGroupingTreeDataProviderSelection : public IUnknownInterfaceImpl<IAIMPMLGroupingTreeDataProviderSelection, IID_IAIMPMLGroupingTreeDataProviderSelection> {
 private:
 	unsigned int index;
 	vector<AimpDlnaGroupingTreeDataProviderNode> nodes;
@@ -30,6 +30,4 @@ public:
 	HRESULT WINAPI GetImageIndex(int* Index);
 	HRESULT WINAPI GetValue(IAIMPString** FieldName, VARIANT* Value);
 	BOOL WINAPI NextRow();
-
-	HRESULT WINAPI QueryInterface(REFIID riid, LPVOID* ppvObject);
 };

@@ -1,6 +1,6 @@
 #pragma once
 
-class AimpDlnaGroupingTreeDataProvider : public IUnknownInterfaceImpl<IAIMPMLGroupingTreeDataProvider> {
+class AimpDlnaGroupingTreeDataProvider : public IUnknownInterfaceImpl<IAIMPMLGroupingTreeDataProvider, IID_IAIMPMLGroupingTreeDataProvider> {
 private:
 	PLT_SyncMediaBrowser* mediaBrowser;
 
@@ -18,6 +18,4 @@ public:
 	DWORD WINAPI GetCapabilities();
 	HRESULT WINAPI GetData(IAIMPMLGroupingTreeSelection* Selection, IAIMPMLGroupingTreeDataProviderSelection** Data);
 	HRESULT WINAPI GetFieldForAlphabeticIndex(IAIMPString** FieldName);
-	
-	HRESULT WINAPI QueryInterface(REFIID riid, LPVOID* ppvObject);
 };

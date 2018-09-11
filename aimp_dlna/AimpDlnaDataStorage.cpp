@@ -86,7 +86,7 @@ HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
 		addField(*List, EVDS_TrackTitle, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_FILTERING);
 		addField(*List, EVDS_TrackDuration, AIMPML_FIELDTYPE_DURATION);
 
-		addField(*List, EVDS_NodeId, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_INTERNAL | AIMPML_FIELDFLAG_REQUIRED);
+		addField(*List, EVDS_NodeId, AIMPML_FIELDTYPE_FILENAME, AIMPML_FIELDFLAG_INTERNAL | AIMPML_FIELDFLAG_REQUIRED);
 		break;
 	}
 	case AIMPML_FIELDS_SCHEMA_TABLE_VIEW_ALBUMTHUMBNAILS:
@@ -166,12 +166,6 @@ HRESULT WINAPI AimpDlnaDataStorage::GetValueAsObject(int PropertyID, REFIID IID,
 }
 
 HRESULT WINAPI AimpDlnaDataStorage::QueryInterface(REFIID riid, LPVOID* ppvObject) {
-	if (riid == IID_IAIMPMLExtensionDataStorage) {
-		*ppvObject = this;
-		AddRef();
-		return S_OK;
-	}
-
 	if (riid == IID_IAIMPMLDataProvider) {
 		*ppvObject = dataProvider;
 		dataProvider->AddRef();

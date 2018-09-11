@@ -104,13 +104,3 @@ BOOL WINAPI AimpDlnaDataProviderSelection::NextRow() {
 
 	return result;
 }
-
-HRESULT WINAPI AimpDlnaDataProviderSelection::QueryInterface(REFIID riid, LPVOID* ppvObject) {
-	if (riid == IID_IAIMPMLDataProviderSelection) {
-		*ppvObject = this;
-		AddRef();
-		return S_OK;
-	}
-
-	return Base::QueryInterface(riid, ppvObject);
-}

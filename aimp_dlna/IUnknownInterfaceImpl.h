@@ -1,9 +1,9 @@
 #pragma once
 
-template <typename T>
-class IUnknownInterfaceImpl : public T {
+template <typename TInterface, REFIID TIID = IID_IUnknown>
+class IUnknownInterfaceImpl : public TInterface {
 protected:
-	typedef IUnknownInterfaceImpl<T> Base;
+	typedef IUnknownInterfaceImpl<TInterface, TIID> Base;
 
 	ULONG reference_count_;
 
@@ -19,7 +19,7 @@ public:
 			return E_POINTER;
 		}
 
-		if (riid == IID_IUnknown) {
+		if (riid == TIID || riid == IID_IUnknown) {
 			*ppvObj = this;
 			AddRef();
 			return S_OK;

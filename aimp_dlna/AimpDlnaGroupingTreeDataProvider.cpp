@@ -116,13 +116,3 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetChildrenData(IAIMPMLGroupingTreeSel
 }
 
 HRESULT WINAPI AimpDlnaGroupingTreeDataProvider::GetFieldForAlphabeticIndex(IAIMPString** FieldName) { return E_FAIL; }
-
-HRESULT WINAPI AimpDlnaGroupingTreeDataProvider::QueryInterface(REFIID riid, LPVOID* ppvObject) {
-	if (riid == IID_IAIMPMLGroupingTreeDataProvider) {
-		*ppvObject = this;
-		AddRef();
-		return S_OK;
-	}
-
-	return Base::QueryInterface(riid, ppvObject);
-}

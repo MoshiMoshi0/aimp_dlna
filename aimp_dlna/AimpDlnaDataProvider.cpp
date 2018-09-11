@@ -70,13 +70,3 @@ int AimpDlnaDataProvider::RecursiveBrowse(PLT_DeviceDataReference& device, const
 
 	return NPT_SUCCESS;
 }
-
-HRESULT WINAPI AimpDlnaDataProvider::QueryInterface(REFIID riid, LPVOID* ppvObject) {
-	if (riid == IID_IAIMPMLDataProvider) {
-		*ppvObject = this;
-		AddRef();
-		return S_OK;
-	}
-
-	return Base::QueryInterface(riid, ppvObject);
-}

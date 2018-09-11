@@ -1,6 +1,6 @@
 #pragma once
 
-class AimpDlnaDataProvider : public IUnknownInterfaceImpl<IAIMPMLDataProvider> {
+class AimpDlnaDataProvider : public IUnknownInterfaceImpl<IAIMPMLDataProvider, IID_IAIMPMLDataProvider> {
 private:
 	PLT_SyncMediaBrowser* mediaBrowser;
 
@@ -16,6 +16,4 @@ public:
 	~AimpDlnaDataProvider() {}
 
 	HRESULT WINAPI GetData(IAIMPObjectList* Fields, IAIMPMLDataFilter* Filter, IUnknown** Data);
-
-	HRESULT WINAPI QueryInterface(REFIID riid, LPVOID* ppvObject);
 };
