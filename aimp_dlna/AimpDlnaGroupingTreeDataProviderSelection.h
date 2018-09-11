@@ -21,8 +21,6 @@ public:
 	AimpDlnaGroupingTreeDataProviderSelection(vector<AimpDlnaGroupingTreeDataProviderNode> nodes) {
 		this->nodes = nodes;
 		this->index = 0;
-
-		AddRef();
 	}
 	
 	HRESULT WINAPI GetDisplayValue(IAIMPString** S);

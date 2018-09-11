@@ -27,8 +27,6 @@ private:
 		mediaBrowser = new PLT_SyncMediaBrowser(ctrlPointRef, true);
 
 		dataProvider = new AimpDlnaDataProvider(mediaBrowser);
-		
-		AddRef();
 	}
 
 	class DataStorageManagerRefreshTask : public NPT_Thread {

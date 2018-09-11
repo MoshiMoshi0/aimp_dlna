@@ -4,9 +4,8 @@ class AimpDlnaAlbumArtProvider : public IUnknownInterfaceImpl<IAIMPExtensionAlbu
 private:
 	static AimpDlnaAlbumArtProvider* singleton;
 
-	AimpDlnaAlbumArtProvider() {
-		AddRef();
-	}
+	AimpDlnaAlbumArtProvider() {}
+
 public:
 	static AimpDlnaAlbumArtProvider* instance() {
 		if (!singleton)

@@ -10,8 +10,6 @@ private:
 public:
 	AimpDlnaGroupingTreeDataProvider(PLT_SyncMediaBrowser* mediaBrowser) {
 		this->mediaBrowser = mediaBrowser;
-
-		AddRef();
 	}
 
 	HRESULT WINAPI AppendFilter(IAIMPMLDataFilterGroup* Filter, IAIMPMLGroupingTreeSelection* Selection);

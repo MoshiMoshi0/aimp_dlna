@@ -10,6 +10,7 @@ protected:
 public:
 	IUnknownInterfaceImpl()
 		: reference_count_(0) {
+		AddRef();
 	}
 
 	virtual ~IUnknownInterfaceImpl() {}

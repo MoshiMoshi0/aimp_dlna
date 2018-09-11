@@ -16,8 +16,6 @@ public:
 		this->items = items;
 		this->fields = fields;
 		this->index = 0;
-
-		AddRef();
 	}
 
 	~AimpDlnaDataProviderSelection() {

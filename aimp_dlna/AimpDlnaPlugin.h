@@ -12,9 +12,7 @@ private:
 	IAIMPCore* core;
 	IAIMPServiceMUI* muiService;
 
-	Plugin() : core(nullptr), muiService(nullptr) {
-		AddRef();
-	}
+	Plugin() : core(nullptr), muiService(nullptr) {}
 
 	Plugin(const Plugin&);
 	Plugin &operator=(const Plugin&);

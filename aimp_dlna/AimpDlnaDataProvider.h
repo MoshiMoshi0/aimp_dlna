@@ -9,8 +9,6 @@ private:
 public:
 	AimpDlnaDataProvider(PLT_SyncMediaBrowser* mediaBrowser) {
 		this->mediaBrowser = mediaBrowser;
-
-		AddRef();
 	}
 
 	~AimpDlnaDataProvider() {}
