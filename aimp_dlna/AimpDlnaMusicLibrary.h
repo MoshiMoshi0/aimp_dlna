@@ -1,6 +1,6 @@
 #pragma once
 
-static const wstring EVDS_TrackId = AIMPML_RESERVED_FIELD_ID;
+static const wstring EVDS_Id = AIMPML_RESERVED_FIELD_ID;
 static const wstring EVDS_TrackFileName = AIMPML_RESERVED_FIELD_FILENAME;
 
 static const wstring EVDS_TrackNumber = L"#";

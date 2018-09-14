@@ -76,7 +76,7 @@ WCHAR* WINAPI AimpDlnaDataProviderSelection::GetValueAsString(int FieldIndex, in
 		result = resource.m_Uri;
 	} else if (field.compare(EVDS_NodeId) == 0) {
 		result = item->m_ObjectID;
-	} else if (field.compare(EVDS_TrackId) == 0) {
+	} else if (field.compare(EVDS_Id) == 0) {
 		result = item->m_ParentID + ":" + item->m_ObjectID;
 	} else if (field.compare(EVDS_TrackArtist) == 0) {
 		PLT_StringList artists;

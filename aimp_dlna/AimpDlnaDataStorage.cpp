@@ -76,7 +76,7 @@ HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
 			field->Release();
 		};
 
-		addField(*List, EVDS_TrackId, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_INTERNAL);
+		addField(*List, EVDS_Id, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_INTERNAL);
 		addField(*List, EVDS_TrackFileName, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_INTERNAL);
 
 		addField(*List, EVDS_TrackNumber, AIMPML_FIELDTYPE_INT32);
