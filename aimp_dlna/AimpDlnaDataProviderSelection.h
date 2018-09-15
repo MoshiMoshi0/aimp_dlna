@@ -4,6 +4,7 @@ using namespace std;
 
 class AimpDlnaDataProviderSelection : public IUnknownInterfaceImpl<IAIMPMLDataProviderSelection, IID_IAIMPMLDataProviderSelection> {
 private:
+	string nodeId;
 	unsigned int index;
 	PLT_MediaObjectListReference items;
 	vector<wstring> fields;
@@ -12,7 +13,8 @@ private:
 	wstring GetField(unsigned int index);
 
 public:
-	AimpDlnaDataProviderSelection(PLT_MediaObjectListReference items, vector<wstring> fields) {
+	AimpDlnaDataProviderSelection(string nodeId, PLT_MediaObjectListReference items, vector<wstring> fields) {
+		this->nodeId = nodeId;
 		this->items = items;
 		this->fields = fields;
 		this->index = 0;

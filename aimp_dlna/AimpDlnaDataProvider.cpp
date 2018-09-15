@@ -5,16 +5,23 @@
 HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDataFilter* Filter, IUnknown** Data) { 
 	vector<wstring> breadcrumbs;
 
-	for (size_t i = 0; i < (size_t)Filter->GetChildCount(); i++) {
-		IAIMPMLDataFieldFilter* childFilter = nullptr;
-		if (SUCCEEDED(Filter->GetChild(i, IID_IAIMPMLDataFieldFilter, reinterpret_cast<void**>(&childFilter)))) {
-			IAIMPString* value = nullptr;
-			if (SUCCEEDED(childFilter->GetValueAsObject(AIMPML_FIELDFILTER_VALUE1, IID_IAIMPString, reinterpret_cast<void**>(&value)))) {
-				breadcrumbs.push_back(wstring(value->GetData()));
-				value->Release();
+	IAIMPMLDataFieldFilter* childFilter = nullptr;
+	if (SUCCEEDED(Filter->GetChild(0, IID_IAIMPMLDataFieldFilter, reinterpret_cast<void**>(&childFilter)))) {
+		IAIMPString* value1 = nullptr;
+		IAIMPString* value2 = nullptr;
+		if (SUCCEEDED(childFilter->GetValueAsObject(AIMPML_FIELDFILTER_VALUE1, IID_IAIMPString, reinterpret_cast<void**>(&value1)))) {
+			wstring value = wstring(value1->GetData());
+			breadcrumbs.push_back(value);
+			value1->Release();
+		}		
+		if (SUCCEEDED(childFilter->GetValueAsObject(AIMPML_FIELDFILTER_VALUE2, IID_IAIMPString, reinterpret_cast<void**>(&value2)))) {
+			wstring value = wstring(value2->GetData());
+			if (value.length() > 0) {
+				breadcrumbs.push_back(value);
 			}
-			childFilter->Release();
+			value2->Release();
 		}
+		childFilter->Release();
 	}
 
 	if (breadcrumbs.size() == 0)
@@ -43,7 +50,7 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 		}
 	}
 
-	*Data = new AimpDlnaDataProviderSelection(objects, fields);
+	*Data = new AimpDlnaDataProviderSelection(containerId, objects, fields);
 	return S_OK;
 }
 
