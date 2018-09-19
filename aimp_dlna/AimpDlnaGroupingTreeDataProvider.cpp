@@ -71,8 +71,8 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetRootData(IAIMPMLGroupingTreeDataPro
 	for (auto device = devices.GetFirstItem(); device; device++) {
 		auto displayName = StringUtils::ToWideString((*device)->GetFriendlyName());
 		auto value = StringUtils::ToWideString((*device)->GetUUID());
-		AimpDlnaGroupingTreeDataProviderNode node = { AIMPML_FIELDIMAGE_NOTE, value, displayName, true, true };
-		list.push_back(node);
+
+		list.push_back({ AIMPML_FIELDIMAGE_NOTE, value, displayName, true, true });
 	}
 
 	if (list.size() == 0)
@@ -119,6 +119,7 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetChildrenData(IAIMPMLGroupingTreeSel
 
 		auto displayName = StringUtils::ToWideString((*object)->m_Title);
 		auto value = StringUtils::ToWideString((*object)->m_ObjectID);
+
 		list.push_back({ AIMPML_FIELDIMAGE_FOLDER , value, displayName, false, true });
 	}
 
