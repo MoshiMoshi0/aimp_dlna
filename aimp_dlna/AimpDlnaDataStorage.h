@@ -53,15 +53,23 @@ private:
 		}
 
 		void Run() {
-			int tries = 10;
-			unsigned int count = 0;
-			do {
-				NPT_System::Sleep(0.5);
-				count = mediaBrowser->GetMediaServers().GetItemCount();
-			} while (count == 0 && --tries > 0);
+			const auto scanDuration = 5.0;
+			const auto sleep = 0.25;
+
+			auto count = 0u;
+			for (size_t tries = (int)(scanDuration / sleep); tries > 0; tries--) {
+				NPT_System::Sleep(sleep);
+				auto newCount = mediaBrowser->GetMediaServers().GetItemCount();
+				if (newCount != count) {
+					tries = 4;
+				}
+
+				count = newCount;
+			}
 
 			if(count > 0)
 				manager->Changed();
+
 			delete this;
 		}
 	};
