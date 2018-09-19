@@ -1,5 +1,7 @@
 #pragma once
 
+#include "StringUtils.h"
+
 class AimpUtils {
 private:
 	static IAIMPCore *core;
@@ -13,6 +15,19 @@ public:
 		if (SUCCEEDED(CreateObject(IID, reinterpret_cast<void**>(&obj))))
 			return obj;
 		return nullptr;
+	}
+
+	static vector<wstring> ToWideStringList(IAIMPObjectList* o) {
+		vector<wstring> list;
+		for (size_t i = 0; i < (size_t)o->GetCount(); i++) {
+			IAIMPString* value = nullptr;
+			if (SUCCEEDED(o->GetObject(i, IID_IAIMPString, reinterpret_cast<void**>(&value)))) {
+				list.push_back(StringUtils::ToWideString(*value));
+				value->Release();
+			}
+		}
+
+		return list;
 	}
 
 	static inline void Unused(IUnknown* o){	o->AddRef(); o->Release(); }

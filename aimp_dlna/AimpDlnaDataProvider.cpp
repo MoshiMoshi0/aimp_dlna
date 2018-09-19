@@ -41,16 +41,7 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 	if (objects.IsNull() || objects->GetItemCount() == 0)
 		return E_FAIL;
 
-	vector<wstring> fields;
-	for (size_t i = 0; i < (size_t)Fields->GetCount(); i++) {
-		IAIMPString* value = nullptr;
-		if (SUCCEEDED(Fields->GetObject(i, IID_IAIMPString, reinterpret_cast<void**>(&value)))) {
-			fields.push_back(wstring(value->GetData()));
-			value->Release();
-		}
-	}
-
-	*Data = new AimpDlnaDataProviderSelection(containerId, objects, fields);
+	*Data = new AimpDlnaDataProviderSelection(containerId, objects, AimpUtils::ToWideStringList(Fields));
 	return S_OK;
 }
 
