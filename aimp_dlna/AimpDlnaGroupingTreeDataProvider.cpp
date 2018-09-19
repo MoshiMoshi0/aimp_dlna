@@ -10,38 +10,43 @@ HRESULT WINAPI AimpDlnaGroupingTreeDataProvider::AppendFilter(IAIMPMLDataFilterG
 	Filter->BeginUpdate();
 	Filter->SetValueAsInt32(AIMPML_FILTERGROUP_OPERATION, AIMPML_FILTERGROUP_OPERATION_AND);
 
-	IAIMPString* fieldName = nullptr;
-	VARIANT value1, value2;
-	value1 = value2 = VARIANT();
+	auto result = S_OK;
+	try {
+		if (Selection->GetCount() == 0)
+			throw exception();
 
-	if (FAILED(Selection->GetValue(0, &fieldName, &value1))) {
-		return E_FAIL;
-	}
+		IAIMPString* fieldName = nullptr;
+		VARIANT value1, value2;
+		value1 = value2 = VARIANT();
 
-	if (Selection->GetCount() > 1) {
-		fieldName->Release();
-		fieldName = nullptr;
+		if (FAILED(Selection->GetValue(0, &fieldName, &value1)))
+			throw exception();
 
-		if (FAILED(Selection->GetValue(Selection->GetCount() - 1, &fieldName, &value2))) {
-			return E_FAIL;
+		if (Selection->GetCount() > 1) {
+			fieldName->Release();
+			fieldName = nullptr;
+
+			if (FAILED(Selection->GetValue(Selection->GetCount() - 1, &fieldName, &value2)))
+				throw exception();
 		}
-	}
 
-	IAIMPMLDataFieldFilter* outFilter = nullptr;
-	auto result = Filter->Add(fieldName, &value1, &value2, AIMPML_FIELDFILTER_OPERATION_EQUALS, &outFilter);
-	if (SUCCEEDED(result)) {
-		outFilter->Release();
+		IAIMPMLDataFieldFilter* outFilter = nullptr;
+		if (SUCCEEDED(Filter->Add(fieldName, &value1, &value2, AIMPML_FIELDFILTER_OPERATION_EQUALS, &outFilter))) {
+			outFilter->Release();
+			fieldName->Release();
+		} else {
+			throw exception();
+		}
+	} catch (const exception& e) {
+		result = E_FAIL;
 	}
-
-	fieldName->Release();
 
 	Filter->EndUpdate();
 	Filter->Release();
 	Selection->Release();
 
-	if (FAILED(result)) {
+	if (FAILED(result))
 		return E_FAIL;
-	}
 	return S_OK;
 }
 
