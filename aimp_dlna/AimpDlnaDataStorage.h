@@ -7,8 +7,6 @@ class AimpDlnaDataStorage : public IUnknownInterfaceImpl<IAIMPMLExtensionDataSto
 private:
 	static AimpDlnaDataStorage* singleton;
 
-	const wstring id{ L"AimpDlna" };
-
 	bool finalized{ false };
 	IAIMPMLDataStorageManager* manager;
 	IAIMPMLDataProvider* dataProvider;

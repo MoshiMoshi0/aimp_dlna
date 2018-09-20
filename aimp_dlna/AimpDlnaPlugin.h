@@ -18,6 +18,8 @@ private:
 	Plugin &operator=(const Plugin&);
 
 public:
+	static const wstring Id;
+
 	static wstring Lang(const wstring &Key, int Part = -1) {
 		auto muiService = singleton->muiService;
 

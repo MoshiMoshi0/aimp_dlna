@@ -4,6 +4,7 @@
 #include "AimpDlnaAlbumArtProvider.h"
 
 Plugin* Plugin::singleton = nullptr;
+const wstring Plugin::Id = L"AimpDlna";
 
 HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 	core = Core;
