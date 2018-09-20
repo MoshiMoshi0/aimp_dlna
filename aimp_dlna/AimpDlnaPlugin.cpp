@@ -42,23 +42,3 @@ HRESULT WINAPI Plugin::Finalize() {
 	finalized = true;
 	return S_OK;
 }
-
-wstring Plugin::Lang(const wstring &Key, int Part) {
-	wstring ret;
-	if (!muiService)
-		return ret;
-
-	IAIMPString *value = nullptr;
-	if (Part > -1) {
-		if (SUCCEEDED(muiService->GetValuePart(AimpString(Key), Part, &value))) {
-			ret = value->GetData();
-			value->Release();
-		}
-	} else {
-		if (SUCCEEDED(muiService->GetValue(AimpString(Key), &value))) {
-			ret = value->GetData();
-			value->Release();
-		}
-	}
-	return ret;
-}
