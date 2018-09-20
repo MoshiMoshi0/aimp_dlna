@@ -29,17 +29,6 @@ DOUBLE WINAPI AimpDlnaDataProviderSelection::GetValueAsFloat(int FieldIndex) {
 	auto resource = item->m_Resources[0];
 	if (field.compare(EVDS_TrackDuration) == 0) {
 		return (DOUBLE)resource.m_Duration;
-	} else if (field.compare(EVDS_TrackDate) == 0) {
-		for (int format = 0; format <= NPT_DateTime::FORMAT_RFC_1036; format++) {
-			NPT_DateTime date;
-			NPT_TimeStamp timestamp;
-			if (NPT_SUCCEEDED(date.FromString(item->m_Date, (NPT_DateTime::Format)format)) &&
-				NPT_SUCCEEDED(date.ToTimeStamp(timestamp))) {
-				return (DOUBLE)(25569.0 + timestamp.ToSeconds() / 86400.0);
-			}
-		}
-
-		return DOUBLE();
 	}
 
 	return DOUBLE();
@@ -54,6 +43,15 @@ int WINAPI AimpDlnaDataProviderSelection::GetValueAsInt32(int FieldIndex) {
 	if (field.compare(EVDS_TrackNumber) == 0) {
 		auto trackNumber = item->m_MiscInfo.original_track_number;
 		return trackNumber <= 0 ? index : trackNumber;
+	} else if (field.compare(EVDS_TrackYear) == 0) {
+		for (int format = 0; format <= NPT_DateTime::FORMAT_RFC_1036; format++) {
+			NPT_DateTime date;
+			if (NPT_SUCCEEDED(date.FromString(item->m_Date, (NPT_DateTime::Format)format))) {
+				return date.m_Year;
+			}
+		}
+
+		return int();
 	}
 
 	return int();
