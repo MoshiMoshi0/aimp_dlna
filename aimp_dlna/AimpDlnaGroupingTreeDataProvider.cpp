@@ -124,8 +124,10 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetChildrenData(IAIMPMLGroupingTreeSel
 
 		auto displayName = StringUtils::ToWideString((*object)->m_Title);
 		auto value = StringUtils::ToWideString((*object)->m_ObjectID);
-
-		list.push_back({ AIMPML_FIELDIMAGE_FOLDER , value, displayName, false, true });
+		auto childrenCount = reinterpret_cast<PLT_MediaContainer*>(*object)->m_ChildrenCount;
+		auto hasChildren = childrenCount == -1 || childrenCount > 0;
+		
+		list.push_back({ AIMPML_FIELDIMAGE_FOLDER , value, displayName, false,  hasChildren });
 	}
 
 	if (list.size() == 0)
