@@ -148,7 +148,7 @@ HRESULT WINAPI AimpDlnaDataStorage::GetGroupingPresets(int Schema, IAIMPMLGroupi
 
 HRESULT WINAPI AimpDlnaDataStorage::GetValueAsInt32(int PropertyID, int *Value) {
 	if (PropertyID == AIMPML_DATASTORAGE_PROPID_CAPABILITIES) {
-		*Value = capabilities;
+		*Value = AIMPML_DATASTORAGE_CAP_CUSTOMIZEGROUPS;
 	}
 
 	return S_OK;

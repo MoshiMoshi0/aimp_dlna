@@ -8,7 +8,6 @@ private:
 	static AimpDlnaDataStorage* singleton;
 
 	const wstring id{ L"AimpDlna" };
-	const int capabilities{ AIMPML_DATASTORAGE_CAP_CUSTOMIZEGROUPS };
 
 	bool finalized{ false };
 	IAIMPMLDataStorageManager* manager;
