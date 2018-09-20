@@ -59,7 +59,7 @@ private:
 				NPT_System::Sleep(sleep);
 				auto newCount = mediaBrowser->GetMediaServers().GetItemCount();
 				if (newCount != count) {
-					tries = 4;
+					tries = 2;
 				}
 
 				count = newCount;
