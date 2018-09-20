@@ -1,1 +1,5 @@
-﻿[AimpDlna]
+﻿[Common]
+AIMP.AimpDlna.ML.Default=Default
+
+[AimpDlna]
+Caption=DLNA
