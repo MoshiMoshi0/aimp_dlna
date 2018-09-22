@@ -16,6 +16,9 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 		return E_FAIL;
 	}
 
+	auto logConfig = "plist:.level=" + to_string(Config::DebugLevel) + ";.handlers=ConsoleHandler;.ConsoleHandler.filter=56";
+	NPT_LogManager::GetDefault().Configure(logConfig.c_str());
+
 	if (FAILED(core->QueryInterface(IID_IAIMPServiceMUI, reinterpret_cast<void**>(&muiService)))) {
 		Finalize();
 		return E_FAIL;
