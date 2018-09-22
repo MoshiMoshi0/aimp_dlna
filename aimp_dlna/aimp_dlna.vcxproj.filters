@@ -64,6 +64,9 @@
     <ClInclude Include="StringUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AimpDlnaConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -104,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="AimpDlnaPlugin.h">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AimpDlnaConfig.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

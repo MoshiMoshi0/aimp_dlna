@@ -10,6 +10,11 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 	core = Core;
 
 	AimpUtils::Initialize(core);
+	
+	if (FAILED(Config::Initialize(core))) {
+		Finalize();
+		return E_FAIL;
+	}
 
 	if (FAILED(core->QueryInterface(IID_IAIMPServiceMUI, reinterpret_cast<void**>(&muiService)))) {
 		Finalize();
@@ -30,6 +35,8 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 }
 
 HRESULT WINAPI Plugin::Finalize() {
+	Config::Finalize();
+
 	if (muiService) {
 		muiService->Release();
 		muiService = nullptr;

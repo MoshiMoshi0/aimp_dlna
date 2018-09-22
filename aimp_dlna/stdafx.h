@@ -30,3 +30,5 @@
 #include "AimpString.h"
 #include "AimpUtils.h"
 #include "StringUtils.h"
+
+#include "AimpDlnaConfig.h"

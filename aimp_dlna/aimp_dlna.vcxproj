@@ -170,6 +170,7 @@ copy "$(ProjectDir)Langs" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\Langs" 
     <ClInclude Include="AimpString.h" />
     <ClInclude Include="AimpDlnaMusicLibrary.h" />
     <ClInclude Include="AimpUtils.h" />
+    <ClInclude Include="AimpDlnaConfig.h" />
     <ClInclude Include="IUnknownInterfaceImpl.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -187,6 +188,7 @@ copy "$(ProjectDir)Langs" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\Langs" 
     <ClCompile Include="AimpString.cpp" />
     <ClCompile Include="AimpUtils.cpp" />
     <ClCompile Include="AimpDlnaPlugin.cpp" />
+    <ClCompile Include="AimpDlnaConfig.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="AimpDlnaPlugin.h" />
     <ClCompile Include="stdafx.cpp">
