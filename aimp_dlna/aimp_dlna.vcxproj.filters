@@ -13,6 +13,10 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Language Files">
+      <UniqueIdentifier>{5eb15eab-d3d6-4b49-bb3c-cc20c0ed5018}</UniqueIdentifier>
+      <Extensions>lng;</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -106,7 +110,9 @@
     <None Include="aimp_dlna.def">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="Langs\english.lng" />
+    <None Include="Langs\english.lng">
+      <Filter>Language Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="aimp_dlna.rc">
