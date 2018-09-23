@@ -132,7 +132,7 @@ HRESULT WINAPI AimpDlnaDataStorage::GetGroupingPresets(int Schema, IAIMPMLGroupi
 	case AIMPML_GROUPINGPRESETS_SCHEMA_BUILTIN: {
 		const auto presetId = L"AIMP." + Plugin::Id + L".ML.Default";
 		IAIMPMLGroupingPreset* preset = nullptr;
-		if (SUCCEEDED(Presets->Add(AimpString(presetId), AimpString(Plugin::Lang(L"Common\\" + presetId)), 0, new AimpDlnaGroupingTreeDataProvider(mediaBrowser), &preset))) {
+		if (SUCCEEDED(Presets->Add(AimpString(presetId), AimpString(AimpUtils::Lang(L"Common\\" + presetId)), 0, new AimpDlnaGroupingTreeDataProvider(mediaBrowser), &preset))) {
 			preset->Release();
 			result = S_OK;
 		}
@@ -160,7 +160,7 @@ HRESULT WINAPI AimpDlnaDataStorage::GetValueAsObject(int PropertyID, REFIID IID,
 	}
 
 	if (PropertyID == AIMPML_DATASTORAGE_PROPID_CAPTION) {
-		*Value = AimpString(Plugin::Lang(Plugin::Id + L"\\Caption"), true);
+		*Value = AimpString(AimpUtils::Lang(Plugin::Id + L"\\Caption"), true);
 	}
 
 	return S_OK;

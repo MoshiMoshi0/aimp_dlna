@@ -10,37 +10,14 @@ private:
 
 	bool finalized{ false };
 	IAIMPCore* core;
-	IAIMPServiceMUI* muiService;
 
-	Plugin() : core(nullptr), muiService(nullptr) {}
+	Plugin() : core(nullptr) {}
 
 	Plugin(const Plugin&);
 	Plugin &operator=(const Plugin&);
 
 public:
 	static const wstring Id;
-
-	static wstring Lang(const wstring &Key, int Part = -1) {
-		auto muiService = singleton->muiService;
-
-		wstring ret;
-		if (!muiService)
-			return ret;
-
-		IAIMPString *value = nullptr;
-		if (Part > -1) {
-			if (SUCCEEDED(muiService->GetValuePart(AimpString(Key), Part, &value))) {
-				ret = value->GetData();
-				value->Release();
-			}
-		} else {
-			if (SUCCEEDED(muiService->GetValue(AimpString(Key), &value))) {
-				ret = value->GetData();
-				value->Release();
-			}
-		}
-		return ret;
-	}
 
 	static Plugin* instance() {
 		if (!singleton)

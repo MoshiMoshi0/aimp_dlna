@@ -9,7 +9,10 @@ const wstring Plugin::Id = L"AimpDlna";
 HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 	core = Core;
 
-	AimpUtils::Initialize(core);
+	if (FAILED(AimpUtils::Initialize(core))) {
+		Finalize();
+		return E_FAIL;
+	}
 	
 	if (FAILED(Config::Initialize(core))) {
 		Finalize();
@@ -38,12 +41,8 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 }
 
 HRESULT WINAPI Plugin::Finalize() {
+	AimpUtils::Finalize();
 	Config::Finalize();
-
-	if (muiService) {
-		muiService->Release();
-		muiService = nullptr;
-	}
 
 	if (core) {
 		core->Release();

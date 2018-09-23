@@ -5,8 +5,27 @@
 class AimpUtils {
 private:
 	static IAIMPCore *core;
+	static IAIMPServiceMUI* muiService;
 
 public:
+	static HRESULT Initialize(IAIMPCore *Core) {
+		core = Core;
+
+		if (FAILED(core->QueryInterface(IID_IAIMPServiceMUI, reinterpret_cast<void**>(&muiService)))) {
+			return E_FAIL;
+		}
+		return S_OK;
+	}
+
+	static void Finalize() {
+		if (muiService) {
+			muiService->Release();
+			muiService = nullptr;
+		}
+
+		core = nullptr;
+	}
+
 	static inline HRESULT CreateObject(REFIID IID, void **Obj){	return core->CreateObject(IID, Obj); }
 
 	template<typename T>
@@ -30,8 +49,26 @@ public:
 		return list;
 	}
 
-	static inline void Unused(IUnknown* o){	o->AddRef(); o->Release(); }
+	static wstring Lang(const wstring &Key, int Part = -1) {
+		wstring ret;
+		if (!muiService)
+			return ret;
 
-	static inline void Initialize(IAIMPCore *Core) { core = Core; }
+		IAIMPString *value = nullptr;
+		if (Part > -1) {
+			if (SUCCEEDED(muiService->GetValuePart(AimpString(Key), Part, &value))) {
+				ret = value->GetData();
+				value->Release();
+			}
+		} else {
+			if (SUCCEEDED(muiService->GetValue(AimpString(Key), &value))) {
+				ret = value->GetData();
+				value->Release();
+			}
+		}
+		return ret;
+	}
+
+	static inline void Unused(IUnknown* o){	o->AddRef(); o->Release(); }
 };
 
