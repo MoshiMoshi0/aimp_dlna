@@ -49,15 +49,18 @@ private:
 		}
 
 		void Run() {
-			const auto scanDuration = 5.0;
-			const auto sleep = 0.25;
+			const auto updateRate = 0.1;
+			const auto additionalTime = 0.25;
 
 			auto count = 0u;
-			for (size_t tries = (int)(scanDuration / sleep); tries > 0; tries--) {
-				NPT_System::Sleep(sleep);
+			auto timeout = 2.0;
+			while(timeout > 0) {
+				NPT_System::Sleep(updateRate);
+				timeout -= updateRate;
+
 				auto newCount = mediaBrowser->GetMediaServers().GetItemCount();
 				if (newCount != count) {
-					tries = 2;
+					timeout += additionalTime;
 				}
 
 				count = newCount;
