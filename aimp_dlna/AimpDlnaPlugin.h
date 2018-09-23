@@ -17,6 +17,7 @@ private:
 	Plugin &operator=(const Plugin&);
 
 public:
+	static HMODULE Module;
 	static const wstring Id;
 
 	static Plugin* instance() {

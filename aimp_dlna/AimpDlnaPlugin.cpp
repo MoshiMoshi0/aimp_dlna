@@ -2,8 +2,10 @@
 #include "AimpDlnaPlugin.h"
 #include "AimpDlnaDataStorage.h"
 #include "AimpDlnaAlbumArtProvider.h"
+#include "AimpDlnaOptionsDialog.h"
 
 Plugin* Plugin::singleton = nullptr;
+HMODULE Plugin::Module = NULL;
 const wstring Plugin::Id = L"AimpDlna";
 
 HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
@@ -22,17 +24,17 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 	auto logConfig = "plist:.level=" + to_string(Config::DebugLevel) + ";.handlers=ConsoleHandler;.ConsoleHandler.filter=56";
 	NPT_LogManager::GetDefault().Configure(logConfig.c_str());
 
-	if (FAILED(core->QueryInterface(IID_IAIMPServiceMUI, reinterpret_cast<void**>(&muiService)))) {
+	if (FAILED(core->RegisterExtension(IID_IAIMPServiceOptionsDialog, static_cast<IAIMPOptionsDialogFrame*>(new AimpDlnaOptionsDialog(core))))) {
 		Finalize();
 		return E_FAIL;
 	}
-	
-	if (FAILED(core->RegisterExtension(IID_IAIMPServiceMusicLibrary, static_cast<IAIMPMLExtensionDataStorage*>(AimpDlnaDataStorage::instance())))) {
+
+	if (FAILED(core->RegisterExtension(IID_IAIMPServiceAlbumArt, static_cast<IAIMPExtensionAlbumArtProvider*>(AimpDlnaAlbumArtProvider::instance())))) {
 		Finalize();
 		return E_FAIL;
-	}	
-	
-	if (FAILED(core->RegisterExtension(IID_IAIMPServiceAlbumArt, static_cast<IAIMPExtensionAlbumArtProvider*>(AimpDlnaAlbumArtProvider::instance())))) {
+	}
+
+	if (FAILED(core->RegisterExtension(IID_IAIMPServiceMusicLibrary, static_cast<IAIMPMLExtensionDataStorage*>(AimpDlnaDataStorage::instance())))) {
 		Finalize();
 		return E_FAIL;
 	}

@@ -22,6 +22,7 @@
 #include "apiMUI.h"
 #include "apiMusicLibrary.h"
 #include "apiAlbumArt.h"
+#include "apiOptions.h"
 
 #include "Platinum.h"
 #include "Neptune.h"
