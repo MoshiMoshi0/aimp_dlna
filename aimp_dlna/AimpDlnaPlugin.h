@@ -13,9 +13,6 @@ private:
 
 	Plugin() : core(nullptr) {}
 
-	Plugin(const Plugin&);
-	Plugin &operator=(const Plugin&);
-
 public:
 	static HMODULE Module;
 	static const wstring Id;
