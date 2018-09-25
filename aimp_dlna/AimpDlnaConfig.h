@@ -16,15 +16,34 @@ private:
 	static IAIMPServiceConfig* configService;
 
 public:
-	static int DebugLevel;
+	static int LogLevel;
+	static int ScanDuration;
+	static int ScanStop;
+	static int StopDelay;
+	static wstring UuidBlacklist;
 
 	static void Save() {
-		_SAVE(Int32, DebugLevel);
+		_SAVE(Int32, LogLevel);
+		_SAVE(Int32, ScanDuration);
+		_SAVE(Int32, ScanStop);
+		_SAVE(Int32, StopDelay);
+
+		AimpString UuidBlacklist(Config::UuidBlacklist);
+		_SAVE(String, UuidBlacklist);
+
 		configService->FlushCache();
 	}
 
 	static void Load() {
-		_LOAD(Int32, DebugLevel, NPT_LOG_LEVEL_OFF);
+		_LOAD(Int32, LogLevel, NPT_LOG_LEVEL_OFF);
+		_LOAD(Int32, ScanDuration, 2000);
+		_LOAD(Int32, ScanStop, 1);
+		_LOAD(Int32, StopDelay, 250);
+
+		IAIMPString* UuidBlacklist;
+		_LOAD(String, UuidBlacklist, nullptr);
+		Config::UuidBlacklist = UuidBlacklist->GetData();
+		UuidBlacklist->Release();
 	}
 
 	static HRESULT Initialize(IAIMPCore *Core) { 

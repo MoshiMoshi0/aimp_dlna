@@ -33,25 +33,55 @@ void WINAPI AimpDlnaOptionsDialog::DestroyFrame() {
 }
 
 void WINAPI AimpDlnaOptionsDialog::Notification(int ID) {
-	static const int debugValues[9] = { NPT_LOG_LEVEL_OFF,	NPT_LOG_LEVEL_ALL, NPT_LOG_LEVEL_FATAL,
-										NPT_LOG_LEVEL_SEVERE, NPT_LOG_LEVEL_WARNING, NPT_LOG_LEVEL_INFO,
-										NPT_LOG_LEVEL_FINE, NPT_LOG_LEVEL_FINER, NPT_LOG_LEVEL_FINEST };
+	static const int logValues[9] = { NPT_LOG_LEVEL_OFF,	NPT_LOG_LEVEL_ALL, NPT_LOG_LEVEL_FATAL,
+									  NPT_LOG_LEVEL_SEVERE, NPT_LOG_LEVEL_WARNING, NPT_LOG_LEVEL_INFO,
+									  NPT_LOG_LEVEL_FINE, NPT_LOG_LEVEL_FINER, NPT_LOG_LEVEL_FINEST };
 	switch (ID) {
-		case AIMP_SERVICE_OPTIONSDIALOG_NOTIFICATION_LOCALIZATION:
+		case AIMP_SERVICE_OPTIONSDIALOG_NOTIFICATION_LOCALIZATION: {
+			SetDlgItemText(handle, IDC_GROUPBOX_GENERAL,		AimpUtils::Lang(L"AimpDlna.Options\\General").c_str());
+			SetDlgItemText(handle, IDC_GROUPBOX_ADVANCED,		AimpUtils::Lang(L"AimpDlna.Options\\Advanced").c_str());
+			SetDlgItemText(handle, IDC_LABEL_LOGLEVEL,			AimpUtils::Lang(L"AimpDlna.Options\\LogLevel").c_str());
+			SetDlgItemText(handle, IDC_LABEL_RESTART,			AimpUtils::Lang(L"AimpDlna.Options\\Restart").c_str());
+			SetDlgItemText(handle, IDC_LABEL_BLACKLIST,			AimpUtils::Lang(L"AimpDlna.Options\\Blacklist").c_str());
+			SetDlgItemText(handle, IDC_CHECKBOX_SCANSTOP,		AimpUtils::Lang(L"AimpDlna.Options\\ScanStop").c_str());
+			SetDlgItemText(handle, IDC_LABEL_SCANDURATION,		AimpUtils::Lang(L"AimpDlna.Options\\ScanDuration").c_str());
+			SetDlgItemText(handle, IDC_LABEL_MS1,				AimpUtils::Lang(L"AimpDlna.Options\\MS").c_str());
+			SetDlgItemText(handle, IDC_LABEL_MS2,				AimpUtils::Lang(L"AimpDlna.Options\\MS").c_str());
+			SetDlgItemText(handle, IDC_LABEL_DELAYFOR,			AimpUtils::Lang(L"AimpDlna.Options\\DelayFor").c_str());
 			break;
+		}
 		case AIMP_SERVICE_OPTIONSDIALOG_NOTIFICATION_LOAD: {
 			SendDlgItemMessage(handle, IDC_COMBOBOX_DEBUG, CB_SETCURSEL, 0, 0);
 			for (size_t i = 0; i < 9; i++) {
-				if (debugValues[i] == Config::DebugLevel) {
+				if (logValues[i] == Config::LogLevel) {
 					SendDlgItemMessage(handle, IDC_COMBOBOX_DEBUG, CB_SETCURSEL, i, 0);
 					break;
 				}
 			}
+
+			SendDlgItemMessage(handle, IDC_CHECKBOX_SCANSTOP, BM_SETCHECK, Config::ScanStop, 0);
+			EnableWindow(GetDlgItem(handle, IDC_EDIT_STOPDELAY), (bool)Config::ScanStop);
+			EnableWindow(GetDlgItem(handle, IDC_LABEL_DELAYFOR), (bool)Config::ScanStop);
+			EnableWindow(GetDlgItem(handle, IDC_LABEL_MS2), (bool)Config::ScanStop);
+
+			SetDlgItemText(handle, IDC_EDIT_SCANDURATION, to_wstring(Config::ScanDuration).c_str());
+			SetDlgItemText(handle, IDC_EDIT_STOPDELAY, to_wstring(Config::StopDelay).c_str());
+			SetDlgItemText(handle, IDC_EDIT_BLACKLIST, StringUtils::Replace(Config::UuidBlacklist, L"|", L"\r\n").c_str());
 			break;
 		}
 		case AIMP_SERVICE_OPTIONSDIALOG_NOTIFICATION_SAVE: {
-			int selectedIndex = SendDlgItemMessage(handle, IDC_COMBOBOX_DEBUG, CB_GETCURSEL, 0, 0);
-			Config::DebugLevel = debugValues[selectedIndex];
+			TCHAR buffer[1024];
+			GetDlgItemText(handle, IDC_EDIT_SCANDURATION, buffer, 64);
+			Config::ScanDuration = _wtoi(buffer);
+			GetDlgItemText(handle, IDC_EDIT_STOPDELAY, buffer, 64);
+			Config::StopDelay = _wtoi(buffer);
+
+			Config::LogLevel = logValues[SendDlgItemMessage(handle, IDC_COMBOBOX_DEBUG, CB_GETCURSEL, 0, 0)];
+			Config::ScanStop = SendDlgItemMessage(handle, IDC_CHECKBOX_SCANSTOP, BM_GETCHECK, 0, 0);
+
+			GetDlgItemText(handle, IDC_EDIT_BLACKLIST, buffer, 1024);
+			Config::UuidBlacklist = StringUtils::Replace(buffer, L"\r\n", L"|");
+
 			Config::Save();
 			break;
 		}
@@ -67,18 +97,12 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 
 			InitCommonControls();
 			SetWindowSubclass(GetDlgItem(hwnd, IDC_MAINFRAME), FrameProc, 0, lParam); SendDlgItemMessage(hwnd, IDC_MAINFRAME, WM_SUBCLASSINIT, 0, 0);
+			SetWindowSubclass(GetDlgItem(hwnd, IDC_GROUPBOX_GENERAL), GroupBoxProc, 0, lParam); SendDlgItemMessage(hwnd, IDC_GROUPBOX_GENERAL, WM_SUBCLASSINIT, 0, 0);
 			SetWindowSubclass(GetDlgItem(hwnd, IDC_GROUPBOX_ADVANCED), GroupBoxProc, 0, lParam); SendDlgItemMessage(hwnd, IDC_GROUPBOX_ADVANCED, WM_SUBCLASSINIT, 0, 0);
 
-			// INIT IDC_DEBUGCOMBOBOX
-			{
-				const int debugValues[9] = { NPT_LOG_LEVEL_OFF,	NPT_LOG_LEVEL_ALL, NPT_LOG_LEVEL_FATAL,
-											 NPT_LOG_LEVEL_SEVERE, NPT_LOG_LEVEL_WARNING, NPT_LOG_LEVEL_INFO,
-											 NPT_LOG_LEVEL_FINE, NPT_LOG_LEVEL_FINER, NPT_LOG_LEVEL_FINEST };
-				const wstring debugNames[9] = { L"OFF\0", L"ALL\0", L"FATAL\0", L"SEVERE\0", L"WARNING\0", L"INFO\0", L"FINE\0", L"FINER\0", L"FINEST\0" };
-				for (auto o : debugNames)
-					SendDlgItemMessage(hwnd, IDC_COMBOBOX_DEBUG, CB_ADDSTRING, 1, (LPARAM)o.c_str());
-			}
-
+			const wstring logNames[9] = { L"OFF", L"ALL", L"FATAL", L"SEVERE", L"WARNING", L"INFO", L"FINE", L"FINER", L"FINEST" };
+			for (auto o : logNames)
+				SendDlgItemMessage(hwnd, IDC_COMBOBOX_DEBUG, CB_ADDSTRING, 1, (LPARAM)o.c_str());
 
 			break;
 		}
@@ -87,16 +111,37 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 			GetClientRect(hwnd, &rc);
 
 			SetWindowPos(GetDlgItem(hwnd, IDC_MAINFRAME), NULL, rc.left, rc.top, rc.right, rc.bottom, 0);
-			HWND group = GetDlgItem(hwnd, IDC_GROUPBOX_ADVANCED); GetClientRect(group, &rc2); SetWindowPos(group, NULL, 0, 0, rc.right - 21, rc2.bottom, SWP_NOMOVE | SWP_NOZORDER);
+			HWND group = GetDlgItem(hwnd, IDC_GROUPBOX_GENERAL); GetClientRect(group, &rc2); SetWindowPos(group, NULL, rc.left + 10, rc.top + 21 + 10, rc.right - 20, rc2.bottom, SWP_NOZORDER);
+				 group = GetDlgItem(hwnd, IDC_GROUPBOX_ADVANCED); GetClientRect(group, &rc2); SetWindowPos(group, NULL, rc.left + 10, rc.top + rc.bottom - rc2.bottom - 10, rc.right - 20, rc2.bottom, SWP_NOZORDER);
 			break;
 		}
 		case WM_COMMAND:
 			switch (LOWORD(wParam)) {
-				case IDC_COMBOBOX_DEBUG:
+				case IDC_COMBOBOX_DEBUG: {
 					switch (HIWORD(wParam)) {
 						case CBN_SELENDOK: { dialog->Dirty(); break; }
 						default: break;
 					}
+					break;
+				}
+				case IDC_EDIT_SCANDURATION:
+				case IDC_EDIT_STOPDELAY:
+				case IDC_EDIT_BLACKLIST: {
+					if (HIWORD(wParam) != EN_SETFOCUS && HIWORD(wParam) != EN_KILLFOCUS) {
+						dialog->Dirty();
+					}
+					break;
+				}
+				case IDC_CHECKBOX_SCANSTOP: {
+					bool checked = SendDlgItemMessage(hwnd, IDC_CHECKBOX_SCANSTOP, BM_GETCHECK, 0, 0);
+
+					EnableWindow(GetDlgItem(hwnd, IDC_EDIT_STOPDELAY), checked);
+					EnableWindow(GetDlgItem(hwnd, IDC_LABEL_DELAYFOR), checked);
+					EnableWindow(GetDlgItem(hwnd, IDC_LABEL_MS2), checked);
+
+					dialog->Dirty(); 
+					break;
+				}
 				default: break;
 			}
 			break;

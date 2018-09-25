@@ -3,3 +3,14 @@ AIMP.AimpDlna.ML.Default=Default
 
 [AimpDlna]
 Caption=DLNA
+
+[AimpDlna.Options]
+General=General
+Advanced=Advanced
+LogLevel=Log level*:
+Blacklist=UUID blacklist*:
+ScanStop=Stop scan after first server is found
+ScanDuration=Maximum scan duration:
+DelayFor=Delay stop for:
+Restart=* requires application restart
+MS=ms

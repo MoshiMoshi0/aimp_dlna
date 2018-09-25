@@ -12,6 +12,18 @@ void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {
 	upnp->AddCtrlPoint(ctrlPointRef);
 	upnp->Start();
 
+	wchar_t* context;
+	wchar_t* token = wcstok_s((wchar_t*)Config::UuidBlacklist.c_str(), L"|", &context);
+	while (token) {
+		auto length = wcsnlen_s(token, 65);
+		if (length >= 32 && length <= 64) {
+			ctrlPoint->IgnoreUUID(StringUtils::ToString(token).c_str());
+		} else {
+			int i = 0;
+		}
+		token = wcstok_s(NULL, L"|", &context);
+	}
+
 	ctrlPoint->Discover(NPT_HttpUrl("239.255.255.250", 1900, "*"), "ssdp:all", 5, 0.0, 0.0);
 	DataStorageManagerRefreshTask::Start(manager, mediaBrowser);
 }
@@ -163,7 +175,7 @@ HRESULT WINAPI AimpDlnaDataStorage::GetValueAsObject(int PropertyID, REFIID IID,
 	}
 
 	if (PropertyID == AIMPML_DATASTORAGE_PROPID_CAPTION) {
-		*Value = AimpString(AimpUtils::Lang(Plugin::Id + L"\\Caption"), true);
+		*Value = AimpString(AimpUtils::Lang(L"AimpDlna\\Caption"), true);
 	}
 
 	return S_OK;

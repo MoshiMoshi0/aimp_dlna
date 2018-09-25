@@ -49,24 +49,22 @@ private:
 		}
 
 		void Run() {
-			const auto updateRate = 0.1;
-			const auto additionalTime = 0.25;
-
 			auto count = 0u;
-			auto timeout = 2.0;
+			auto timeout = Config::ScanDuration / 1000.0;
+			auto updateRate = !Config::ScanStop ? timeout : 0.1;
 			while(timeout > 0) {
 				NPT_System::Sleep(updateRate);
 				timeout -= updateRate;
 
 				auto newCount = mediaBrowser->GetMediaServers().GetItemCount();
-				if (newCount != count) {
-					timeout += additionalTime;
+				if (Config::ScanStop && newCount > count) {
+					timeout = Config::StopDelay / 1000.0;
 				}
 
 				count = newCount;
 			}
 
-			if(count > 0)
+			if (count > 0)
 				manager->Changed();
 
 			delete this;

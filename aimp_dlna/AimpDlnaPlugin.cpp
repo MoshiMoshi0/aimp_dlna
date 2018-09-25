@@ -21,7 +21,7 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 		return E_FAIL;
 	}
 
-	auto logConfig = "plist:.level=" + to_string(Config::DebugLevel) + ";.handlers=ConsoleHandler;.ConsoleHandler.filter=56";
+	auto logConfig = "plist:.level=" + to_string(Config::LogLevel) + ";.handlers=ConsoleHandler;.ConsoleHandler.filter=56";
 	NPT_LogManager::GetDefault().Configure(logConfig.c_str());
 
 	if (FAILED(core->RegisterExtension(IID_IAIMPServiceOptionsDialog, static_cast<IAIMPOptionsDialogFrame*>(new AimpDlnaOptionsDialog(core))))) {
