@@ -13,7 +13,6 @@ void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {
 	upnp->Start();
 
 	ctrlPoint->Discover(NPT_HttpUrl("239.255.255.250", 1900, "*"), "ssdp:all", 5, 0.0, 0.0);
-
 	DataStorageManagerRefreshTask::Start(manager, mediaBrowser);
 }
 
@@ -43,7 +42,11 @@ void AimpDlnaDataStorage::Finalize() {
 	}
 }
 
-void AimpDlnaDataStorage::FlushCache(int Reserved) {}
+void AimpDlnaDataStorage::FlushCache(int Reserved) {
+	ctrlPoint->Discover(NPT_HttpUrl("239.255.255.250", 1900, "*"), "ssdp:all", 5, 0.0, 0.0);
+	DataStorageManagerRefreshTask::Start(manager, mediaBrowser);
+}
+
 HRESULT AimpDlnaDataStorage::ConfigLoad(IAIMPConfig* Config, IAIMPString* Section) { 
 	AimpUtils::Unused(Config);
 	AimpUtils::Unused(Section);
