@@ -42,8 +42,10 @@ public:
 
 		IAIMPString* UuidBlacklist;
 		_LOAD(String, UuidBlacklist, nullptr);
-		Config::UuidBlacklist = UuidBlacklist->GetData();
-		UuidBlacklist->Release();
+		if (UuidBlacklist != nullptr && UuidBlacklist->GetLength() > 0) {
+			Config::UuidBlacklist = UuidBlacklist->GetData();
+			UuidBlacklist->Release();
+		}
 	}
 
 	static HRESULT Initialize(IAIMPCore *Core) { 
