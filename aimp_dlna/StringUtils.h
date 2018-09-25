@@ -24,5 +24,21 @@ public:
 		ToWideString(s).copy(buffer, length);
 		return buffer;
 	}
+
+	static wstring Replace(const wstring& s, const wstring& find, const wstring& replace) {
+		wstring result = s;
+		size_t pos = 0;
+
+		while (true) {
+			pos = result.find(find, pos);
+			if (pos == wstring::npos)
+				break;
+
+			result.erase(pos, find.length());
+			result.insert(pos, replace);
+		}
+
+		return result;
+	}
 };
 
