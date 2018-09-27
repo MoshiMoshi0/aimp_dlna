@@ -8,6 +8,19 @@
 
 #define WM_SUBCLASSINIT WM_USER + 1
 
+#define A_TOP		0x01 
+#define A_BOTTOM	0x02
+#define A_LEFT		0x04
+#define A_RIGHT		0x08
+#define A_HFILL		(A_LEFT | A_RIGHT)
+#define A_VFILL		(A_TOP | A_BOTTOM)
+#define A_FILL		(A_VFILL | A_HFILL)
+#define AF_MOVE		0x01
+#define AF_SIZE		0x02
+#define AF_FLIP		0x04
+
+#define BITTEST(x, f) ((x & f) == f)
+
 HRESULT WINAPI AimpDlnaOptionsDialog::GetName(IAIMPString **S) {
 	*S = AimpString(L"DLNA Client", true);
 	return S_OK;
@@ -88,6 +101,72 @@ void WINAPI AimpDlnaOptionsDialog::Notification(int ID) {
 	}
 }
 
+inline void AimpDlnaOptionsDialog::MoveControl(HWND hwnd, int x, int y) {
+	SetWindowPos(hwnd, NULL, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+}
+
+inline void AimpDlnaOptionsDialog::SizeControl(HWND hwnd, int w, int h) {
+	SetWindowPos(hwnd, NULL, 0, 0, w, h, SWP_NOMOVE | SWP_NOZORDER);
+}
+
+void AimpDlnaOptionsDialog::AlignControl(HWND hwnd, int source, int target, int margin, int anchor, int flags) {
+	RECT sr = { 0 }, tr = { 0 };
+	HWND sh = GetDlgItem(hwnd, source);
+
+	if (target != NULL) {
+		GetWindowRect(GetDlgItem(hwnd, target), &tr);
+
+		ScreenToClient(hwnd, (POINT*)&tr);
+		ScreenToClient(hwnd, (POINT*)&tr + 1);
+	} else {
+		GetClientRect(hwnd, &tr);
+	}
+
+	for (size_t i = 0; i < 4 && anchor > 0; i++) {
+		GetWindowRect(sh, &sr);
+		ScreenToClient(hwnd, (POINT*)&sr);
+		ScreenToClient(hwnd, (POINT*)&sr + 1);
+
+		if (BITTEST(anchor, A_LEFT)) {
+			auto nx = (!BITTEST(flags, AF_FLIP) ? tr.left : tr.right) + margin;
+			auto nw = (!BITTEST(flags, AF_FLIP) ? sr.right : sr.left) - nx;
+			
+			MoveControl(sh, nx, sr.top);
+			if (BITTEST(flags, AF_SIZE))
+				SizeControl(sh, nw, sr.bottom - sr.top);
+
+			anchor &= ~A_LEFT;
+		} else if (BITTEST(anchor, A_TOP)) {
+			auto ny = (!BITTEST(flags, AF_FLIP) ? tr.top : tr.bottom) + margin;;
+			auto nh = (!BITTEST(flags, AF_FLIP) ? sr.bottom : sr.top) - ny;
+
+			MoveControl(sh, sr.left, ny);
+			if (BITTEST(flags, AF_SIZE))
+				SizeControl(sh, sr.right - sr.left, nh);
+
+			anchor &= ~A_TOP;
+		} else if (BITTEST(anchor, A_RIGHT)) {
+			auto nx = (!BITTEST(flags, AF_FLIP) ? tr.right : tr.left) - margin;
+
+			if(BITTEST(flags, AF_MOVE))
+				MoveControl(sh, nx - (sr.right - sr.left), sr.top);
+			if (BITTEST(flags, AF_SIZE))
+				SizeControl(sh, nx - sr.left, sr.bottom - sr.top);
+
+			anchor &= ~A_RIGHT;
+		} else if (BITTEST(anchor, A_BOTTOM)) {
+			auto nw = (!BITTEST(flags, AF_FLIP) ? tr.bottom : tr.top) - margin;
+
+			if (BITTEST(flags, AF_MOVE))
+				MoveControl(sh, sr.left, nw - (sr.bottom - sr.top));
+			if (BITTEST(flags, AF_SIZE))
+				SizeControl(sh, sr.right - sr.left, nw - sr.top);
+
+			anchor &= ~A_BOTTOM;
+		}
+	}
+}
+
 BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 	static AimpDlnaOptionsDialog* dialog = nullptr;
 
@@ -107,12 +186,55 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 			break;
 		}
 		case WM_SIZE: {
-			RECT rc, rc2;
-			GetClientRect(hwnd, &rc);
+			AlignControl(hwnd, IDC_MAINFRAME, NULL, 0, A_FILL, AF_SIZE);
 
-			SetWindowPos(GetDlgItem(hwnd, IDC_MAINFRAME), NULL, rc.left, rc.top, rc.right, rc.bottom, 0);
-			HWND group = GetDlgItem(hwnd, IDC_GROUPBOX_GENERAL); GetClientRect(group, &rc2); SetWindowPos(group, NULL, rc.left + 10, rc.top + 21 + 10, rc.right - 20, rc2.bottom, SWP_NOZORDER);
-				 group = GetDlgItem(hwnd, IDC_GROUPBOX_ADVANCED); GetClientRect(group, &rc2); SetWindowPos(group, NULL, rc.left + 10, rc.top + rc.bottom - rc2.bottom - 10, rc.right - 20, rc2.bottom, SWP_NOZORDER);
+			// Align IDC_GROUPBOX_GENERAL
+			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_MAINFRAME,				10, A_HFILL, AF_SIZE);
+			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_MAINFRAME,				21 + 10, A_TOP, AF_SIZE);
+
+			// Align to IDC_GROUPBOX_GENERAL
+			AlignControl(hwnd, IDC_LABEL_SCANDURATION,	IDC_GROUPBOX_GENERAL,		10, A_LEFT, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_SCANDURATION,	IDC_GROUPBOX_GENERAL,		15, A_TOP, AF_MOVE);
+			AlignControl(hwnd, IDC_EDIT_SCANDURATION,	IDC_GROUPBOX_GENERAL,		12, A_TOP, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_MS1,			IDC_GROUPBOX_GENERAL,		15, A_TOP, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_MS1,			IDC_GROUPBOX_GENERAL,		10, A_RIGHT, AF_MOVE);
+			
+			AlignControl(hwnd, IDC_CHECKBOX_SCANSTOP,	IDC_GROUPBOX_GENERAL,		10, A_LEFT | A_RIGHT, AF_SIZE);
+
+			AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_GROUPBOX_GENERAL,		10, A_LEFT, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_GROUPBOX_GENERAL,		10, A_RIGHT, AF_MOVE);
+
+			// Align IDC_GROUPBOX_GENERAL children
+			AlignControl(hwnd, IDC_CHECKBOX_SCANSTOP,	IDC_LABEL_SCANDURATION,		5, A_TOP, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_CHECKBOX_SCANSTOP,		5, A_TOP, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_EDIT_STOPDELAY,		IDC_CHECKBOX_SCANSTOP,		2, A_TOP, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_CHECKBOX_SCANSTOP,		5, A_TOP, AF_MOVE | AF_FLIP);
+
+			AlignControl(hwnd, IDC_EDIT_SCANDURATION,	IDC_LABEL_MS1,				2, A_RIGHT, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_EDIT_STOPDELAY,		IDC_LABEL_MS2,				2, A_RIGHT, AF_MOVE | AF_FLIP);
+
+			// Align IDC_GROUPBOX_GENERAL
+			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_LABEL_DELAYFOR,			-10, A_BOTTOM, AF_SIZE);
+
+
+
+			// Align IDC_GROUPBOX_ADVANCED
+			AlignControl(hwnd, IDC_GROUPBOX_ADVANCED,	IDC_MAINFRAME,				10, A_HFILL | A_BOTTOM, AF_SIZE);
+
+			// Align to IDC_GROUPBOX_ADVANCED
+			AlignControl(hwnd, IDC_LABEL_RESTART,		IDC_GROUPBOX_ADVANCED,		5, A_BOTTOM | A_RIGHT, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_LOGLEVEL,		IDC_GROUPBOX_ADVANCED,		10, A_LEFT, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		10, A_LEFT, AF_MOVE);
+			AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		10, A_LEFT, AF_MOVE);
+
+			// Align IDC_GROUPBOX_ADVANCED children
+			AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_LABEL_RESTART,			5, A_BOTTOM, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_LABEL_BLACKLIST,		IDC_EDIT_BLACKLIST,			5, A_BOTTOM, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_LABEL_LOGLEVEL,		IDC_LABEL_BLACKLIST,		5, A_BOTTOM, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_COMBOBOX_DEBUG,		IDC_LABEL_BLACKLIST,		1, A_BOTTOM, AF_MOVE | AF_FLIP);
+
+			// Align IDC_GROUPBOX_ADVANCED
+			AlignControl(hwnd, IDC_GROUPBOX_ADVANCED,	IDC_LABEL_LOGLEVEL,			-15, A_TOP, AF_SIZE);
 			break;
 		}
 		case WM_COMMAND:
