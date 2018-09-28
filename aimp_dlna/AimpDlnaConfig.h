@@ -21,6 +21,7 @@ public:
 	static int ScanStop;
 	static int StopDelay;
 	static wstring UuidBlacklist;
+	static int CacheDepth;
 
 	static void Save() {
 		_SAVE(Int32, LogLevel);
@@ -30,6 +31,8 @@ public:
 
 		AimpString UuidBlacklist(Config::UuidBlacklist);
 		_SAVE(String, UuidBlacklist);
+
+		_SAVE(Int32, CacheDepth);
 
 		configService->FlushCache();
 	}
@@ -46,6 +49,8 @@ public:
 			Config::UuidBlacklist = UuidBlacklist->GetData();
 			UuidBlacklist->Release();
 		}
+
+		_LOAD(Int32, CacheDepth, 2);
 	}
 
 	static HRESULT Initialize(IAIMPCore *Core) { 

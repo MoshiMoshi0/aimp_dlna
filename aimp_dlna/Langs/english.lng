@@ -12,5 +12,6 @@ Blacklist=UUID blacklist*:
 ScanStop=Stop scan after first server is found
 ScanDuration=Maximum scan duration:
 DelayFor=Delay stop for:
+CacheDepth=Cache depth:
 Restart=* requires application restart
 MS=ms

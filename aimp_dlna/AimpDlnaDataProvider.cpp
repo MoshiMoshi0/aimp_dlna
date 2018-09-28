@@ -46,9 +46,6 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 }
 
 int AimpDlnaDataProvider::RecursiveBrowse(PLT_DeviceDataReference& device, const string& currentContainer, PLT_MediaObjectListReference& result, const int depth) {
-	if (depth >= 3)
-		return NPT_SUCCESS;
-
 	PLT_MediaObjectListReference objects;
 	if (NPT_FAILED(mediaBrowser->BrowseSync(device, currentContainer.c_str(), objects, false)))
 		return NPT_FAILURE;
@@ -59,7 +56,7 @@ int AimpDlnaDataProvider::RecursiveBrowse(PLT_DeviceDataReference& device, const
 	for (auto object = objects->GetFirstItem(); object; object++) {
 		if (!(*object)->IsContainer()) {
 			result->Add(*object);
-		} else {
+		} else if (depth < Config::CacheDepth) {
 			if (mediaBrowser->IsCached(device->GetUUID(), (*object)->m_ObjectID.GetChars()))
 				if (NPT_FAILED(RecursiveBrowse(device, StringUtils::ToString((*object)->m_ObjectID), result, depth + 1)))
 					return NPT_FAILURE;

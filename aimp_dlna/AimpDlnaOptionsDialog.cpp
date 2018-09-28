@@ -61,6 +61,7 @@ void WINAPI AimpDlnaOptionsDialog::Notification(int ID) {
 			SetDlgItemText(handle, IDC_LABEL_MS1,				AimpUtils::Lang(L"AimpDlna.Options\\MS").c_str());
 			SetDlgItemText(handle, IDC_LABEL_MS2,				AimpUtils::Lang(L"AimpDlna.Options\\MS").c_str());
 			SetDlgItemText(handle, IDC_LABEL_DELAYFOR,			AimpUtils::Lang(L"AimpDlna.Options\\DelayFor").c_str());
+			SetDlgItemText(handle, IDC_LABEL_CACHEDEPTH,		AimpUtils::Lang(L"AimpDlna.Options\\CacheDepth").c_str());
 			break;
 		}
 		case AIMP_SERVICE_OPTIONSDIALOG_NOTIFICATION_LOAD: {
@@ -80,13 +81,14 @@ void WINAPI AimpDlnaOptionsDialog::Notification(int ID) {
 			SetDlgItemText(handle, IDC_EDIT_SCANDURATION, to_wstring(Config::ScanDuration).c_str());
 			SetDlgItemText(handle, IDC_EDIT_STOPDELAY, to_wstring(Config::StopDelay).c_str());
 			SetDlgItemText(handle, IDC_EDIT_BLACKLIST, StringUtils::Replace(Config::UuidBlacklist, L"|", L"\r\n").c_str());
+			SetDlgItemText(handle, IDC_EDIT_CACHEDEPTH, to_wstring(Config::CacheDepth).c_str());
 			break;
 		}
 		case AIMP_SERVICE_OPTIONSDIALOG_NOTIFICATION_SAVE: {
 			TCHAR buffer[1024];
-			GetDlgItemText(handle, IDC_EDIT_SCANDURATION, buffer, 64);
+			GetDlgItemText(handle, IDC_EDIT_SCANDURATION, buffer, 16);
 			Config::ScanDuration = _wtoi(buffer);
-			GetDlgItemText(handle, IDC_EDIT_STOPDELAY, buffer, 64);
+			GetDlgItemText(handle, IDC_EDIT_STOPDELAY, buffer, 16);
 			Config::StopDelay = _wtoi(buffer);
 
 			Config::LogLevel = logValues[SendDlgItemMessage(handle, IDC_COMBOBOX_DEBUG, CB_GETCURSEL, 0, 0)];
@@ -94,6 +96,9 @@ void WINAPI AimpDlnaOptionsDialog::Notification(int ID) {
 
 			GetDlgItemText(handle, IDC_EDIT_BLACKLIST, buffer, 1024);
 			Config::UuidBlacklist = StringUtils::Replace(buffer, L"\r\n", L"|");
+
+			GetDlgItemText(handle, IDC_EDIT_CACHEDEPTH, buffer, 16);
+			Config::CacheDepth = _wtoi(buffer);
 
 			Config::Save();
 			break;
@@ -204,17 +209,24 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 			AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_GROUPBOX_GENERAL,		10, A_LEFT, AF_MOVE);
 			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_GROUPBOX_GENERAL,		10, A_RIGHT, AF_MOVE);
 
+			AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_GROUPBOX_GENERAL,		10, A_LEFT, AF_MOVE);
+
 			// Align IDC_GROUPBOX_GENERAL children
 			AlignControl(hwnd, IDC_CHECKBOX_SCANSTOP,	IDC_LABEL_SCANDURATION,		5, A_TOP, AF_MOVE | AF_FLIP);
 			AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_CHECKBOX_SCANSTOP,		5, A_TOP, AF_MOVE | AF_FLIP);
 			AlignControl(hwnd, IDC_EDIT_STOPDELAY,		IDC_CHECKBOX_SCANSTOP,		2, A_TOP, AF_MOVE | AF_FLIP);
 			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_CHECKBOX_SCANSTOP,		5, A_TOP, AF_MOVE | AF_FLIP);
 
+			AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_EDIT_STOPDELAY,			5, A_TOP, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_EDIT_CACHEDEPTH,		IDC_EDIT_STOPDELAY,			2, A_TOP, AF_MOVE | AF_FLIP);
+
 			AlignControl(hwnd, IDC_EDIT_SCANDURATION,	IDC_LABEL_MS1,				2, A_RIGHT, AF_MOVE | AF_FLIP);
 			AlignControl(hwnd, IDC_EDIT_STOPDELAY,		IDC_LABEL_MS2,				2, A_RIGHT, AF_MOVE | AF_FLIP);
 
+			AlignControl(hwnd, IDC_EDIT_CACHEDEPTH,		IDC_EDIT_STOPDELAY,			0, A_RIGHT, AF_MOVE);
+
 			// Align IDC_GROUPBOX_GENERAL
-			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_LABEL_DELAYFOR,			-10, A_BOTTOM, AF_SIZE);
+			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_LABEL_CACHEDEPTH,		-10, A_BOTTOM, AF_SIZE);
 
 
 
@@ -248,7 +260,8 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 				}
 				case IDC_EDIT_SCANDURATION:
 				case IDC_EDIT_STOPDELAY:
-				case IDC_EDIT_BLACKLIST: {
+				case IDC_EDIT_BLACKLIST: 
+				case IDC_EDIT_CACHEDEPTH: {
 					if (HIWORD(wParam) != EN_SETFOCUS && HIWORD(wParam) != EN_KILLFOCUS) {
 						dialog->Dirty();
 					}
