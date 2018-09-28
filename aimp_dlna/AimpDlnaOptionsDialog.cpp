@@ -191,42 +191,49 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 			break;
 		}
 		case WM_SIZE: {
+			const int spacing = 12;
+			const int editOffset = 3;
+			const int labelOffset = 4;
+			const int comboOffset = 5;
+
 			AlignControl(hwnd, IDC_MAINFRAME, NULL, 0, A_FILL, AF_SIZE);
 
 			// Align IDC_GROUPBOX_GENERAL
 			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_MAINFRAME,				10, A_HFILL, AF_SIZE);
-			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_MAINFRAME,				21 + 10, A_TOP, AF_SIZE);
+			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_MAINFRAME,				31, A_TOP, AF_SIZE);
 
 			// Align to IDC_GROUPBOX_GENERAL
-			AlignControl(hwnd, IDC_LABEL_SCANDURATION,	IDC_GROUPBOX_GENERAL,		10, A_LEFT, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_SCANDURATION,	IDC_GROUPBOX_GENERAL,		15, A_TOP, AF_MOVE);
-			AlignControl(hwnd, IDC_EDIT_SCANDURATION,	IDC_GROUPBOX_GENERAL,		12, A_TOP, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_MS1,			IDC_GROUPBOX_GENERAL,		15, A_TOP, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_MS1,			IDC_GROUPBOX_GENERAL,		10, A_RIGHT, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_SCANDURATION,	IDC_GROUPBOX_GENERAL,		spacing, A_LEFT, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_SCANDURATION,	IDC_GROUPBOX_GENERAL,		spacing + labelOffset, A_TOP, AF_MOVE);
+			AlignControl(hwnd, IDC_EDIT_SCANDURATION,	IDC_GROUPBOX_GENERAL,		spacing + labelOffset - editOffset, A_TOP, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_MS1,			IDC_GROUPBOX_GENERAL,		spacing + labelOffset, A_TOP, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_MS1,			IDC_GROUPBOX_GENERAL,		spacing, A_RIGHT, AF_MOVE);
 			
-			AlignControl(hwnd, IDC_CHECKBOX_SCANSTOP,	IDC_GROUPBOX_GENERAL,		10, A_LEFT | A_RIGHT, AF_SIZE);
+			AlignControl(hwnd, IDC_CHECKBOX_SCANSTOP,	IDC_GROUPBOX_GENERAL,		spacing, A_LEFT | A_RIGHT, AF_SIZE);
 
-			AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_GROUPBOX_GENERAL,		10, A_LEFT, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_GROUPBOX_GENERAL,		10, A_RIGHT, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_GROUPBOX_GENERAL,		spacing, A_LEFT, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_GROUPBOX_GENERAL,		spacing, A_RIGHT, AF_MOVE);
 
-			AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_GROUPBOX_GENERAL,		10, A_LEFT, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_GROUPBOX_GENERAL,		spacing, A_LEFT, AF_MOVE);
 
 			// Align IDC_GROUPBOX_GENERAL children
-			AlignControl(hwnd, IDC_CHECKBOX_SCANSTOP,	IDC_LABEL_SCANDURATION,		5, A_TOP, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_CHECKBOX_SCANSTOP,		5, A_TOP, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_EDIT_STOPDELAY,		IDC_CHECKBOX_SCANSTOP,		2, A_TOP, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_CHECKBOX_SCANSTOP,		5, A_TOP, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_CHECKBOX_SCANSTOP,	IDC_LABEL_SCANDURATION,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_CHECKBOX_SCANSTOP,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_EDIT_STOPDELAY,		IDC_CHECKBOX_SCANSTOP,		spacing - editOffset - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_CHECKBOX_SCANSTOP,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
 
-			AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_EDIT_STOPDELAY,			5, A_TOP, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_EDIT_CACHEDEPTH,		IDC_EDIT_STOPDELAY,			2, A_TOP, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_LABEL_DELAYFOR,			spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_EDIT_CACHEDEPTH,		IDC_LABEL_DELAYFOR,			spacing - editOffset - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
 
+			AlignControl(hwnd, IDC_LABEL_MS1,			IDC_LABEL_SCANDURATION,		0, A_TOP, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_LABEL_DELAYFOR,			0, A_TOP, AF_MOVE);
 			AlignControl(hwnd, IDC_EDIT_SCANDURATION,	IDC_LABEL_MS1,				2, A_RIGHT, AF_MOVE | AF_FLIP);
 			AlignControl(hwnd, IDC_EDIT_STOPDELAY,		IDC_LABEL_MS2,				2, A_RIGHT, AF_MOVE | AF_FLIP);
 
 			AlignControl(hwnd, IDC_EDIT_CACHEDEPTH,		IDC_EDIT_STOPDELAY,			0, A_RIGHT, AF_MOVE);
 
 			// Align IDC_GROUPBOX_GENERAL
-			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_LABEL_CACHEDEPTH,		-10, A_BOTTOM, AF_SIZE);
+			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_LABEL_CACHEDEPTH,		-spacing + 2, A_BOTTOM, AF_SIZE);
 
 
 
@@ -235,18 +242,18 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 
 			// Align to IDC_GROUPBOX_ADVANCED
 			AlignControl(hwnd, IDC_LABEL_RESTART,		IDC_GROUPBOX_ADVANCED,		5, A_BOTTOM | A_RIGHT, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_LOGLEVEL,		IDC_GROUPBOX_ADVANCED,		10, A_LEFT, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		10, A_LEFT, AF_MOVE);
-			AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		10, A_LEFT, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_LOGLEVEL,		IDC_GROUPBOX_ADVANCED,		spacing, A_LEFT, AF_MOVE);
+			AlignControl(hwnd, IDC_LABEL_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		spacing, A_LEFT, AF_MOVE);
+			AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		spacing, A_LEFT, AF_MOVE);
 
 			// Align IDC_GROUPBOX_ADVANCED children
-			AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_LABEL_RESTART,			5, A_BOTTOM, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_LABEL_BLACKLIST,		IDC_EDIT_BLACKLIST,			5, A_BOTTOM, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_LABEL_LOGLEVEL,		IDC_LABEL_BLACKLIST,		5, A_BOTTOM, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_COMBOBOX_DEBUG,		IDC_LABEL_BLACKLIST,		1, A_BOTTOM, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_LABEL_RESTART,			spacing - labelOffset, A_BOTTOM, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_LABEL_BLACKLIST,		IDC_EDIT_BLACKLIST,			spacing - labelOffset, A_BOTTOM, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_LABEL_LOGLEVEL,		IDC_LABEL_BLACKLIST,		spacing - labelOffset, A_BOTTOM, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_COMBOBOX_DEBUG,		IDC_LABEL_BLACKLIST,		spacing - labelOffset - comboOffset, A_BOTTOM, AF_MOVE | AF_FLIP);
 
 			// Align IDC_GROUPBOX_ADVANCED
-			AlignControl(hwnd, IDC_GROUPBOX_ADVANCED,	IDC_LABEL_LOGLEVEL,			-15, A_TOP, AF_SIZE);
+			AlignControl(hwnd, IDC_GROUPBOX_ADVANCED,	IDC_LABEL_LOGLEVEL,			-(spacing + 5), A_TOP, AF_SIZE);
 			break;
 		}
 		case WM_COMMAND:
