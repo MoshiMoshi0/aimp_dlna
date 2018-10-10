@@ -33,8 +33,6 @@ void AimpDlnaDataStorage::Finalize() {
 		delete mediaBrowser;
 
 	if (upnp != nullptr) {
-		if (upnp->IsRunning())
-			upnp->Stop();
 		delete upnp;
 	}
 
