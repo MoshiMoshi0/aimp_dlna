@@ -18,8 +18,6 @@ void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {
 		auto length = wcsnlen_s(token, 65);
 		if (length >= 32 && length <= 64) {
 			ctrlPoint->IgnoreUUID(StringUtils::ToString(token).c_str());
-		} else {
-			int i = 0;
 		}
 		token = wcstok_s(NULL, L"|", &context);
 	}

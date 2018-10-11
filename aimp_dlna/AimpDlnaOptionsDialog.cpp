@@ -142,7 +142,7 @@ void AimpDlnaOptionsDialog::AlignControl(HWND hwnd, int source, int target, int 
 
 			anchor &= ~A_LEFT;
 		} else if (BITTEST(anchor, A_TOP)) {
-			auto ny = (!BITTEST(flags, AF_FLIP) ? tr.top : tr.bottom) + margin;;
+			auto ny = (!BITTEST(flags, AF_FLIP) ? tr.top : tr.bottom) + margin;
 			auto nh = (!BITTEST(flags, AF_FLIP) ? sr.bottom : sr.top) - ny;
 
 			MoveControl(sh, sr.left, ny);
