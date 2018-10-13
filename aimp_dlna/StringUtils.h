@@ -18,12 +18,14 @@ public:
 	static inline string ToString(const NPT_String& s) { return string(s.GetChars()); }
 	static inline string ToString(IAIMPString& s) { return ToString(s.GetData()); }
 
-	static wchar_t* ToWideCharArray(const NPT_String& s) {
-		auto length = s.GetLength();
-		wchar_t* buffer = new wchar_t[length];
-		ToWideString(s).copy(buffer, length);
+	static inline wchar_t* ToWideCharArray(const NPT_String& s) { return ToWideCharArray(ToWideString(s)); }
+	static wchar_t* ToWideCharArray(const wstring& s) {
+		wchar_t* buffer = new wchar_t[s.size() + 1];
+		s.copy(buffer, s.size());
+		buffer[s.size()] = '\0';
 		return buffer;
 	}
+
 
 	static wstring Replace(const wstring& s, const wstring& find, const wstring& replace) {
 		wstring result = s;
