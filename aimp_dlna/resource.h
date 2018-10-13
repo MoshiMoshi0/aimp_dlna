@@ -2,11 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by aimp_dlna.rc
 //
-#define VERSION_BUILD                   0
-#define VER_VER_DEBUG                   0
-#define VERSION_MAJOR                   2
-#define VERSION_MINOR                   2
-#define VERSION_REVISION                2
 #define IDD_OPTIONSDIALOG               101
 #define IDC_MAINFRAME                   1000
 #define IDC_GROUPBOX_ADVANCED           1001
