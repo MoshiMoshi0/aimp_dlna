@@ -101,6 +101,9 @@
       <Command>copy "$(TargetPath)" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\aimp_dlna.dll" /Y
 copy "$(ProjectDir)Langs" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\Langs" /Y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>taskkill /t /f /fi "IMAGENAME eq aimp.exe"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -140,6 +143,9 @@ copy "$(ProjectDir)Langs" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\Langs" 
       <Command>copy "$(TargetPath)" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\aimp_dlna.dll" /Y
 copy "$(ProjectDir)Langs" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\Langs" /Y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>taskkill /t /f /fi "IMAGENAME eq aimp.exe"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
