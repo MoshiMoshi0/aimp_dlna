@@ -11,7 +11,5 @@ public:
 		this->mediaBrowser = mediaBrowser;
 	}
 
-	~AimpDlnaDataProvider() {}
-
 	HRESULT WINAPI GetData(IAIMPObjectList* Fields, IAIMPMLDataFilter* Filter, IUnknown** Data);
 };
