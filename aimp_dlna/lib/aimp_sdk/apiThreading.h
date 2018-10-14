@@ -36,7 +36,7 @@ const int AIMP_TASK_PRIORITY_HIGH   = 2;
 class IAIMPTaskOwner: public IUnknown
 {
 	public:
-		virtual BOOL WINAPI IsCanceled() = 0;
+		virtual BOOL PASCAL IsCanceled() = 0;
 };
 
 /* IAIMPTask */
