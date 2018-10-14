@@ -48,6 +48,11 @@ void AimpDlnaDataStorage::Finalize() {
 		dataProvider->Release();
 		dataProvider = nullptr;
 	}
+
+	if (albumArtProvider != nullptr) {
+		albumArtProvider->Release();
+		albumArtProvider = nullptr;
+	}
 }
 
 void AimpDlnaDataStorage::FlushCache(int Reserved) {
@@ -182,6 +187,12 @@ HRESULT WINAPI AimpDlnaDataStorage::QueryInterface(REFIID riid, LPVOID* ppvObjec
 	if (riid == IID_IAIMPMLDataProvider) {
 		*ppvObject = dataProvider;
 		dataProvider->AddRef();
+		return S_OK;
+	}
+
+	if (riid == IID_IAIMPMLAlbumArtProvider) {
+		*ppvObject = albumArtProvider;
+		albumArtProvider->AddRef();
 		return S_OK;
 	}
 

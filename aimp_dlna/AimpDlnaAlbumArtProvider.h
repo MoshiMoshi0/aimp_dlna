@@ -1,23 +1,13 @@
 #pragma once
 
-class AimpDlnaAlbumArtProvider : public IUnknownInterfaceImpl<IAIMPExtensionAlbumArtProvider, IID_IAIMPExtensionAlbumArtProvider> {
+class AimpDlnaAlbumArtProvider : public IUnknownInterfaceImpl<IAIMPMLAlbumArtProvider, IID_IAIMPMLAlbumArtProvider> {
 private:
-	static AimpDlnaAlbumArtProvider* singleton;
-
-	AimpDlnaAlbumArtProvider() {}
+	PLT_SyncMediaBrowser* mediaBrowser;
 
 public:
-	static AimpDlnaAlbumArtProvider* instance() {
-		if (!singleton)
-			singleton = new AimpDlnaAlbumArtProvider();
-
-		return singleton;
+	AimpDlnaAlbumArtProvider(PLT_SyncMediaBrowser* mediaBrowser) {
+		this->mediaBrowser = mediaBrowser;
 	}
 
-	~AimpDlnaAlbumArtProvider() {
-		singleton = nullptr;
-	}
-
-	HRESULT WINAPI Get(IAIMPString *FileURI, IAIMPString *Artist, IAIMPString *Album, IAIMPPropertyList *Options, IAIMPImageContainer **Image);
-	DWORD WINAPI GetCategory() { return AIMP_ALBUMART_PROVIDER_CATEGORY_INTERNET; }
+	HRESULT WINAPI Get(IAIMPObjectList* Fields, VARIANT* Values, IAIMPPropertyList* Options, IAIMPImageContainer** Image);
 };

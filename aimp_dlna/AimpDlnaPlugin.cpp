@@ -29,11 +29,6 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 		return E_FAIL;
 	}
 
-	if (FAILED(core->RegisterExtension(IID_IAIMPServiceAlbumArt, static_cast<IAIMPExtensionAlbumArtProvider*>(AimpDlnaAlbumArtProvider::instance())))) {
-		Finalize();
-		return E_FAIL;
-	}
-
 	if (FAILED(core->RegisterExtension(IID_IAIMPServiceMusicLibrary, static_cast<IAIMPMLExtensionDataStorage*>(AimpDlnaDataStorage::instance())))) {
 		Finalize();
 		return E_FAIL;
