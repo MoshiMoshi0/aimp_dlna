@@ -58,5 +58,18 @@ public:
 
 		return result;
 	}
+
+	static bool EndsWith(const wstring& s, const wstring& with, const bool& ignoreCase = true) {
+		if (with.size() > s.size())
+			return false;
+
+		if(ignoreCase)
+			return equal(s.end() - with.size(), s.end(), with.begin(), with.end(),
+				[](wchar_t a, wchar_t b) {
+					return towlower(a) == towlower(b);
+				});
+
+		return equal(s.end() - with.size(), s.end(), with.begin(), with.end());
+	}
 };
 
