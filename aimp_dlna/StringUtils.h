@@ -40,5 +40,23 @@ public:
 
 		return result;
 	}
+
+	static vector<wstring> Split(const wstring& s, const wstring& delimeter) {
+		vector<wstring> result;
+		size_t pos = 0;
+
+		while (true) {
+			auto fpos = s.find(delimeter, pos);
+			if (fpos == wstring::npos) {
+				result.push_back(s.substr(pos));
+				break;
+			}
+
+			result.push_back(s.substr(pos, fpos - pos));
+			pos = fpos + delimeter.size();
+		}
+
+		return result;
+	}
 };
 
