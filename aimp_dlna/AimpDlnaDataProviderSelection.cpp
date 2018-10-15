@@ -73,7 +73,7 @@ WCHAR* WINAPI AimpDlnaDataProviderSelection::GetValueAsString(int FieldIndex, in
 		auto resource = item->m_Resources[0];
 		result = resource.m_Uri;
 	} else if (field.compare(EVDS_ContainerId) == 0) {
-		result = NPT_String(item->m_ParentID);
+		result = NPT_String(containerId.c_str());
 	} else if (field.compare(EVDS_DeviceUuid) == 0) {
 		result = NPT_String(deviceUuid.c_str());
 	} else if (field.compare(EVDS_Id) == 0) {

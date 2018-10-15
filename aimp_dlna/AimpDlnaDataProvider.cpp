@@ -41,7 +41,7 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 	if (objects.IsNull() || objects->GetItemCount() == 0)
 		return E_FAIL;
 
-	*Data = new AimpDlnaDataProviderSelection(deviceUuid, objects, AimpUtils::ToWideStringList(Fields));
+	*Data = new AimpDlnaDataProviderSelection(deviceUuid, containerId, objects, AimpUtils::ToWideStringList(Fields));
 	return S_OK;
 }
 
