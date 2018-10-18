@@ -103,7 +103,7 @@ HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
 		addField(*List, EVDS_TrackDuration, AIMPML_FIELDTYPE_DURATION);
 
 		addField(*List, EVDS_ContainerId, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_INTERNAL | AIMPML_FIELDFLAG_REQUIRED);
-		addField(*List, EVDS_DeviceUuid, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_INTERNAL);
+		addField(*List, EVDS_DeviceUuid, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_REQUIRED);
 		break;
 	}
 	case AIMPML_FIELDS_SCHEMA_TABLE_VIEW_ALBUMTHUMBNAILS:
@@ -190,10 +190,13 @@ HRESULT WINAPI AimpDlnaDataStorage::QueryInterface(REFIID riid, LPVOID* ppvObjec
 		return S_OK;
 	}
 
-	if (riid == IID_IAIMPMLAlbumArtProvider) {
-		*ppvObject = albumArtProvider;
-		albumArtProvider->AddRef();
-		return S_OK;
+	auto version = AimpUtils::GetVersion();
+	if (get<0>(version) >= 4 && get<1>(version) >= 60) {
+		if (riid == IID_IAIMPMLAlbumArtProvider) {
+			*ppvObject = albumArtProvider;
+			albumArtProvider->AddRef();
+			return S_OK;
+		}
 	}
 
 	return Base::QueryInterface(riid, ppvObject);

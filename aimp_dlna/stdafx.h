@@ -13,6 +13,7 @@
 
 #include <string>
 #include <vector>
+#include <tuple>
 #include <tchar.h>
 #include <comdef.h>
 
