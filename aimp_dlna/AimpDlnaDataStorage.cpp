@@ -12,15 +12,9 @@ void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {
 	upnp->AddCtrlPoint(ctrlPointRef);
 	upnp->Start();
 
-	wchar_t* context;
-	wchar_t* token = wcstok_s((wchar_t*)Config::UuidBlacklist.c_str(), L"|", &context);
-	while (token) {
-		auto length = wcsnlen_s(token, 65);
-		if (length >= 32 && length <= 64) {
-			ctrlPoint->IgnoreUUID(StringUtils::ToString(token).c_str());
-		}
-		token = wcstok_s(NULL, L"|", &context);
-	}
+	for (auto uuid : StringUtils::Split(Config::UuidBlacklist, L"|"))
+		if(uuid.length() >= 32 && uuid.length() <= 64)
+			ctrlPoint->IgnoreUUID(StringUtils::ToString(uuid).c_str());
 
 	ctrlPoint->Discover(NPT_HttpUrl("239.255.255.250", 1900, "*"), "ssdp:all", 5, 0.0, 0.0);
 	DataStorageManagerRefreshTask::Start(manager, mediaBrowser);
