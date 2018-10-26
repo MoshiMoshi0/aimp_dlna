@@ -50,7 +50,7 @@ int AimpDlnaDataProvider::RecursiveBrowse(PLT_DeviceDataReference& device, const
 	if (NPT_FAILED(mediaBrowser->BrowseSync(device, currentContainer.c_str(), objects, false)))
 		return NPT_FAILURE;
 
-	if (objects.IsNull())
+	if (objects.IsNull() || objects->GetItemCount() == 0)
 		return NPT_SUCCESS;
 
 	for (auto object = objects->GetFirstItem(); object; object++) {
