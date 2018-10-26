@@ -63,5 +63,6 @@ int AimpDlnaDataProvider::RecursiveBrowse(PLT_DeviceDataReference& device, const
 		}
 	}
 
+	objects.Detach();
 	return NPT_SUCCESS;
 }
