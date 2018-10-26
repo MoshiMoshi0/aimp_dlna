@@ -21,6 +21,7 @@ public:
 	static int ScanStop;
 	static int StopDelay;
 	static wstring UuidBlacklist;
+	static int UseCache;
 	static int CacheDepth;
 
 	static void Save() {
@@ -32,6 +33,7 @@ public:
 		AimpString UuidBlacklist(Config::UuidBlacklist);
 		_SAVE(String, UuidBlacklist);
 
+		_SAVE(Int32, UseCache);
 		_SAVE(Int32, CacheDepth);
 
 		configService->FlushCache();
@@ -50,6 +52,7 @@ public:
 			UuidBlacklist->Release();
 		}
 
+		_LOAD(Int32, UseCache, 1);
 		_LOAD(Int32, CacheDepth, 2);
 	}
 

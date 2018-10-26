@@ -20,7 +20,7 @@ private:
 		upnp = new PLT_UPnP();
 		ctrlPoint = new PLT_CtrlPoint();
 		ctrlPointRef = PLT_CtrlPointReference(ctrlPoint);
-		mediaBrowser = new PLT_SyncMediaBrowser(ctrlPointRef, true);
+		mediaBrowser = new PLT_SyncMediaBrowser(ctrlPointRef, Config::UseCache);
 
 		dataProvider = new AimpDlnaDataProvider(mediaBrowser);
 	}

@@ -61,6 +61,7 @@ void WINAPI AimpDlnaOptionsDialog::Notification(int ID) {
 			SetDlgItemText(handle, IDC_LABEL_MS1,				AimpUtils::Lang(L"AimpDlna.Options\\MS").c_str());
 			SetDlgItemText(handle, IDC_LABEL_MS2,				AimpUtils::Lang(L"AimpDlna.Options\\MS").c_str());
 			SetDlgItemText(handle, IDC_LABEL_DELAYFOR,			AimpUtils::Lang(L"AimpDlna.Options\\DelayFor").c_str());
+			SetDlgItemText(handle, IDC_CHECKBOX_USECACHE,		AimpUtils::Lang(L"AimpDlna.Options\\UseCache").c_str());
 			SetDlgItemText(handle, IDC_LABEL_CACHEDEPTH,		AimpUtils::Lang(L"AimpDlna.Options\\CacheDepth").c_str());
 			break;
 		}
@@ -77,6 +78,10 @@ void WINAPI AimpDlnaOptionsDialog::Notification(int ID) {
 			EnableWindow(GetDlgItem(handle, IDC_EDIT_STOPDELAY), (bool)Config::ScanStop);
 			EnableWindow(GetDlgItem(handle, IDC_LABEL_DELAYFOR), (bool)Config::ScanStop);
 			EnableWindow(GetDlgItem(handle, IDC_LABEL_MS2), (bool)Config::ScanStop);
+
+			SendDlgItemMessage(handle, IDC_CHECKBOX_USECACHE, BM_SETCHECK, Config::UseCache, 0);
+			EnableWindow(GetDlgItem(handle, IDC_LABEL_CACHEDEPTH), (bool)Config::UseCache);
+			EnableWindow(GetDlgItem(handle, IDC_EDIT_CACHEDEPTH), (bool)Config::UseCache);
 
 			SetDlgItemText(handle, IDC_EDIT_SCANDURATION, to_wstring(Config::ScanDuration).c_str());
 			SetDlgItemText(handle, IDC_EDIT_STOPDELAY, to_wstring(Config::StopDelay).c_str());
@@ -96,6 +101,8 @@ void WINAPI AimpDlnaOptionsDialog::Notification(int ID) {
 
 			GetDlgItemText(handle, IDC_EDIT_BLACKLIST, buffer, 1024);
 			Config::UuidBlacklist = StringUtils::Replace(buffer, L"\r\n", L"|");
+
+			Config::UseCache = SendDlgItemMessage(handle, IDC_CHECKBOX_USECACHE, BM_GETCHECK, 0, 0);
 
 			GetDlgItemText(handle, IDC_EDIT_CACHEDEPTH, buffer, 16);
 			Config::CacheDepth = _wtoi(buffer);
@@ -214,6 +221,7 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 			AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_GROUPBOX_GENERAL,		spacing, A_LEFT, AF_MOVE);
 			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_GROUPBOX_GENERAL,		spacing, A_RIGHT, AF_MOVE);
 
+			AlignControl(hwnd, IDC_CHECKBOX_USECACHE,	IDC_GROUPBOX_GENERAL,		spacing, A_LEFT, AF_MOVE);
 			AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_GROUPBOX_GENERAL,		spacing, A_LEFT, AF_MOVE);
 
 			// Align IDC_GROUPBOX_GENERAL children
@@ -222,8 +230,10 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 			AlignControl(hwnd, IDC_EDIT_STOPDELAY,		IDC_CHECKBOX_SCANSTOP,		spacing - editOffset - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
 			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_CHECKBOX_SCANSTOP,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
 
-			AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_LABEL_DELAYFOR,			spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_EDIT_CACHEDEPTH,		IDC_LABEL_DELAYFOR,			spacing - editOffset - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_CHECKBOX_USECACHE,	IDC_LABEL_DELAYFOR,			spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+
+			AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_CHECKBOX_USECACHE,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+			AlignControl(hwnd, IDC_EDIT_CACHEDEPTH,		IDC_CHECKBOX_USECACHE,		spacing - editOffset - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
 
 			AlignControl(hwnd, IDC_LABEL_MS1,			IDC_LABEL_SCANDURATION,		0, A_TOP, AF_MOVE);
 			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_LABEL_DELAYFOR,			0, A_TOP, AF_MOVE);
@@ -235,8 +245,6 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 			// Align IDC_GROUPBOX_GENERAL
 			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_LABEL_CACHEDEPTH,		-spacing + 2, A_BOTTOM, AF_SIZE);
 
-
-
 			// Align IDC_GROUPBOX_ADVANCED
 			AlignControl(hwnd, IDC_GROUPBOX_ADVANCED,	IDC_MAINFRAME,				10, A_HFILL | A_BOTTOM, AF_SIZE);
 
@@ -245,9 +253,9 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 			AlignControl(hwnd, IDC_LABEL_LOGLEVEL,		IDC_GROUPBOX_ADVANCED,		spacing, A_LEFT, AF_MOVE);
 			AlignControl(hwnd, IDC_LABEL_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		spacing, A_LEFT, AF_MOVE);
 			AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		spacing, A_LEFT, AF_MOVE);
+			AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		spacing - labelOffset, A_BOTTOM, AF_SIZE);
 
 			// Align IDC_GROUPBOX_ADVANCED children
-			AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_LABEL_RESTART,			spacing - labelOffset, A_BOTTOM, AF_MOVE | AF_FLIP);
 			AlignControl(hwnd, IDC_LABEL_BLACKLIST,		IDC_EDIT_BLACKLIST,			spacing - labelOffset, A_BOTTOM, AF_MOVE | AF_FLIP);
 			AlignControl(hwnd, IDC_LABEL_LOGLEVEL,		IDC_LABEL_BLACKLIST,		spacing - labelOffset, A_BOTTOM, AF_MOVE | AF_FLIP);
 			AlignControl(hwnd, IDC_COMBOBOX_DEBUG,		IDC_LABEL_BLACKLIST,		spacing - labelOffset - comboOffset, A_BOTTOM, AF_MOVE | AF_FLIP);
@@ -282,6 +290,15 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 					EnableWindow(GetDlgItem(hwnd, IDC_LABEL_MS2), checked);
 
 					dialog->Dirty(); 
+					break;
+				}				
+				case IDC_CHECKBOX_USECACHE: {
+					bool checked = SendDlgItemMessage(hwnd, IDC_CHECKBOX_USECACHE, BM_GETCHECK, 0, 0);
+
+					EnableWindow(GetDlgItem(hwnd, IDC_LABEL_CACHEDEPTH), checked);
+					EnableWindow(GetDlgItem(hwnd, IDC_EDIT_CACHEDEPTH), checked);
+
+					dialog->Dirty();
 					break;
 				}
 				default: break;

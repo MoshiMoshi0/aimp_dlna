@@ -56,7 +56,7 @@ int AimpDlnaDataProvider::RecursiveBrowse(PLT_DeviceDataReference& device, const
 	for (auto object = objects->GetFirstItem(); object; object++) {
 		if (!(*object)->IsContainer()) {
 			result->Add(*object);
-		} else if (depth < Config::CacheDepth) {
+		} else if (Config::UseCache && depth < Config::CacheDepth) {
 			if (mediaBrowser->IsCached(device->GetUUID(), (*object)->m_ObjectID.GetChars()))
 				if (NPT_FAILED(RecursiveBrowse(device, StringUtils::ToString((*object)->m_ObjectID), result, depth + 1)))
 					return NPT_FAILURE;
