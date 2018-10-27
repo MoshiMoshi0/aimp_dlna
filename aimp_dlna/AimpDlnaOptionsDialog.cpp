@@ -51,8 +51,10 @@ void WINAPI AimpDlnaOptionsDialog::Notification(int ID) {
 									  NPT_LOG_LEVEL_FINE, NPT_LOG_LEVEL_FINER, NPT_LOG_LEVEL_FINEST };
 	switch (ID) {
 		case AIMP_SERVICE_OPTIONSDIALOG_NOTIFICATION_LOCALIZATION: {
-			SetDlgItemText(handle, IDC_GROUPBOX_GENERAL,		AimpUtils::Lang(L"AimpDlna.Options\\General").c_str());
-			SetDlgItemText(handle, IDC_GROUPBOX_ADVANCED,		AimpUtils::Lang(L"AimpDlna.Options\\Advanced").c_str());
+			SetDlgItemText(handle, IDC_GROUPBOX_DISCOVERY,		AimpUtils::Lang(L"AimpDlna.Options.Group\\Discovery").c_str());
+			SetDlgItemText(handle, IDC_GROUPBOX_CACHE,			AimpUtils::Lang(L"AimpDlna.Options.Group\\Cache").c_str());
+			SetDlgItemText(handle, IDC_GROUPBOX_ADVANCED,		AimpUtils::Lang(L"AimpDlna.Options.Group\\Advanced").c_str());
+
 			SetDlgItemText(handle, IDC_LABEL_LOGLEVEL,			AimpUtils::Lang(L"AimpDlna.Options\\LogLevel").c_str());
 			SetDlgItemText(handle, IDC_LABEL_RESTART,			AimpUtils::Lang(L"AimpDlna.Options\\Restart").c_str());
 			SetDlgItemText(handle, IDC_LABEL_BLACKLIST,			AimpUtils::Lang(L"AimpDlna.Options\\Blacklist").c_str());
@@ -66,10 +68,10 @@ void WINAPI AimpDlnaOptionsDialog::Notification(int ID) {
 			break;
 		}
 		case AIMP_SERVICE_OPTIONSDIALOG_NOTIFICATION_LOAD: {
-			SendDlgItemMessage(handle, IDC_COMBOBOX_DEBUG, CB_SETCURSEL, 0, 0);
+			SendDlgItemMessage(handle, IDC_COMBOBOX_LOGLEVEL, CB_SETCURSEL, 0, 0);
 			for (size_t i = 0; i < 9; i++) {
 				if (logValues[i] == Config::LogLevel) {
-					SendDlgItemMessage(handle, IDC_COMBOBOX_DEBUG, CB_SETCURSEL, i, 0);
+					SendDlgItemMessage(handle, IDC_COMBOBOX_LOGLEVEL, CB_SETCURSEL, i, 0);
 					break;
 				}
 			}
@@ -96,7 +98,7 @@ void WINAPI AimpDlnaOptionsDialog::Notification(int ID) {
 			GetDlgItemText(handle, IDC_EDIT_STOPDELAY, buffer, 16);
 			Config::StopDelay = _wtoi(buffer);
 
-			Config::LogLevel = logValues[SendDlgItemMessage(handle, IDC_COMBOBOX_DEBUG, CB_GETCURSEL, 0, 0)];
+			Config::LogLevel = logValues[SendDlgItemMessage(handle, IDC_COMBOBOX_LOGLEVEL, CB_GETCURSEL, 0, 0)];
 			Config::ScanStop = SendDlgItemMessage(handle, IDC_CHECKBOX_SCANSTOP, BM_GETCHECK, 0, 0);
 
 			GetDlgItemText(handle, IDC_EDIT_BLACKLIST, buffer, 1024);
@@ -188,12 +190,13 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 
 			InitCommonControls();
 			SetWindowSubclass(GetDlgItem(hwnd, IDC_MAINFRAME), FrameProc, 0, lParam); SendDlgItemMessage(hwnd, IDC_MAINFRAME, WM_SUBCLASSINIT, 0, 0);
-			SetWindowSubclass(GetDlgItem(hwnd, IDC_GROUPBOX_GENERAL), GroupBoxProc, 0, lParam); SendDlgItemMessage(hwnd, IDC_GROUPBOX_GENERAL, WM_SUBCLASSINIT, 0, 0);
+			SetWindowSubclass(GetDlgItem(hwnd, IDC_GROUPBOX_DISCOVERY), GroupBoxProc, 0, lParam); SendDlgItemMessage(hwnd, IDC_GROUPBOX_DISCOVERY, WM_SUBCLASSINIT, 0, 0);
+			SetWindowSubclass(GetDlgItem(hwnd, IDC_GROUPBOX_CACHE), GroupBoxProc, 0, lParam); SendDlgItemMessage(hwnd, IDC_GROUPBOX_CACHE, WM_SUBCLASSINIT, 0, 0);
 			SetWindowSubclass(GetDlgItem(hwnd, IDC_GROUPBOX_ADVANCED), GroupBoxProc, 0, lParam); SendDlgItemMessage(hwnd, IDC_GROUPBOX_ADVANCED, WM_SUBCLASSINIT, 0, 0);
 
 			const wstring logNames[9] = { L"OFF", L"ALL", L"FATAL", L"SEVERE", L"WARNING", L"INFO", L"FINE", L"FINER", L"FINEST" };
 			for (auto o : logNames)
-				SendDlgItemMessage(hwnd, IDC_COMBOBOX_DEBUG, CB_ADDSTRING, 1, (LPARAM)o.c_str());
+				SendDlgItemMessage(hwnd, IDC_COMBOBOX_LOGLEVEL, CB_ADDSTRING, 1, (LPARAM)o.c_str());
 
 			break;
 		}
@@ -205,68 +208,83 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 
 			AlignControl(hwnd, IDC_MAINFRAME, NULL, 0, A_FILL, AF_SIZE);
 
-			// Align IDC_GROUPBOX_GENERAL
-			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_MAINFRAME,				10, A_HFILL, AF_SIZE);
-			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_MAINFRAME,				31, A_TOP, AF_SIZE);
+			{
+				// Align IDC_GROUPBOX_DISCOVERY
+				AlignControl(hwnd, IDC_GROUPBOX_DISCOVERY,	IDC_MAINFRAME,				10, A_HFILL, AF_SIZE);
+				AlignControl(hwnd, IDC_GROUPBOX_DISCOVERY,	IDC_MAINFRAME,				31, A_TOP, AF_SIZE);
 
-			// Align to IDC_GROUPBOX_GENERAL
-			AlignControl(hwnd, IDC_LABEL_SCANDURATION,	IDC_GROUPBOX_GENERAL,		spacing, A_LEFT, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_SCANDURATION,	IDC_GROUPBOX_GENERAL,		spacing + labelOffset, A_TOP, AF_MOVE);
-			AlignControl(hwnd, IDC_EDIT_SCANDURATION,	IDC_GROUPBOX_GENERAL,		spacing + labelOffset - editOffset, A_TOP, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_MS1,			IDC_GROUPBOX_GENERAL,		spacing + labelOffset, A_TOP, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_MS1,			IDC_GROUPBOX_GENERAL,		spacing, A_RIGHT, AF_MOVE);
+				// Align to IDC_GROUPBOX_DISCOVERY
+				AlignControl(hwnd, IDC_LABEL_SCANDURATION,	IDC_GROUPBOX_DISCOVERY,		spacing, A_LEFT, AF_MOVE);
+				AlignControl(hwnd, IDC_LABEL_SCANDURATION,	IDC_GROUPBOX_DISCOVERY,		spacing + labelOffset, A_TOP, AF_MOVE);
+				AlignControl(hwnd, IDC_EDIT_SCANDURATION,	IDC_GROUPBOX_DISCOVERY,		spacing + labelOffset - editOffset, A_TOP, AF_MOVE);
+				AlignControl(hwnd, IDC_LABEL_MS1,			IDC_GROUPBOX_DISCOVERY,		spacing + labelOffset, A_TOP, AF_MOVE);
+				AlignControl(hwnd, IDC_LABEL_MS1,			IDC_GROUPBOX_DISCOVERY,		spacing, A_RIGHT, AF_MOVE);
+
+				AlignControl(hwnd, IDC_CHECKBOX_SCANSTOP,	IDC_GROUPBOX_DISCOVERY,		spacing, A_LEFT | A_RIGHT, AF_SIZE);
+
+				AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_GROUPBOX_DISCOVERY,		spacing, A_LEFT, AF_MOVE);
+				AlignControl(hwnd, IDC_LABEL_MS2,			IDC_GROUPBOX_DISCOVERY,		spacing, A_RIGHT, AF_MOVE);
+
+				// Align IDC_GROUPBOX_DISCOVERY children
+				AlignControl(hwnd, IDC_CHECKBOX_SCANSTOP,	IDC_LABEL_SCANDURATION,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+				AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_CHECKBOX_SCANSTOP,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+				AlignControl(hwnd, IDC_EDIT_STOPDELAY,		IDC_CHECKBOX_SCANSTOP,		spacing - editOffset - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+				AlignControl(hwnd, IDC_LABEL_MS2,			IDC_CHECKBOX_SCANSTOP,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+
+				AlignControl(hwnd, IDC_LABEL_MS1,			IDC_LABEL_SCANDURATION,		0, A_TOP, AF_MOVE);
+				AlignControl(hwnd, IDC_LABEL_MS2,			IDC_LABEL_DELAYFOR,			0, A_TOP, AF_MOVE);
+				AlignControl(hwnd, IDC_EDIT_SCANDURATION,	IDC_LABEL_MS1,				2, A_RIGHT, AF_MOVE | AF_FLIP);
+				AlignControl(hwnd, IDC_EDIT_STOPDELAY,		IDC_LABEL_MS2,				2, A_RIGHT, AF_MOVE | AF_FLIP);
+
+				// Align IDC_GROUPBOX_DISCOVERY
+				AlignControl(hwnd, IDC_GROUPBOX_DISCOVERY,	IDC_LABEL_DELAYFOR,			-spacing + 2, A_BOTTOM, AF_SIZE);
+			}
+
+			{
+				// Align IDC_GROUPBOX_CACHE
+				AlignControl(hwnd, IDC_GROUPBOX_CACHE,		IDC_MAINFRAME,				10, A_HFILL, AF_SIZE);
+				AlignControl(hwnd, IDC_GROUPBOX_CACHE,		IDC_GROUPBOX_DISCOVERY,		labelOffset, A_TOP, AF_SIZE | AF_FLIP);
+
+				// Align to IDC_GROUPBOX_CACHE
+				AlignControl(hwnd, IDC_CHECKBOX_USECACHE,	IDC_GROUPBOX_CACHE,			spacing, A_LEFT, AF_MOVE);
+				AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_GROUPBOX_CACHE,			spacing, A_LEFT, AF_MOVE);
+				AlignControl(hwnd, IDC_CHECKBOX_USECACHE,	IDC_GROUPBOX_CACHE,			spacing + labelOffset, A_TOP, AF_MOVE);
+
+				// Align IDC_GROUPBOX_CACHE children
+				AlignControl(hwnd, IDC_EDIT_CACHEDEPTH,		IDC_EDIT_STOPDELAY,			0, A_RIGHT, AF_MOVE);
+				AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_CHECKBOX_USECACHE,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+				AlignControl(hwnd, IDC_EDIT_CACHEDEPTH,		IDC_CHECKBOX_USECACHE,		spacing - editOffset - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+
+				// Align IDC_GROUPBOX_CACHE
+				AlignControl(hwnd, IDC_GROUPBOX_CACHE,		IDC_LABEL_CACHEDEPTH,		-spacing + 2, A_BOTTOM, AF_SIZE);
+			}
+
+			{
+				// Align IDC_GROUPBOX_ADVANCED
+				AlignControl(hwnd, IDC_GROUPBOX_ADVANCED,	IDC_MAINFRAME,				10, A_HFILL, AF_SIZE);
+				AlignControl(hwnd, IDC_GROUPBOX_ADVANCED,	IDC_GROUPBOX_CACHE,			labelOffset, A_TOP, AF_SIZE | AF_FLIP);
+
+				// Align to IDC_GROUPBOX_ADVANCED
+				AlignControl(hwnd, IDC_LABEL_LOGLEVEL,		IDC_GROUPBOX_ADVANCED,		spacing + labelOffset, A_TOP, AF_MOVE);
+				AlignControl(hwnd, IDC_COMBOBOX_LOGLEVEL,	IDC_GROUPBOX_ADVANCED,		spacing + labelOffset - comboOffset, A_TOP, AF_MOVE | AF_FLIP);
+				AlignControl(hwnd, IDC_LABEL_LOGLEVEL,		IDC_GROUPBOX_ADVANCED,		spacing, A_LEFT, AF_MOVE);
+				AlignControl(hwnd, IDC_LABEL_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		spacing, A_LEFT, AF_MOVE);
+				AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		spacing, A_LEFT, AF_MOVE);
+
+				// Align IDC_GROUPBOX_ADVANCED children
+				AlignControl(hwnd, IDC_LABEL_BLACKLIST,		IDC_LABEL_LOGLEVEL,			spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+				AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_LABEL_BLACKLIST,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
+
+				// Align IDC_GROUPBOX_ADVANCED
+				AlignControl(hwnd, IDC_GROUPBOX_ADVANCED,	IDC_EDIT_BLACKLIST,			-spacing, A_BOTTOM, AF_SIZE);
+			}
 			
-			AlignControl(hwnd, IDC_CHECKBOX_SCANSTOP,	IDC_GROUPBOX_GENERAL,		spacing, A_LEFT | A_RIGHT, AF_SIZE);
-
-			AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_GROUPBOX_GENERAL,		spacing, A_LEFT, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_GROUPBOX_GENERAL,		spacing, A_RIGHT, AF_MOVE);
-
-			AlignControl(hwnd, IDC_CHECKBOX_USECACHE,	IDC_GROUPBOX_GENERAL,		spacing, A_LEFT, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_GROUPBOX_GENERAL,		spacing, A_LEFT, AF_MOVE);
-
-			// Align IDC_GROUPBOX_GENERAL children
-			AlignControl(hwnd, IDC_CHECKBOX_SCANSTOP,	IDC_LABEL_SCANDURATION,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_LABEL_DELAYFOR,		IDC_CHECKBOX_SCANSTOP,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_EDIT_STOPDELAY,		IDC_CHECKBOX_SCANSTOP,		spacing - editOffset - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_CHECKBOX_SCANSTOP,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
-
-			AlignControl(hwnd, IDC_CHECKBOX_USECACHE,	IDC_LABEL_DELAYFOR,			spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
-
-			AlignControl(hwnd, IDC_LABEL_CACHEDEPTH,	IDC_CHECKBOX_USECACHE,		spacing - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_EDIT_CACHEDEPTH,		IDC_CHECKBOX_USECACHE,		spacing - editOffset - labelOffset, A_TOP, AF_MOVE | AF_FLIP);
-
-			AlignControl(hwnd, IDC_LABEL_MS1,			IDC_LABEL_SCANDURATION,		0, A_TOP, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_MS2,			IDC_LABEL_DELAYFOR,			0, A_TOP, AF_MOVE);
-			AlignControl(hwnd, IDC_EDIT_SCANDURATION,	IDC_LABEL_MS1,				2, A_RIGHT, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_EDIT_STOPDELAY,		IDC_LABEL_MS2,				2, A_RIGHT, AF_MOVE | AF_FLIP);
-
-			AlignControl(hwnd, IDC_EDIT_CACHEDEPTH,		IDC_EDIT_STOPDELAY,			0, A_RIGHT, AF_MOVE);
-
-			// Align IDC_GROUPBOX_GENERAL
-			AlignControl(hwnd, IDC_GROUPBOX_GENERAL,	IDC_LABEL_CACHEDEPTH,		-spacing + 2, A_BOTTOM, AF_SIZE);
-
-			// Align IDC_GROUPBOX_ADVANCED
-			AlignControl(hwnd, IDC_GROUPBOX_ADVANCED,	IDC_MAINFRAME,				10, A_HFILL | A_BOTTOM, AF_SIZE);
-
-			// Align to IDC_GROUPBOX_ADVANCED
-			AlignControl(hwnd, IDC_LABEL_RESTART,		IDC_GROUPBOX_ADVANCED,		5, A_BOTTOM | A_RIGHT, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_LOGLEVEL,		IDC_GROUPBOX_ADVANCED,		spacing, A_LEFT, AF_MOVE);
-			AlignControl(hwnd, IDC_LABEL_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		spacing, A_LEFT, AF_MOVE);
-			AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		spacing, A_LEFT, AF_MOVE);
-			AlignControl(hwnd, IDC_EDIT_BLACKLIST,		IDC_GROUPBOX_ADVANCED,		spacing - labelOffset, A_BOTTOM, AF_SIZE);
-
-			// Align IDC_GROUPBOX_ADVANCED children
-			AlignControl(hwnd, IDC_LABEL_BLACKLIST,		IDC_EDIT_BLACKLIST,			spacing - labelOffset, A_BOTTOM, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_LABEL_LOGLEVEL,		IDC_LABEL_BLACKLIST,		spacing - labelOffset, A_BOTTOM, AF_MOVE | AF_FLIP);
-			AlignControl(hwnd, IDC_COMBOBOX_DEBUG,		IDC_LABEL_BLACKLIST,		spacing - labelOffset - comboOffset, A_BOTTOM, AF_MOVE | AF_FLIP);
-
-			// Align IDC_GROUPBOX_ADVANCED
-			AlignControl(hwnd, IDC_GROUPBOX_ADVANCED,	IDC_LABEL_LOGLEVEL,			-(spacing + 5), A_TOP, AF_SIZE);
+			AlignControl(hwnd, IDC_LABEL_RESTART, IDC_MAINFRAME, 5, A_BOTTOM | A_RIGHT, AF_MOVE);
 			break;
 		}
 		case WM_COMMAND:
 			switch (LOWORD(wParam)) {
-				case IDC_COMBOBOX_DEBUG: {
+				case IDC_COMBOBOX_LOGLEVEL: {
 					switch (HIWORD(wParam)) {
 						case CBN_SELENDOK: { dialog->Dirty(); break; }
 						default: break;

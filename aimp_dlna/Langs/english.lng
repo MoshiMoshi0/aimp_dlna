@@ -5,8 +5,6 @@ AIMP.AimpDlna.ML.Default=Default
 Caption=DLNA
 
 [AimpDlna.Options]
-General=General
-Advanced=Advanced
 LogLevel=Log level*:
 Blacklist=UUID blacklist*:
 ScanStop=Stop discovery after the first server is found
@@ -16,3 +14,8 @@ UseCache=Use cache*
 CacheDepth=Depth of cached objects to include:
 Restart=* requires application restart
 MS=ms
+
+[AimpDlna.Options.Group]
+Discovery=Discovery
+Cache=Cache
+Advanced=Advanced
