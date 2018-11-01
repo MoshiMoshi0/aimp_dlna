@@ -8,68 +8,25 @@ private:
 	static AimpDlnaDataStorage* singleton;
 
 	bool finalized{ false };
-	IAIMPMLDataStorageManager* manager;
+	IAIMPMLDataStorageManager* manager;	
 	IAIMPMLDataProvider* dataProvider;
 
-	PLT_UPnP* upnp;
-	PLT_CtrlPoint* ctrlPoint;
-	PLT_SyncMediaBrowser* mediaBrowser;
-	PLT_CtrlPointReference ctrlPointRef;
+	shared_ptr<PLT_UPnP> upnp;
+	shared_ptr<PLT_SyncMediaBrowser> mediaBrowser;
+
+	PLT_CtrlPointReference ctrlPoint;
+	PLT_TaskManagerReference taskManager;
 
 	AimpDlnaDataStorage() : manager(nullptr), dataProvider(nullptr), mediaBrowser(nullptr) {
-		upnp = new PLT_UPnP();
-		ctrlPoint = new PLT_CtrlPoint();
-		ctrlPointRef = PLT_CtrlPointReference(ctrlPoint);
-		mediaBrowser = new PLT_SyncMediaBrowser(ctrlPointRef, Config::UseCache);
+		ctrlPoint = PLT_CtrlPointReference(new PLT_CtrlPoint());
+		taskManager = PLT_TaskManagerReference(new PLT_TaskManager());
+
+		upnp = make_shared<PLT_UPnP>();
+		mediaBrowser = make_shared<PLT_SyncMediaBrowser>(ctrlPoint, Config::UseCache);
 
 		dataProvider = new AimpDlnaDataProvider(mediaBrowser);
 	}
 
-	class DataStorageManagerRefreshTask : public NPT_Thread {
-	private:
-		IAIMPMLDataStorageManager* manager;
-		PLT_SyncMediaBrowser* mediaBrowser;
-
-		DataStorageManagerRefreshTask(IAIMPMLDataStorageManager* Manager, PLT_SyncMediaBrowser* MediaBrowser) {
-			manager = Manager;
-			manager->AddRef();
-
-			mediaBrowser = MediaBrowser;
-		}
-	public:
-		static NPT_Result Start(IAIMPMLDataStorageManager* Manager, PLT_SyncMediaBrowser* MediaBrowser) {
-			auto instance = new DataStorageManagerRefreshTask(Manager, MediaBrowser);
-			return static_cast<NPT_ThreadInterface*>(instance)->Start();
-		}
-
-		~DataStorageManagerRefreshTask() {
-			manager->Release();
-			manager = nullptr;
-			mediaBrowser = nullptr;
-		}
-
-		void Run() {
-			auto count = 0u;
-			auto timeout = Config::ScanDuration / 1000.0;
-			auto updateRate = !Config::ScanStop ? timeout : 0.1;
-			while(timeout > 0) {
-				NPT_System::Sleep(updateRate);
-				timeout -= updateRate;
-
-				auto newCount = mediaBrowser->GetMediaServers().GetItemCount();
-				if (Config::ScanStop && newCount > count) {
-					timeout = Config::StopDelay / 1000.0;
-				}
-
-				count = newCount;
-			}
-
-			if (count > 0)
-				manager->Changed();
-
-			delete this;
-		}
-	};
 public:
 	static AimpDlnaDataStorage* instance() {
 		if (!singleton)
@@ -112,3 +69,48 @@ public:
 	HRESULT WINAPI QueryInterface(REFIID riid, LPVOID* ppvObject);
 };
 
+class DataStorageManagerRefreshTask : public PLT_ThreadTask {
+private:
+	IAIMPMLDataStorageManager* manager;
+	
+	shared_ptr<PLT_SyncMediaBrowser> mediaBrowser;
+
+public:
+	DataStorageManagerRefreshTask(IAIMPMLDataStorageManager* Manager, shared_ptr<PLT_SyncMediaBrowser> MediaBrowser) {
+		manager = Manager;
+		manager->AddRef();
+
+		mediaBrowser = MediaBrowser;
+	}
+
+protected:
+	virtual ~DataStorageManagerRefreshTask() {
+		if (manager != nullptr) {
+			manager->Release();
+			manager = nullptr;
+		}
+
+		mediaBrowser = nullptr;
+	}
+
+	virtual void DoRun() {
+		auto count = 0u;
+		auto timeout = Config::ScanDuration / 1000.0;
+		auto updateRate = !Config::ScanStop ? timeout : 0.1;
+
+		while (timeout > 0 && !IsAborting(0)) {
+			NPT_System::Sleep(updateRate);
+			timeout -= updateRate;
+
+			auto newCount = mediaBrowser->GetMediaServers().GetItemCount();
+			if (Config::ScanStop && newCount > count) {
+				timeout = Config::StopDelay / 1000.0;
+			}
+
+			count = newCount;
+		}
+
+		if (count > 0)
+			manager->Changed();
+	}
+};

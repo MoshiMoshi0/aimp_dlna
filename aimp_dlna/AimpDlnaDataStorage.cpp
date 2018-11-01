@@ -9,7 +9,7 @@ void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {
 	manager = Manager;
 	manager->AddRef();
 
-	upnp->AddCtrlPoint(ctrlPointRef);
+	upnp->AddCtrlPoint(ctrlPoint);
 	upnp->Start();
 
 	wchar_t* context;
@@ -23,21 +23,13 @@ void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {
 	}
 
 	ctrlPoint->Discover(NPT_HttpUrl("239.255.255.250", 1900, "*"), "ssdp:all", 5, 0.0, 0.0);
-	DataStorageManagerRefreshTask::Start(manager, mediaBrowser);
+	taskManager->StartTask(new DataStorageManagerRefreshTask(manager, mediaBrowser));
 }
 
 void AimpDlnaDataStorage::Finalize() {
-	if (mediaBrowser != nullptr)
-		delete mediaBrowser;
-
-	if (upnp != nullptr) {
-		delete upnp;
-	}
-
-	ctrlPointRef.Detach();
-	if (ctrlPoint != nullptr) {
-		delete ctrlPoint;
-	}
+	upnp = nullptr;
+	ctrlPoint = nullptr;
+	taskManager = nullptr;
 
 	if (manager != nullptr) {
 		manager->Release();
@@ -52,7 +44,7 @@ void AimpDlnaDataStorage::Finalize() {
 
 void AimpDlnaDataStorage::FlushCache(int Reserved) {
 	ctrlPoint->Discover(NPT_HttpUrl("239.255.255.250", 1900, "*"), "ssdp:all", 5, 0.0, 0.0);
-	DataStorageManagerRefreshTask::Start(manager, mediaBrowser);
+	taskManager->StartTask(new DataStorageManagerRefreshTask(manager, mediaBrowser));
 }
 
 HRESULT AimpDlnaDataStorage::ConfigLoad(IAIMPConfig* Config, IAIMPString* Section) { 

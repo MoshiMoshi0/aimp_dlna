@@ -2,13 +2,13 @@
 
 class AimpDlnaGroupingTreeDataProvider : public IUnknownInterfaceImpl<IAIMPMLGroupingTreeDataProvider, IID_IAIMPMLGroupingTreeDataProvider> {
 private:
-	PLT_SyncMediaBrowser* mediaBrowser;
+	shared_ptr<PLT_SyncMediaBrowser> mediaBrowser;
 
 	HRESULT GetRootData(IAIMPMLGroupingTreeDataProviderSelection** Data);
 	HRESULT GetChildrenData(IAIMPMLGroupingTreeSelection* Selection, IAIMPMLGroupingTreeDataProviderSelection** Data);
 
 public:
-	AimpDlnaGroupingTreeDataProvider(PLT_SyncMediaBrowser* mediaBrowser) {
+	AimpDlnaGroupingTreeDataProvider(shared_ptr<PLT_SyncMediaBrowser> mediaBrowser) {
 		this->mediaBrowser = mediaBrowser;
 	}
 
