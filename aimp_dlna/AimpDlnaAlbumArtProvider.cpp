@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "AimpDlnaAlbumArtProvider.h"
 
-AimpDlnaAlbumArtProvider* AimpDlnaAlbumArtProvider::singleton = nullptr;
-
 HRESULT WINAPI AimpDlnaAlbumArtProvider::Get(IAIMPString *FileURI, IAIMPString *Artist, IAIMPString *Album, IAIMPPropertyList *Options, IAIMPImageContainer **Image) {
 	int isAllowed;
 	int maxSize;

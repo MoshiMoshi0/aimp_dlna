@@ -3,8 +3,6 @@
 #include "AimpDlnaMusicLibrary.h"
 #include "AimpDlnaPlugin.h"
 
-AimpDlnaDataStorage* AimpDlnaDataStorage::singleton = nullptr;
-
 void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {
 	manager = Manager;
 	manager->AddRef();

@@ -5,8 +5,6 @@
 
 class AimpDlnaDataStorage : public IUnknownInterfaceImpl<IAIMPMLExtensionDataStorage, IID_IAIMPMLExtensionDataStorage> {
 private:
-	static AimpDlnaDataStorage* singleton;
-
 	bool finalized{ false };
 	IAIMPMLDataStorageManager* manager;	
 	IAIMPMLDataProvider* dataProvider;
@@ -17,6 +15,7 @@ private:
 	PLT_CtrlPointReference ctrlPoint;
 	PLT_TaskManagerReference taskManager;
 
+public:
 	AimpDlnaDataStorage() : manager(nullptr), dataProvider(nullptr), mediaBrowser(nullptr) {
 		ctrlPoint = PLT_CtrlPointReference(new PLT_CtrlPoint());
 		taskManager = PLT_TaskManagerReference(new PLT_TaskManager());
@@ -27,19 +26,9 @@ private:
 		dataProvider = new AimpDlnaDataProvider(mediaBrowser);
 	}
 
-public:
-	static AimpDlnaDataStorage* instance() {
-		if (!singleton)
-			singleton = new AimpDlnaDataStorage();
-
-		return singleton;
-	}
-
 	~AimpDlnaDataStorage() {
 		if (!finalized)
 			Finalize();
-
-		singleton = nullptr;
 	}
 
 	void WINAPI Initialize(IAIMPMLDataStorageManager* Manager);

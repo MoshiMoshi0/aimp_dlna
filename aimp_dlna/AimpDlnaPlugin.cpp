@@ -29,12 +29,12 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 		return E_FAIL;
 	}
 
-	if (FAILED(core->RegisterExtension(IID_IAIMPServiceAlbumArt, static_cast<IAIMPExtensionAlbumArtProvider*>(AimpDlnaAlbumArtProvider::instance())))) {
+	if (FAILED(core->RegisterExtension(IID_IAIMPServiceAlbumArt, static_cast<IAIMPExtensionAlbumArtProvider*>(new AimpDlnaAlbumArtProvider())))) {
 		Finalize();
 		return E_FAIL;
 	}
 
-	if (FAILED(core->RegisterExtension(IID_IAIMPServiceMusicLibrary, static_cast<IAIMPMLExtensionDataStorage*>(AimpDlnaDataStorage::instance())))) {
+	if (FAILED(core->RegisterExtension(IID_IAIMPServiceMusicLibrary, static_cast<IAIMPMLExtensionDataStorage*>(new AimpDlnaDataStorage())))) {
 		Finalize();
 		return E_FAIL;
 	}
