@@ -111,7 +111,7 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetChildrenData(IAIMPMLGroupingTreeSel
 		return E_FAIL;
 
 	PLT_MediaObjectListReference objects;
-	if (NPT_FAILED(mediaBrowser->BrowseSync(device, containerId.c_str(), objects, false, 0, UINT_MAX)))
+	if (NPT_FAILED(mediaBrowser->BrowseSync(device, containerId.c_str(), objects)))
 		return E_FAIL;
 
 	if (objects.IsNull())

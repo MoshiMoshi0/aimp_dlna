@@ -10,15 +10,9 @@ void AimpDlnaDataStorage::Initialize(IAIMPMLDataStorageManager* Manager) {
 	upnp->AddCtrlPoint(ctrlPoint);
 	upnp->Start();
 
-	wchar_t* context;
-	wchar_t* token = wcstok_s((wchar_t*)Config::UuidBlacklist.c_str(), L"|", &context);
-	while (token) {
-		auto length = wcsnlen_s(token, 65);
-		if (length >= 32 && length <= 64) {
-			ctrlPoint->IgnoreUUID(StringUtils::ToString(token).c_str());
-		}
-		token = wcstok_s(NULL, L"|", &context);
-	}
+	for (auto uuid : StringUtils::Split(Config::UuidBlacklist, L"|"))
+		if(uuid.length() >= 32 && uuid.length() <= 64)
+			ctrlPoint->IgnoreUUID(StringUtils::ToString(uuid).c_str());
 
 	ctrlPoint->Discover(NPT_HttpUrl("239.255.255.250", 1900, "*"), "ssdp:all", 5, 0.0, 0.0);
 	taskManager->StartTask(new DataStorageManagerRefreshTask(manager, mediaBrowser));
@@ -37,6 +31,11 @@ void AimpDlnaDataStorage::Finalize() {
 	if (dataProvider != nullptr) {
 		dataProvider->Release();
 		dataProvider = nullptr;
+	}
+
+	if (albumArtProvider != nullptr) {
+		albumArtProvider->Release();
+		albumArtProvider = nullptr;
 	}
 }
 
@@ -87,7 +86,8 @@ HRESULT AimpDlnaDataStorage::GetFields(int Schema, IAIMPObjectList** List) {
 		addField(*List, EVDS_TrackTitle, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_FILTERING);
 		addField(*List, EVDS_TrackDuration, AIMPML_FIELDTYPE_DURATION);
 
-		addField(*List, EVDS_NodeId, AIMPML_FIELDTYPE_FILENAME, AIMPML_FIELDFLAG_INTERNAL | AIMPML_FIELDFLAG_REQUIRED);
+		addField(*List, EVDS_ContainerId, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_INTERNAL | AIMPML_FIELDFLAG_REQUIRED);
+		addField(*List, EVDS_DeviceUuid, AIMPML_FIELDTYPE_STRING, AIMPML_FIELDFLAG_REQUIRED);
 		break;
 	}
 	case AIMPML_FIELDS_SCHEMA_TABLE_VIEW_ALBUMTHUMBNAILS:
@@ -172,6 +172,15 @@ HRESULT WINAPI AimpDlnaDataStorage::QueryInterface(REFIID riid, LPVOID* ppvObjec
 		*ppvObject = dataProvider;
 		dataProvider->AddRef();
 		return S_OK;
+	}
+
+	auto version = AimpUtils::GetVersion();
+	if (get<0>(version) >= 4 && get<1>(version) >= 60) {
+		if (riid == IID_IAIMPMLAlbumArtProvider) {
+			*ppvObject = albumArtProvider;
+			albumArtProvider->AddRef();
+			return S_OK;
+		}
 	}
 
 	return Base::QueryInterface(riid, ppvObject);

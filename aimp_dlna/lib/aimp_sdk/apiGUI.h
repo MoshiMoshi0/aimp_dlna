@@ -1111,9 +1111,9 @@ static const GUID IID_IAIMPUIWndProcEvents = {0x61756957, 0x6E64, 0x5072, 0x6F, 
   {
 		public:
 			virtual HRESULT WINAPI Execute(HWND OwnerWnd, IAIMPString* Caption, 
-				IUnknown* EventsHandler, IAIMPString* Text, VARIANT** Value) = 0;
+				IUnknown* EventsHandler, IAIMPString* Text, VARIANT* Value) = 0;
 			virtual HRESULT WINAPI Execute2(HWND OwnerWnd, IAIMPString* Caption,
-				IUnknown* EventsHandler, IAIMPObjectList* TextForValues, VARIANT** Values, int ValueCount) = 0;
+				IUnknown* EventsHandler, IAIMPObjectList* TextForValues, VARIANT* Values, int ValueCount) = 0;
   };
 
   /* IAIMPUIInputDialogEvents */

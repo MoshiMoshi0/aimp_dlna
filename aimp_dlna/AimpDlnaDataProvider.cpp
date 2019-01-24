@@ -41,13 +41,13 @@ HRESULT WINAPI AimpDlnaDataProvider::GetData(IAIMPObjectList* Fields, IAIMPMLDat
 	if (objects.IsNull() || objects->GetItemCount() == 0)
 		return E_FAIL;
 
-	*Data = new AimpDlnaDataProviderSelection(containerId, objects, AimpUtils::ToWideStringList(Fields));
+	*Data = new AimpDlnaDataProviderSelection(deviceUuid, containerId, objects, AimpUtils::ToWideStringList(Fields));
 	return S_OK;
 }
 
 int AimpDlnaDataProvider::RecursiveBrowse(PLT_DeviceDataReference& device, const string& currentContainer, PLT_MediaObjectListReference& result, const int depth) {
 	PLT_MediaObjectListReference objects;
-	if (NPT_FAILED(mediaBrowser->BrowseSync(device, currentContainer.c_str(), objects, false)))
+	if (NPT_FAILED(mediaBrowser->BrowseSync(device, currentContainer.c_str(), objects)))
 		return NPT_FAILURE;
 
 	if (objects.IsNull() || objects->GetItemCount() == 0)

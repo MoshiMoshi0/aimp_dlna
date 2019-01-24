@@ -10,4 +10,5 @@ static const wstring EVDS_TrackAlbum = L"Album";
 static const wstring EVDS_TrackTitle = L"Title";
 static const wstring EVDS_TrackDuration = AIMPML_RESERVED_FIELD_DURATION;
 
-static const wstring EVDS_NodeId = L"NodeId";
+static const wstring EVDS_ContainerId = L"ContainerId";
+static const wstring EVDS_DeviceUuid = L"DeviceUuid";

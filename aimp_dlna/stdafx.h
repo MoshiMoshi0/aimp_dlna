@@ -14,6 +14,7 @@
 
 #include <string>
 #include <vector>
+#include <tuple>
 #include <tchar.h>
 #include <comdef.h>
 
@@ -24,6 +25,7 @@
 #include "apiMusicLibrary.h"
 #include "apiAlbumArt.h"
 #include "apiOptions.h"
+#include "apiInternet.h"
 
 #include "Platinum.h"
 #include "Neptune.h"
@@ -31,6 +33,7 @@
 #include "IUnknownInterfaceImpl.h"
 #include "AimpString.h"
 #include "AimpUtils.h"
+#include "AimpHttp.h" 
 #include "StringUtils.h"
 
 #include "AimpDlnaConfig.h"

@@ -6,6 +6,7 @@ class AimpUtils {
 private:
 	static IAIMPCore *core;
 	static IAIMPServiceMUI* muiService;
+	static IAIMPServiceVersionInfo* versionService;
 
 public:
 	static HRESULT Initialize(IAIMPCore *Core) {
@@ -14,6 +15,10 @@ public:
 		if (FAILED(core->QueryInterface(IID_IAIMPServiceMUI, reinterpret_cast<void**>(&muiService)))) {
 			return E_FAIL;
 		}
+		if (FAILED(core->QueryInterface(IID_IAIMPServiceVersionInfo, reinterpret_cast<void**>(&versionService)))) {
+			return E_FAIL;
+		}
+
 		return S_OK;
 	}
 
@@ -22,11 +27,19 @@ public:
 			muiService->Release();
 			muiService = nullptr;
 		}
+		if (versionService) {
+			versionService->Release();
+			versionService = nullptr;
+		}
 
 		core = nullptr;
 	}
 
 	static inline HRESULT CreateObject(REFIID IID, void **Obj){	return core->CreateObject(IID, Obj); }
+	static tuple<int, int, int> GetVersion() {
+		int version = versionService->GetVersionID();
+		return make_tuple(version / 1000, (version / 10) % 100, version % 10);
+	}
 
 	template<typename T>
 	static T* CreateObject(REFIID IID) {

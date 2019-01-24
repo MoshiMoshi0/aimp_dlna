@@ -42,5 +42,36 @@ public:
 
 		return result;
 	}
+
+	static vector<wstring> Split(const wstring& s, const wstring& delimeter) {
+		vector<wstring> result;
+		size_t pos = 0;
+
+		while (true) {
+			auto fpos = s.find(delimeter, pos);
+			if (fpos == wstring::npos) {
+				result.push_back(s.substr(pos));
+				break;
+			}
+
+			result.push_back(s.substr(pos, fpos - pos));
+			pos = fpos + delimeter.size();
+		}
+
+		return result;
+	}
+
+	static bool EndsWith(const wstring& s, const wstring& with, const bool& ignoreCase = true) {
+		if (with.size() > s.size())
+			return false;
+
+		if(ignoreCase)
+			return equal(s.end() - with.size(), s.end(), with.begin(), with.end(),
+				[](wchar_t a, wchar_t b) {
+					return towlower(a) == towlower(b);
+				});
+
+		return equal(s.end() - with.size(), s.end(), with.begin(), with.end());
+	}
 };
 

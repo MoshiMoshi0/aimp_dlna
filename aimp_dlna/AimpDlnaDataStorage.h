@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AimpDlnaDataProvider.h"
+#include "AimpDlnaAlbumArtProvider.h"
 #include "AimpDlnaGroupingTreeDataProvider.h"
 
 class AimpDlnaDataStorage : public IUnknownInterfaceImpl<IAIMPMLExtensionDataStorage, IID_IAIMPMLExtensionDataStorage> {
@@ -8,6 +9,7 @@ private:
 	bool finalized{ false };
 	IAIMPMLDataStorageManager* manager;	
 	IAIMPMLDataProvider* dataProvider;
+	IAIMPMLAlbumArtProvider* albumArtProvider;
 
 	shared_ptr<PLT_UPnP> upnp;
 	shared_ptr<PLT_SyncMediaBrowser> mediaBrowser;
@@ -24,6 +26,7 @@ public:
 		mediaBrowser = make_shared<PLT_SyncMediaBrowser>(ctrlPoint, Config::UseCache);
 
 		dataProvider = new AimpDlnaDataProvider(mediaBrowser);
+		albumArtProvider = new AimpDlnaAlbumArtProvider(mediaBrowser);
 	}
 
 	~AimpDlnaDataStorage() {

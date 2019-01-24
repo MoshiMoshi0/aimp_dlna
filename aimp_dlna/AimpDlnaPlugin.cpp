@@ -15,6 +15,11 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 		Finalize();
 		return E_FAIL;
 	}
+
+	if (FAILED(AimpHttp::Initialize(core))) {
+		Finalize();
+		return E_FAIL;
+	}
 	
 	if (FAILED(Config::Initialize(core))) {
 		Finalize();
@@ -29,11 +34,6 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 		return E_FAIL;
 	}
 
-	if (FAILED(core->RegisterExtension(IID_IAIMPServiceAlbumArt, static_cast<IAIMPExtensionAlbumArtProvider*>(new AimpDlnaAlbumArtProvider())))) {
-		Finalize();
-		return E_FAIL;
-	}
-
 	if (FAILED(core->RegisterExtension(IID_IAIMPServiceMusicLibrary, static_cast<IAIMPMLExtensionDataStorage*>(new AimpDlnaDataStorage())))) {
 		Finalize();
 		return E_FAIL;
@@ -44,6 +44,7 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 
 HRESULT WINAPI Plugin::Finalize() {
 	AimpUtils::Finalize();
+	AimpHttp::Finalize();
 	Config::Finalize();
 
 	if (core) {

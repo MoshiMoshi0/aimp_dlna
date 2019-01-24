@@ -394,8 +394,11 @@ const int AIMP_MSG_PROPERTY_REPEAT_SINGLE_FILE_PLAYLISTS = AIMP_MSG_PROPERTY_BAS
 const int AIMP_MSG_PROPERTY_ACTION_ON_END_OF_PLAYLIST = AIMP_MSG_PROPERTY_BASE + 27;
 
 // AParam1: AIMP_MSG_PROPVALUE_GET / AIMP_MSG_PROPVALUE_SET
-// AParam2: Pointer to LongBool (32-bit boolean value) variable
-const int AIMP_MSG_PROPERTY_STOP_AFTER_TRACK = AIMP_MSG_PROPERTY_BASE + 28;
+// AParam2: Pointer to Integer variable
+//   0 - Default Action
+//   1 - Jump to next track and stop playback
+//   2 - Jump to next track and pause playback
+const int AIMP_MSG_PROPERTY_ACTION_ON_END_OF_TRACK = AIMP_MSG_PROPERTY_BASE + 28;
 
 // Start / Stop Internet Radio capture
 // AParam1: AIMP_MSG_PROPVALUE_GET / AIMP_MSG_PROPVALUE_SET
@@ -415,6 +418,16 @@ const int AIMP_MSG_PROPERTY_VISUAL_FULLSCREEN = AIMP_MSG_PROPERTY_BASE + 31;
 // AParam1: AIMP_MSG_PROPVALUE_GET
 // AParam2: Pointer to Single (32-bit floating point value) variable, [0..100]%
 const int AIMP_MSG_PROPERTY_PLAYER_BUFFERING = AIMP_MSG_PROPERTY_BASE + 32;
+
+// Start / Stop Internet Radio capture (single track only)
+// AParam1: AIMP_MSG_PROPVALUE_GET / AIMP_MSG_PROPVALUE_SET
+// AParam2: Pointer to LongBool (32-bit boolean value) variable
+const int AIMP_MSG_PROPERTY_RADIOCAP_SINGLE_TRACK = AIMP_MSG_PROPERTY_BASE + 33;
+
+// State of cross-mixing feature
+// AParam1: AIMP_MSG_PROPVALUE_GET / AIMP_MSG_PROPVALUE_SET
+// AParam2: Pointer to LongBool (32-bit boolean value) variable
+const int AIMP_MSG_PROPERTY_CROSSMIXING = AIMP_MSG_PROPERTY_BASE + 34;
 
 //==============================================================================
 // Events

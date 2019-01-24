@@ -1,7 +1,13 @@
 #pragma once
 
-class AimpDlnaAlbumArtProvider : public IUnknownInterfaceImpl<IAIMPExtensionAlbumArtProvider, IID_IAIMPExtensionAlbumArtProvider> {
+class AimpDlnaAlbumArtProvider : public IUnknownInterfaceImpl<IAIMPMLAlbumArtProvider, IID_IAIMPMLAlbumArtProvider> {
+private:
+	PLT_SyncMediaBrowser* mediaBrowser;
+
 public:
-	HRESULT WINAPI Get(IAIMPString *FileURI, IAIMPString *Artist, IAIMPString *Album, IAIMPPropertyList *Options, IAIMPImageContainer **Image);
-	DWORD WINAPI GetCategory() { return AIMP_ALBUMART_PROVIDER_CATEGORY_INTERNET; }
+	AimpDlnaAlbumArtProvider(PLT_SyncMediaBrowser* mediaBrowser) {
+		this->mediaBrowser = mediaBrowser;
+	}
+
+	HRESULT WINAPI Get(IAIMPObjectList* Fields, VARIANT* Values, IAIMPPropertyList* Options, IAIMPImageContainer** Image);
 };
