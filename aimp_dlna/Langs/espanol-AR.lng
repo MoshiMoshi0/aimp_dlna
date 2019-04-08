@@ -1,0 +1,21 @@
+﻿[Common]
+AIMP.AimpDlna.ML.Default=Predeterminado
+
+[AimpDlna]
+Caption=DLNA
+
+[AimpDlna.Options]
+LogLevel=Nivel del registro*:
+Blacklist=Lista negra de identificadores únicos (UUID)*:
+ScanStop=Detener la búsqueda luego que se encuentre el primer servidor
+ScanDuration=Duración máxima para la búsqueda de servidores:
+DelayFor=Retrasar la detención:
+UseCache=Usar caché*
+CacheDepth=Profundidad de los objetos en caché a incluir:
+Restart=* requiere reinicio de la aplicación
+MS=ms
+
+[AimpDlna.Options.Group]
+Discovery=Búsqueda
+Cache=Caché
+Advanced=Avanzado

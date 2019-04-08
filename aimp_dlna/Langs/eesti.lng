@@ -1,0 +1,21 @@
+[Common]
+AIMP.AimpDlna.ML.Default=Vaikimisi
+
+[AimpDlna]
+Caption=DLNA
+
+[AimpDlna.Options]
+LogLevel=Logi tase*:
+Blacklist=UUID`i must nimekiri*:
+ScanStop=Peata skaneerimine, kui esimene server on leitud
+ScanDuration=Maksimaalne skaneerimise pikkus:
+DelayFor=Peatamise viivitus:
+UseCache=Kasuta puhvrit*
+CacheDepth=Puhverdatud objektide sügavus:
+Restart=* Nõuab rakenduse taaskäivitust
+MS=ms
+
+[AimpDlna.Options.Group]
+Discovery=Skaneeri
+Cache=Puhver
+Advanced=Täpsem
