@@ -1,1 +1,1 @@
-aimp_dlna
+This is home to aimp_dlna, a DLNA client plugin for Aimp media player.
