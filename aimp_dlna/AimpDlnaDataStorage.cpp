@@ -175,7 +175,7 @@ HRESULT WINAPI AimpDlnaDataStorage::QueryInterface(REFIID riid, LPVOID* ppvObjec
 	}
 
 	auto version = AimpUtils::GetVersion();
-	if (get<0>(version) >= 4 && get<1>(version) >= 60) {
+	if (get<0>(version) > 4 || (get<0>(version) == 4 && get<1>(version) >= 60)) {
 		if (riid == IID_IAIMPMLAlbumArtProvider) {
 			*ppvObject = albumArtProvider;
 			albumArtProvider->AddRef();
