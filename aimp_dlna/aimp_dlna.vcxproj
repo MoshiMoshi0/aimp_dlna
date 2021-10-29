@@ -69,7 +69,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="UserMacros">
+    <AimpDir>E:\Program Files (x86)\AIMP</AimpDir>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
@@ -98,8 +100,8 @@
       <ModuleDefinitionFile>aimp_dlna.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\aimp_dlna.dll" /Y
-copy "$(ProjectDir)Langs" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\Langs" /Y</Command>
+      <Command>copy "$(TargetPath)" "$(AimpDir)\Plugins\aimp_dlna\aimp_dlna.dll" /Y
+copy "$(ProjectDir)Langs" "$(AimpDir)\Plugins\aimp_dlna\Langs" /Y</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>taskkill /t /f /fi "IMAGENAME eq aimp.exe"</Command>
@@ -140,8 +142,8 @@ copy "$(ProjectDir)Langs" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\Langs" 
       <ModuleDefinitionFile>aimp_dlna.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\aimp_dlna.dll" /Y
-copy "$(ProjectDir)Langs" "E:\Program Files (x86)\AIMP\Plugins\aimp_dlna\Langs" /Y</Command>
+      <Command>copy "$(TargetPath)" "$(AimpDir)\Plugins\aimp_dlna\aimp_dlna.dll" /Y
+copy "$(ProjectDir)Langs" "$(AimpDir)\Plugins\aimp_dlna\Langs" /Y</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>taskkill /t /f /fi "IMAGENAME eq aimp.exe"</Command>
