@@ -36,7 +36,9 @@ HRESULT WINAPI AimpDlnaGroupingTreeDataProviderSelection::GetValue(IAIMPString**
 		return E_FAIL;
 
 	*FieldName = AimpString(EVDS_ContainerId, true);
-	if (FAILED(VariantCopyInd(Value, &_variant_t(GetCurrentNode()->Value.c_str()))))
+
+	_variant_t currentValue(GetCurrentNode()->Value.c_str());
+	if (FAILED(VariantCopyInd(Value, &currentValue)))
 		return E_FAIL;
 	return S_OK;
 }
