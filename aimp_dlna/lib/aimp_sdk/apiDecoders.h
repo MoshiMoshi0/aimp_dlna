@@ -1,13 +1,12 @@
 /************************************************/
 /*                                              */
 /*          AIMP Programming Interface          */
-/*               v4.50 build 2000               */
+/*               v5.00 build 2300               */
 /*                                              */
 /*                Artem Izmaylov                */
-/*                (C) 2006-2017                 */
+/*                (C) 2006-2020                 */
 /*                 www.aimp.ru                  */
-/*                                              */
-/*            Mail: support@aimp.ru             */
+/*               support@aimp.ru                */
 /*                                              */
 /************************************************/
 
@@ -24,7 +23,10 @@ static const GUID IID_IAIMPAudioDecoder = {0x41494D50, 0x4175, 0x6469, 0x6F, 0x4
 static const GUID IID_IAIMPAudioDecoderBufferingProgress = {0x41494D50, 0x4175, 0x6469, 0x6F, 0x44, 0x65, 0x63, 0x42, 0x75, 0x66, 0x66};
 static const GUID IID_IAIMPExtensionAudioDecoder = {0x41494D50, 0x4578, 0x7441, 0x75, 0x64, 0x69, 0x6F, 0x44, 0x65, 0x63, 0x00};
 static const GUID IID_IAIMPExtensionAudioDecoderOld = {0x41494D50, 0x4578, 0x7441, 0x75, 0x64, 0x69, 0x6F, 0x44, 0x65, 0x63, 0x4F};
+static const GUID IID_IAIMPExtensionAudioDecoderPriority = {0x41494D50, 0x4578, 0x7444, 0x65, 0x63, 0x50, 0x72, 0x69, 0x6F, 0x72, 0x00};
 static const GUID IID_IAIMPServiceAudioDecoders = {0x41494D50, 0x5372, 0x7641, 0x75, 0x64, 0x69, 0x6F, 0x44, 0x65, 0x63, 0x00};
+static const GUID IID_IAIMPAudioDecoderListener = {0x41494D50, 0x4175, 0x6469, 0x6F, 0x44, 0x65, 0x63, 0x4C, 0x73, 0x74, 0x00};
+static const GUID IID_IAIMPAudioDecoderNotifications = {0x41494D50, 0x4175, 0x6469, 0x6F, 0x44, 0x65, 0x63, 0x4E, 0x74, 0x66, 0x79};
 
 const int AIMP_DECODER_SAMPLEFORMAT_08BIT      = 1;
 const int AIMP_DECODER_SAMPLEFORMAT_16BIT      = 2;
@@ -34,6 +36,9 @@ const int AIMP_DECODER_SAMPLEFORMAT_32BITFLOAT = 5;
 
 // Flags for IAIMPExtensionAudioDecoder / IAIMPExtensionAudioDecoderOld
 const int AIMP_DECODER_FLAGS_FORCE_CREATE_INSTANCE = 0x1000;
+
+// Flags for IAIMPAudioDecoderListener.Changed
+const int AIMP_DECODER_CHANGE_INPUTFORMAT = 1;
 
 /* IAIMPAudioDecoder */
   
@@ -62,6 +67,22 @@ class IAIMPAudioDecoderBufferingProgress: public IUnknown
 		virtual BOOL WINAPI Get(double* Value) = 0;
 };
 
+/* IAIMPAudioDecoderListener */
+class IAIMPAudioDecoderListener: public IUnknown
+{
+	public:
+		virtual void WINAPI Changed(int Changes) = 0;
+};
+
+/* IAIMPAudioDecoderNotifications */
+
+class IAIMPAudioDecoderNotifications: public IUnknown
+{
+	public:
+		virtual void WINAPI ListenerAdd(IAIMPAudioDecoderListener* Listener) = 0;
+		virtual void WINAPI ListenerRemove(IAIMPAudioDecoderListener* Listener) = 0;
+};
+
 /* IAIMPExtensionAudioDecoder */
   
 class IAIMPExtensionAudioDecoder: public IUnknown
@@ -78,6 +99,14 @@ class IAIMPExtensionAudioDecoderOld: public IUnknown
 	public:
 		virtual HRESULT WINAPI CreateDecoder(IAIMPString *FileName, DWORD Flags,
 			IAIMPErrorInfo *ErrorInfo, IAIMPAudioDecoder **Decoder) = 0;
+};
+
+/* IAIMPExtensionAudioDecoderPriority */
+
+class IAIMPExtensionAudioDecoderPriority: public IUnknown
+{
+	public:
+		virtual int WINAPI GetPriority() = 0;
 };
 
 /* IAIMPServiceAudioDecoders */

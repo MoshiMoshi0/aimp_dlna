@@ -1,13 +1,12 @@
 /************************************************/
 /*                                              */
 /*          AIMP Programming Interface          */
-/*               v4.50 build 2000               */
+/*               v5.00 build 2300               */
 /*                                              */
 /*                Artem Izmaylov                */
-/*                (C) 2006-2017                 */
+/*                (C) 2006-2020                 */
 /*                 www.aimp.ru                  */
-/*                                              */
-/*            Mail: support@aimp.ru             */
+/*               support@aimp.ru                */
 /*                                              */
 /************************************************/
 
@@ -44,6 +43,7 @@ const int AIMP_SERVICE_ALBUMART_PROPID_FIND_IN_INTERNET_MAX_FILE_SIZE = 5;
 const int AIMP_SERVICE_ALBUMART_FLAGS_NOCACHE  = 1;
 const int AIMP_SERVICE_ALBUMART_FLAGS_ORIGINAL = 2;
 const int AIMP_SERVICE_ALBUMART_FLAGS_WAITFOR  = 4;
+const int AIMP_SERVICE_ALBUMART_FLAGS_OFFLINE  = 8;
 
 typedef void (CALLBACK TAIMPServiceAlbumArtReceiveProc)(IAIMPImage *image, IAIMPImageContainer *imageContainer, void *UserData);
 

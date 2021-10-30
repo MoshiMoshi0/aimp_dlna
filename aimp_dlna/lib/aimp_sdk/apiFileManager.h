@@ -1,13 +1,12 @@
 /************************************************/
 /*                                              */
 /*          AIMP Programming Interface          */
-/*               v4.10 build 1800               */
+/*               v5.00 build 2300               */
 /*                                              */
 /*                Artem Izmaylov                */
-/*                (C) 2006-2016                 */
+/*                (C) 2006-2020                 */
 /*                 www.aimp.ru                  */
-/*                 www.aimp.ru                  */
-/*            Mail: support@aimp.ru             */
+/*               support@aimp.ru                */
 /*                                              */
 /************************************************/
 
@@ -44,44 +43,51 @@ static const GUID IID_IAIMPServiceFileSystems = {0x41494D50, 0x5372, 0x7646, 0x5
 static const GUID IID_IAIMPServiceFileURI2 = {0x41494D50, 0x5372, 0x7646, 0x69, 0x6C, 0x65, 0x55, 0x52, 0x49, 0x32, 0x00};
 
 // PropertyID for the IAIMPFileInfo
-const int AIMP_FILEINFO_PROPID_CUSTOM            = 0;
-const int AIMP_FILEINFO_PROPID_ALBUM             = 1;
-const int AIMP_FILEINFO_PROPID_ALBUMART          = 2;
-const int AIMP_FILEINFO_PROPID_ALBUMARTIST       = 3;
-const int AIMP_FILEINFO_PROPID_ALBUMGAIN         = 4;
-const int AIMP_FILEINFO_PROPID_ALBUMPEAK         = 5;
-const int AIMP_FILEINFO_PROPID_ARTIST            = 6;
-const int AIMP_FILEINFO_PROPID_BITRATE           = 7;
-const int AIMP_FILEINFO_PROPID_BPM               = 8;
-const int AIMP_FILEINFO_PROPID_CHANNELS          = 9;
-const int AIMP_FILEINFO_PROPID_COMMENT           = 10;
-const int AIMP_FILEINFO_PROPID_COMPOSER          = 11;
-const int AIMP_FILEINFO_PROPID_COPYRIGHT         = 12;
-const int AIMP_FILEINFO_PROPID_CUESHEET          = 13;
-const int AIMP_FILEINFO_PROPID_DATE              = 14;
-const int AIMP_FILEINFO_PROPID_DISKNUMBER        = 15;
-const int AIMP_FILEINFO_PROPID_DISKTOTAL         = 16;
-const int AIMP_FILEINFO_PROPID_DURATION          = 17;
-const int AIMP_FILEINFO_PROPID_FILENAME          = 18;
-const int AIMP_FILEINFO_PROPID_FILESIZE          = 19;
-const int AIMP_FILEINFO_PROPID_GENRE             = 20;
-const int AIMP_FILEINFO_PROPID_LYRICS            = 21;
-const int AIMP_FILEINFO_PROPID_MARK              = 22;
-const int AIMP_FILEINFO_PROPID_PUBLISHER         = 23;
-const int AIMP_FILEINFO_PROPID_SAMPLERATE        = 24;
-const int AIMP_FILEINFO_PROPID_TITLE             = 25;
-const int AIMP_FILEINFO_PROPID_TRACKGAIN         = 26;
-const int AIMP_FILEINFO_PROPID_TRACKNUMBER       = 27;
-const int AIMP_FILEINFO_PROPID_TRACKPEAK         = 28;
-const int AIMP_FILEINFO_PROPID_TRACKTOTAL        = 29;
-const int AIMP_FILEINFO_PROPID_URL               = 30;
-const int AIMP_FILEINFO_PROPID_BITDEPTH          = 31;
-const int AIMP_FILEINFO_PROPID_CODEC             = 32;
-const int AIMP_FILEINFO_PROPID_STAT_ADDINGDATE    = 40;
-const int AIMP_FILEINFO_PROPID_STAT_LASTPLAYDATE  = 41;
-const int AIMP_FILEINFO_PROPID_STAT_MARK	      = 42;
-const int AIMP_FILEINFO_PROPID_STAT_PLAYCOUNT     = 43;
-const int AIMP_FILEINFO_PROPID_STAT_RATING        = 44;
+const int AIMP_FILEINFO_PROPID_CUSTOM            = 0; // IUnknown
+const int AIMP_FILEINFO_PROPID_ALBUM             = 1; // IAIMPString
+const int AIMP_FILEINFO_PROPID_ALBUMART          = 2; // IAIMPImage / IAIMPImageContainer
+const int AIMP_FILEINFO_PROPID_ALBUMARTIST       = 3; // IAIMPString
+const int AIMP_FILEINFO_PROPID_ALBUMGAIN         = 4; // Float
+const int AIMP_FILEINFO_PROPID_ALBUMPEAK         = 5; // Float
+const int AIMP_FILEINFO_PROPID_ARTIST            = 6; // IAIMPString
+const int AIMP_FILEINFO_PROPID_BITRATE           = 7; // Int32
+const int AIMP_FILEINFO_PROPID_BPM               = 8; // Int32
+const int AIMP_FILEINFO_PROPID_CHANNELS          = 9; // Int32
+const int AIMP_FILEINFO_PROPID_COMMENT           = 10; // IAIMPString
+const int AIMP_FILEINFO_PROPID_COMPOSER          = 11; // IAIMPString
+const int AIMP_FILEINFO_PROPID_COPYRIGHT         = 12; // IAIMPString
+const int AIMP_FILEINFO_PROPID_CUESHEET          = 13; // IAIMPString
+const int AIMP_FILEINFO_PROPID_DATE              = 14; // IAIMPString
+const int AIMP_FILEINFO_PROPID_DISKNUMBER        = 15; // IAIMPString
+const int AIMP_FILEINFO_PROPID_DISKTOTAL         = 16; // IAIMPString
+const int AIMP_FILEINFO_PROPID_DURATION          = 17; // Float
+const int AIMP_FILEINFO_PROPID_FILENAME          = 18; // IAIMPString
+const int AIMP_FILEINFO_PROPID_FILESIZE          = 19; // Int64
+const int AIMP_FILEINFO_PROPID_GENRE             = 20; // IAIMPString
+const int AIMP_FILEINFO_PROPID_LYRICS            = 21; // IAIMPString
+const int AIMP_FILEINFO_PROPID_PUBLISHER         = 23; // Int32
+const int AIMP_FILEINFO_PROPID_SAMPLERATE        = 24; // Int32
+const int AIMP_FILEINFO_PROPID_TITLE             = 25; // IAIMPString
+const int AIMP_FILEINFO_PROPID_TRACKGAIN         = 26; // Float
+const int AIMP_FILEINFO_PROPID_TRACKNUMBER       = 27; // IAIMPString
+const int AIMP_FILEINFO_PROPID_TRACKPEAK         = 28; // Float
+const int AIMP_FILEINFO_PROPID_TRACKTOTAL        = 29; // IAIMPString
+const int AIMP_FILEINFO_PROPID_URL               = 30; // IAIMPString
+const int AIMP_FILEINFO_PROPID_BITDEPTH          = 31; // Int32
+const int AIMP_FILEINFO_PROPID_CODEC             = 32; // IAIMPString
+const int AIMP_FILEINFO_PROPID_CONDUCTOR         = 33; // IAIMPString
+const int AIMP_FILEINFO_PROPID_MOOD              = 34; // IAIMPString
+const int AIMP_FILEINFO_PROPID_CATALOG           = 35; // IAIMPString
+const int AIMP_FILEINFO_PROPID_ISRC              = 36; // IAIMPString
+const int AIMP_FILEINFO_PROPID_LYRICIST          = 37; // IAIMPString
+const int AIMP_FILEINFO_PROPID_ENCODEDBY         = 38; // IAIMPString
+const int AIMP_FILEINFO_PROPID_RATING            = 39; // Int32
+const int AIMP_FILEINFO_PROPID_STAT_ADDINGDATE      = 40; // Float (TDateTime)
+const int AIMP_FILEINFO_PROPID_STAT_LASTPLAYDATE    = 41; // Float (TDateTime)
+const int AIMP_FILEINFO_PROPID_STAT_MARK            = 42; // Int32
+const int AIMP_FILEINFO_PROPID_STAT_PLAYCOUNT       = 43; // Int32
+const int AIMP_FILEINFO_PROPID_STAT_RATING          = 44; // Float
+const int AIMP_FILEINFO_PROPID_STAT_DISPLAYING_MARK = 22; // Float
 
 // PropertyID for the IAIMPVirtualFile
 const int AIMP_VIRTUALFILE_PROPID_FILEURI          = 0;

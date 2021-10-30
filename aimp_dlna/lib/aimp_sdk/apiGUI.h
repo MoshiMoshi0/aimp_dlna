@@ -1,13 +1,12 @@
 /************************************************/
 /*                                              */
 /*          AIMP Programming Interface          */
-/*               v4.50 build 2000               */
+/*               v5.00 build 2300               */
 /*                                              */
 /*                Artem Izmaylov                */
-/*                (C) 2006-2017                 */
+/*                (C) 2006-2020                 */
 /*                 www.aimp.ru                  */
-/*                                              */
-/*            Mail: support@aimp.ru             */
+/*               support@aimp.ru                */
 /*                                              */
 /************************************************/
 
@@ -19,9 +18,7 @@
 #include "apiObjects.h"
 #include "apiMenu.h"
 
-
 static const GUID IID_IAIMPServiceUI = {0x41494D50, 0x5365, 0x7276, 0x69, 0x63, 0x65, 0x55, 0x49, 0x00, 0x00, 0x00};
-static const GUID IID_IAIMPUIDPIAwareness = {0x61756944, 0x5049, 0x4177, 0x61, 0x72, 0x65, 0x6E, 0x65, 0x73, 0x73, 0x00};
 static const GUID IID_IAIMPUIBaseButtonnedEdit = {0x61756942, 0x6173, 0x6542, 0x74, 0x6E, 0x45, 0x64, 0x69, 0x74, 0x00, 0x00};
 static const GUID IID_IAIMPUIBaseComboBox = {0x61756942, 0x6173, 0x6543, 0x6F, 0x6D, 0x62, 0x6F, 0x00, 0x00, 0x00, 0x00};
 static const GUID IID_IAIMPUIBaseEdit = {0x61756942, 0x6173, 0x6545, 0x64, 0x69, 0x74, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -34,8 +31,10 @@ static const GUID IID_IAIMPUICategory = {0x61756943, 0x6174, 0x6567, 0x6F, 0x72,
 static const GUID IID_IAIMPUIChangeEvents = {0x61756945, 0x766E, 0x7443, 0x68, 0x61, 0x6E, 0x67, 0x65, 0x00, 0x00, 0x00};
 static const GUID IID_IAIMPUICheckBox = {0x61756943, 0x6865, 0x636B, 0x42, 0x6F, 0x78, 0x00, 0x00, 0x00, 0x00, 0x00};
 static const GUID IID_IAIMPUICheckComboBox = {0x61756943, 0x6865, 0x636B, 0x65, 0x64, 0x43, 0x6F, 0x6D, 0x62, 0x6F, 0x00};
+static const GUID IID_IAIMPUIColorSchema = {0x617569D1, 0x6F6C, 0x6F72, 0x53, 0x63, 0x68, 0x65, 0x6D, 0x61, 0x00, 0x00};
 static const GUID IID_IAIMPUIComboBox = {0x61756943, 0x6F6D, 0x626F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 static const GUID IID_IAIMPUIControl = {0x61756943, 0x6F6E, 0x7472, 0x6F, 0x6C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+static const GUID IID_IAIMPUIDPIAwareness = {0x61756944, 0x5049, 0x4177, 0x61, 0x72, 0x65, 0x6E, 0x65, 0x73, 0x73, 0x00};
 static const GUID IID_IAIMPUIDrawEvents = {0x61756945, 0x766E, 0x7444, 0x72, 0x61, 0x77, 0x00, 0x00, 0x00, 0x00, 0x00};
 static const GUID IID_IAIMPUIEdit = {0x61756945, 0x6469, 0x7400, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 static const GUID IID_IAIMPUIEditButton = {0x61756945, 0x6469, 0x7442, 0x74, 0x6E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -43,6 +42,7 @@ static const GUID IID_IAIMPUIFileDialogs = {0x61756946, 0x696C, 0x6544, 0x6C, 0x
 static const GUID IID_IAIMPUIForm = {0x61756946, 0x6F72, 0x6D00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 static const GUID IID_IAIMPUIFormEvents = {0x61756946, 0x6F72, 0x6D45, 0x76, 0x65, 0x6E, 0x74, 0x73, 0x00, 0x00, 0x00};
 static const GUID IID_IAIMPUIFormEvents2 = {0x61756946, 0x6F72, 0x6D45, 0x76, 0x65, 0x6E, 0x74, 0x73, 0x32, 0x00, 0x00};
+static const GUID IID_IAIMPUIFormEvents3 = {0x61756946, 0x6F72, 0x6D45, 0x76, 0x65, 0x6E, 0x74, 0x73, 0x33, 0x00, 0x00};
 static const GUID IID_IAIMPUIGroupBox = {0x61756947, 0x726F, 0x7570, 0x42, 0x6F, 0x78, 0x00, 0x00, 0x00, 0x00, 0x00};
 static const GUID IID_IAIMPUIImage = {0x61756949, 0x6D61, 0x6765, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 static const GUID IID_IAIMPUIImageComboBox = {0x61756949, 0x6D61, 0x6765, 0x43, 0x6F, 0x6D, 0x62, 0x6F, 0x00, 0x00, 0x00};
@@ -92,6 +92,8 @@ static const GUID IID_IAIMPUIWndProcEvents = {0x61756957, 0x6E64, 0x5072, 0x6F, 
 /*----------------------------------------------------------------------------------------------------------------------*/
 /* Flags																												   */
 /*----------------------------------------------------------------------------------------------------------------------*/
+  const int AIMPUI_STYLE_LIGHT      = 0;
+  const int AIMPUI_STYLE_DARK       = 1;
 
   // Modifiers Flags
   const int AIMPUI_FLAGS_MOD_ALT    = 1;
@@ -414,6 +416,7 @@ static const GUID IID_IAIMPUIWndProcEvents = {0x61756957, 0x6E64, 0x5072, 0x6F, 
   const int AIMPUI_FORM_PROPID_ICON          = AIMPUI_WINCONTROL_MAX_PROPID + 5;
   const int AIMPUI_FORM_PROPID_PADDING       = AIMPUI_WINCONTROL_MAX_PROPID + 6;
   const int AIMPUI_FORM_PROPID_SHOWONTASKBAR = AIMPUI_WINCONTROL_MAX_PROPID + 7;
+  const int AIMPUI_FORM_PROPID_STYLE         = AIMPUI_WINCONTROL_MAX_PROPID + 8;
 
   // PropID for IAIMPUIProgressDialog
   const int AIMPUI_PROGRESSDLG_PROPID_CAPTION                  = 1;
@@ -452,6 +455,17 @@ static const GUID IID_IAIMPUIWndProcEvents = {0x61756957, 0x6E64, 0x5072, 0x6F, 
 		public:
 			virtual BOOL WINAPI IsDPIAware() = 0;
 			virtual HRESULT WINAPI SetDPIAware(BOOL Value) = 0;
+  };
+
+  /* IAIMPUIColorSchema */
+
+  class IAIMPUIColorSchema: public IAIMPPropertyList
+  {
+		public:
+			virtual void WINAPI ApplyToARGB(DWORD* ARGB) = 0;
+			virtual void WINAPI ApplyToColor(DWORD* Color) = 0;
+			virtual void WINAPI ApplyToColors(RGBQUAD* Colors, int numbersOfColors) = 0;
+			virtual void WINAPI ApplyToImage(IAIMPImage* Image) = 0;
   };
 
   /* IAIMPUIChangeEvents */
@@ -1081,6 +1095,14 @@ static const GUID IID_IAIMPUIWndProcEvents = {0x61756957, 0x6E64, 0x5072, 0x6F, 
   {
 		public:
 			virtual void WINAPI OnChangeScale(IAIMPUIForm* Sender, int Multiplier, int Divider) = 0;
+  };
+
+  /* IAIMPUIFormEvents3 */
+
+  class IAIMPUIFormEvents3: public IUnknown
+  {
+		public:
+			virtual void WINAPI OnStyleChanged(IAIMPUIForm* Sender, int Style) = 0;
   };
 
 /*----------------------------------------------------------------------------------------------------------------------*/
