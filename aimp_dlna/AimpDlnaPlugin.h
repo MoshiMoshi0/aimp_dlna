@@ -26,13 +26,14 @@ public:
 
 	static wstring GetVersionString() {
 		wchar_t szModPath[MAX_PATH] = { '\0' };
-		GetModuleFileName(Plugin::Module, szModPath, sizeof(szModPath));
+		GetModuleFileName(Plugin::Module, szModPath, MAX_PATH);
 		DWORD dwHandle;
 		DWORD dwSize = GetFileVersionInfoSize(szModPath, &dwHandle);
 
+		wstring result = L"0.0.0.0";
 		if (dwSize > 0) {
-			BYTE* pbBuf = static_cast<BYTE*>(alloca(dwSize));
-			if (GetFileVersionInfo(szModPath, dwHandle, dwSize, pbBuf)) {
+			BYTE* pbBuf = static_cast<BYTE*>(_malloca(dwSize));
+			if (pbBuf != nullptr && GetFileVersionInfo(szModPath, 0, dwSize, pbBuf)) {
 				UINT uiSize;
 				VS_FIXEDFILEINFO *verInfo = NULL;
 				if (VerQueryValue(pbBuf, L"\\", reinterpret_cast<LPVOID*>(&verInfo), &uiSize)) {
@@ -41,12 +42,14 @@ public:
 					auto build = HIWORD(verInfo->dwProductVersionLS);
 					auto patch = LOWORD(verInfo->dwProductVersionLS);
 
-					return to_wstring(major) + L"." + to_wstring(minor) + L"." + to_wstring(build) + L"." + to_wstring(patch);
+					result = to_wstring(major) + L"." + to_wstring(minor) + L"." + to_wstring(build) + L"." + to_wstring(patch);
 				}
 			}
+
+			_freea(pbBuf);
 		}
 
-		return L"0.0.0.0";
+		return result;
 	}
 
 	~Plugin() {

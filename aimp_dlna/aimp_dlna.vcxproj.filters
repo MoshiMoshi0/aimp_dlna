@@ -70,6 +70,9 @@
     <ClInclude Include="AimpHttp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AimpDlnaPlugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -107,9 +110,6 @@
     </ClCompile>
     <ClCompile Include="AimpDlnaPlugin.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AimpDlnaPlugin.h">
-      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="AimpDlnaConfig.cpp">
       <Filter>Source Files</Filter>

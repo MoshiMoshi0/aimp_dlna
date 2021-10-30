@@ -16,8 +16,8 @@ HRESULT WINAPI AimpDlnaGroupingTreeDataProvider::AppendFilter(IAIMPMLDataFilterG
 			throw exception();
 
 		IAIMPString* fieldName = nullptr;
-		VARIANT value1, value2;
-		value1 = value2 = VARIANT();
+		VARIANT value1 = VARIANT();
+		VARIANT value2 = VARIANT();
 
 		if (FAILED(Selection->GetValue(0, &fieldName, &value1)))
 			throw exception();
@@ -37,7 +37,7 @@ HRESULT WINAPI AimpDlnaGroupingTreeDataProvider::AppendFilter(IAIMPMLDataFilterG
 		} else {
 			throw exception();
 		}
-	} catch (const exception& e) {
+	} catch (const exception&) {
 		result = E_FAIL;
 	}
 
@@ -92,7 +92,7 @@ HRESULT AimpDlnaGroupingTreeDataProvider::GetChildrenData(IAIMPMLGroupingTreeSel
 
 	for (size_t i = 0; i < (size_t)Selection->GetCount(); i++) {
 		IAIMPString* fieldName = nullptr;
-		VARIANT value;
+		VARIANT value = VARIANT();
 
 		if (SUCCEEDED(Selection->GetValue(i, &fieldName, &value))) {
 			breadcrumbs.push_back(wstring(value.bstrVal));

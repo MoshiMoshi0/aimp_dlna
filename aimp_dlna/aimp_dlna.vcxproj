@@ -80,6 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -201,7 +202,7 @@ copy "$(ProjectDir)Langs" "$(AimpDir)\Plugins\aimp_dlna\Langs" /Y</Command>
     <ClCompile Include="AimpDlnaPlugin.cpp" />
     <ClCompile Include="AimpDlnaConfig.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="AimpDlnaPlugin.h" />
+    <ClInclude Include="AimpDlnaPlugin.h" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -195,7 +195,7 @@ BOOL CALLBACK AimpDlnaOptionsDialog::DlgProc(HWND hwnd, UINT Msg, WPARAM wParam,
 			SetWindowSubclass(GetDlgItem(hwnd, IDC_GROUPBOX_ADVANCED), GroupBoxProc, 0, lParam); SendDlgItemMessage(hwnd, IDC_GROUPBOX_ADVANCED, WM_SUBCLASSINIT, 0, 0);
 
 			const wstring logNames[9] = { L"OFF", L"ALL", L"FATAL", L"SEVERE", L"WARNING", L"INFO", L"FINE", L"FINER", L"FINEST" };
-			for (auto o : logNames)
+			for (auto &o : logNames)
 				SendDlgItemMessage(hwnd, IDC_COMBOBOX_LOGLEVEL, CB_ADDSTRING, 1, (LPARAM)o.c_str());
 
 			break;
@@ -338,8 +338,8 @@ LRESULT CALLBACK AimpDlnaOptionsDialog::FrameProc(HWND hwnd, UINT uMsg, WPARAM w
 	static RECT rect;
 	static RECT captionRect;
 	static HFONT captionFont;
-	static TRIVERTEX gradient[2];
-	static wchar_t text[64];
+	static TRIVERTEX gradient[2]{};
+	static wchar_t text[64] = { '\0' };
 
 	switch (uMsg) {
 		case WM_SUBCLASSINIT: {
