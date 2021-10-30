@@ -1,0 +1,21 @@
+﻿[Common]
+AIMP.AimpDlna.ML.Default=По умолчанию
+
+[AimpDlna]
+Caption=DLNA
+
+[AimpDlna.Options]
+LogLevel=Логгирование*:
+Blacklist=Черный список UUID*:
+ScanStop=Останавливать поиск после обнаружения первого сервера
+ScanDuration=Максимальное время поиска серверов:
+DelayFor=Задержка перед остановкой поиска:
+UseCache=Разрешить кэширование объектов*
+CacheDepth=Максимальный уровень вложенности объектов для кэширования:
+Restart=* необходим перезапуск программы
+MS=мс
+
+[AimpDlna.Options.Group]
+Discovery=Поиск серверов
+Cache=Кэш
+Advanced=Разное
