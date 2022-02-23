@@ -90,8 +90,9 @@ WCHAR* WINAPI AimpDlnaDataProviderSelection::GetValueAsString(int FieldIndex, in
 		result = item->m_Title;
 	}
 
-	*Length = result.GetLength();
-	return StringUtils::ToWideCharArray(result);
+	auto wResult = StringUtils::ToWideString(result);
+	*Length = wResult.size();
+	return StringUtils::ToWideCharArray(wResult);
 }
 
 BOOL WINAPI AimpDlnaDataProviderSelection::NextRow() {
