@@ -33,7 +33,6 @@
 #include "IUnknownInterfaceImpl.h"
 #include "AimpString.h"
 #include "AimpUtils.h"
-#include "AimpHttp.h" 
 #include "StringUtils.h"
 
 #include "AimpDlnaConfig.h"

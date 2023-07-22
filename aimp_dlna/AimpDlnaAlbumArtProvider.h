@@ -1,6 +1,6 @@
 #pragma once
 
-class AimpDlnaAlbumArtProvider : public IUnknownInterfaceImpl<IAIMPMLAlbumArtProvider, IID_IAIMPMLAlbumArtProvider> {
+class AimpDlnaAlbumArtProvider : public IUnknownInterfaceImpl<IAIMPMLAlbumArtProvider2, IID_IAIMPMLAlbumArtProvider2> {
 private:
 	shared_ptr<PLT_SyncMediaBrowser> mediaBrowser;
 
@@ -13,5 +13,5 @@ public:
 		mediaBrowser = nullptr;
 	}
 
-	HRESULT WINAPI Get(IAIMPObjectList* Fields, VARIANT* Values, IAIMPPropertyList* Options, IAIMPImageContainer** Image);
+	HRESULT WINAPI Get(IAIMPObjectList* Fields, VARIANT* Values, IAIMPAlbumArtRequest* Request, IAIMPImageContainer** Image);
 };

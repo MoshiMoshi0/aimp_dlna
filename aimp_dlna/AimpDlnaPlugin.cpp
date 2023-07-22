@@ -15,11 +15,6 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 		Finalize();
 		return E_FAIL;
 	}
-
-	if (FAILED(AimpHttp::Initialize(core))) {
-		Finalize();
-		return E_FAIL;
-	}
 	
 	if (FAILED(Config::Initialize(core))) {
 		Finalize();
@@ -44,7 +39,6 @@ HRESULT WINAPI Plugin::Initialize(IAIMPCore *Core) {
 
 HRESULT WINAPI Plugin::Finalize() {
 	AimpUtils::Finalize();
-	AimpHttp::Finalize();
 	Config::Finalize();
 
 	if (core) {

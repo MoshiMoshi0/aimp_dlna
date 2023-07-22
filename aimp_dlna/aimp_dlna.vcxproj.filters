@@ -67,9 +67,6 @@
     <ClInclude Include="AimpDlnaOptionsDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AimpHttp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AimpDlnaPlugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -115,9 +112,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AimpDlnaOptionsDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AimpHttp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

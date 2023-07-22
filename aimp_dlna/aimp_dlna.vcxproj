@@ -177,7 +177,6 @@ copy "$(ProjectDir)Langs" "$(AimpDir)\Plugins\aimp_dlna\Langs" /Y</Command>
     <ClInclude Include="AimpDlnaGroupingTreeDataProviderSelection.h" />
     <ClInclude Include="AimpDlnaDataProviderSelection.h" />
     <ClInclude Include="AimpDlnaOptionsDialog.h" />
-    <ClInclude Include="AimpHttp.h" />
     <ClInclude Include="AimpString.h" />
     <ClInclude Include="AimpDlnaMusicLibrary.h" />
     <ClInclude Include="AimpUtils.h" />
@@ -196,7 +195,6 @@ copy "$(ProjectDir)Langs" "$(AimpDir)\Plugins\aimp_dlna\Langs" /Y</Command>
     <ClCompile Include="AimpDlnaGroupingTreeDataProviderSelection.cpp" />
     <ClCompile Include="AimpDlnaDataProviderSelection.cpp" />
     <ClCompile Include="AimpDlnaOptionsDialog.cpp" />
-    <ClCompile Include="AimpHttp.cpp" />
     <ClCompile Include="AimpString.cpp" />
     <ClCompile Include="AimpUtils.cpp" />
     <ClCompile Include="AimpDlnaPlugin.cpp" />

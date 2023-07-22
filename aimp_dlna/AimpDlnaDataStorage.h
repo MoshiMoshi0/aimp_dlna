@@ -9,7 +9,7 @@ private:
 	bool finalized{ false };
 	IAIMPMLDataStorageManager* manager;	
 	IAIMPMLDataProvider* dataProvider;
-	IAIMPMLAlbumArtProvider* albumArtProvider;
+	IAIMPMLAlbumArtProvider2* albumArtProvider;
 
 	shared_ptr<PLT_UPnP> upnp;
 	shared_ptr<PLT_SyncMediaBrowser> mediaBrowser;

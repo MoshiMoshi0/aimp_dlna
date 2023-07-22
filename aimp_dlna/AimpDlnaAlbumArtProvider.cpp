@@ -2,7 +2,7 @@
 #include "AimpDlnaAlbumArtProvider.h"
 #include "AimpDlnaMusicLibrary.h"
 
-HRESULT WINAPI AimpDlnaAlbumArtProvider::Get(IAIMPObjectList* Fields, VARIANT* Values, IAIMPPropertyList* Options, IAIMPImageContainer** Image) {
+HRESULT WINAPI AimpDlnaAlbumArtProvider::Get(IAIMPObjectList* Fields, VARIANT* Values, IAIMPAlbumArtRequest* Request, IAIMPImageContainer** Image) {
 	string deviceUuid, objectId;
 	auto fields = AimpUtils::ToWideStringList(Fields);
 	for (auto field : fields) {
@@ -42,21 +42,31 @@ HRESULT WINAPI AimpDlnaAlbumArtProvider::Get(IAIMPObjectList* Fields, VARIANT* V
 			return E_FAIL;
 	}
 
+	auto url = StringUtils::ToWideString((*item->m_ExtraInfo.album_arts.GetFirstItem()).uri);
+	auto aimpUrl = AimpString(url, true);
+	if (SUCCEEDED(Request->CacheGet(aimpUrl, Image)))
+		return S_OK;
+
 	IAIMPString* extensionsString;
-	if (FAILED(Options->GetValueAsObject(AIMP_SERVICE_ALBUMART_PROPID_FIND_IN_FILES_EXTS, IID_IAIMPString, reinterpret_cast<void**>(&extensionsString))))
+	if (FAILED(Request->GetValueAsObject(AIMP_ALBUMART_REQUEST_PROPID_FIND_IN_FILES_EXTS, IID_IAIMPString, reinterpret_cast<void**>(&extensionsString))))
 		return E_FAIL;
 
 	auto extensionList = StringUtils::Split(extensionsString->GetData(), L";");
 	extensionsString->Release();
 
-	auto url = StringUtils::ToWideString((*item->m_ExtraInfo.album_arts.GetFirstItem()).uri);
 	for (auto ext : extensionList) {
 		if (ext.size() == 0)
 			continue;
 
 		ext.erase(0, 1);
-		if (StringUtils::EndsWith(url, ext, true))
-			return AimpHttp::DownloadImage(url, Image);
+		if (!StringUtils::EndsWith(url, ext, true))
+			continue;
+
+		if (!SUCCEEDED(Request->Download(aimpUrl, Image)))
+			return E_FAIL;
+
+		Request->CachePut(aimpUrl, Image);
+		return S_OK;
 	}
 
 	return E_FAIL;
