@@ -1,10 +1,10 @@
 /************************************************/
 /*                                              */
 /*          AIMP Programming Interface          */
-/*               v5.00 build 2300               */
+/*               v5.10 build 2400               */
 /*                                              */
 /*                Artem Izmaylov                */
-/*                (C) 2006-2020                 */
+/*                (C) 2006-2023                 */
 /*                 www.aimp.ru                  */
 /*               support@aimp.ru                */
 /*                                              */
@@ -43,19 +43,19 @@ const int AIMP_MSG_CMD_SHOW_NOTIFICATION = AIMP_MSG_CMD_BASE + 3;
 
 const int AIMP_MSG_CMD_TOGGLE_PARTREPEAT = AIMP_MSG_CMD_BASE + 5;
 
-// Show "About" window
+// Show the "About" Dialog
 // AParam1, AParam2: unused
 const int AIMP_MSG_CMD_ABOUT = AIMP_MSG_CMD_BASE + 6;
 
-// Show "Options" Dialog
+// Show the "Options" Dialog
 // AParam1, AParam2: unused
 const int AIMP_MSG_CMD_OPTIONS = AIMP_MSG_CMD_BASE + 7;
 
-// Show "Options" Dialog with active "plugins" sheet
+// Show the "Options" Dialog with active "plugins" sheet
 // AParam1, AParam2: unused
 const int AIMP_MSG_CMD_PLUGINS = AIMP_MSG_CMD_BASE + 8;
 
-// Close the program
+// Close the App
 // AParam1, AParam2: unused
 const int AIMP_MSG_CMD_QUIT = AIMP_MSG_CMD_BASE + 9;
 
@@ -180,7 +180,12 @@ const int AIMP_MSG_CMD_PLS_SORT_BY_PATH = AIMP_MSG_CMD_BASE + 40;
 // AParam1, AParam2: unused
 const int AIMP_MSG_CMD_PLS_SORT_BY_DURATION = AIMP_MSG_CMD_BASE + 41;
 
-// AParam1, AParam2: unused
+// AParam1:
+//   0 - all
+//   1 - groups
+//   2 - items inside groups
+//   3 - groups and it items
+// AParam2: unused
 const int AIMP_MSG_CMD_PLS_SORT_RANDOMIZE = AIMP_MSG_CMD_BASE + 42;
 
 // AParam1, AParam2: unused
@@ -542,6 +547,11 @@ const int AIMP_MSG_EVENT_PLAYER_UPDATE_POSITION_HR = AIMP_MSG_EVENT_BASE + 21;
 // AParam1: Unused
 // AParam2: Pointer to WideChar array, can be = nil (ReadOnly!)
 const int AIMP_MSG_EVENT_EQUALIZER_PRESET_NAME = AIMP_MSG_EVENT_BASE + 22;
+
+// Callen, when playback queue changed
+// AParam1: Unused
+// AParam2: Unused
+const int AIMP_MSG_EVENT_PLAYBACK_QUEUE = AIMP_MSG_EVENT_BASE + 23;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Quick File Info

@@ -1,10 +1,10 @@
 /************************************************/
 /*                                              */
 /*          AIMP Programming Interface          */
-/*               v5.00 build 2300               */
+/*               v5.10 build 2400               */
 /*                                              */
 /*                Artem Izmaylov                */
-/*                (C) 2006-2020                 */
+/*                (C) 2006-2023                 */
 /*                 www.aimp.ru                  */
 /*               support@aimp.ru                */
 /*                                              */
@@ -96,12 +96,15 @@ const int AIMP_PLAYLIST_DELETE_FLAGS_PHYSICALLY     = 1;
 const int AIMP_PLAYLIST_DELETE_FLAGS_NOCONFIRMATION = 2;
 
 // Flags for IAIMPPlaylist.Sort
-const int AIMP_PLAYLIST_SORTMODE_TITLE      = 1;
-const int AIMP_PLAYLIST_SORTMODE_FILENAME   = 2;
-const int AIMP_PLAYLIST_SORTMODE_DURATION   = 3;
-const int AIMP_PLAYLIST_SORTMODE_ARTIST     = 4;
-const int AIMP_PLAYLIST_SORTMODE_INVERSE    = 5;
-const int AIMP_PLAYLIST_SORTMODE_RANDOMIZE  = 6;
+const int AIMP_PLAYLIST_SORTMODE_TITLE                         = 1;
+const int AIMP_PLAYLIST_SORTMODE_FILENAME                      = 2;
+const int AIMP_PLAYLIST_SORTMODE_DURATION                      = 3;
+const int AIMP_PLAYLIST_SORTMODE_ARTIST                        = 4;
+const int AIMP_PLAYLIST_SORTMODE_INVERSE                       = 5;
+const int AIMP_PLAYLIST_SORTMODE_RANDOMIZE                     = 6;
+const int AIMP_PLAYLIST_SORTMODE_RANDOMIZE_GROUPS              = 7; // v5.10
+const int AIMP_PLAYLIST_SORTMODE_RANDOMIZE_GROUPITEMS          = 8; // v5.10
+const int AIMP_PLAYLIST_SORTMODE_RANDOMIZE_GROUPS_AND_IT_ITEMS = 9; // v5.10
 
 // Flags for IAIMPPlaylist.Close
 const int AIMP_PLAYLIST_CLOSE_FLAGS_FORCE_REMOVE = 1;
@@ -147,9 +150,9 @@ const int AIMP_PLAYLISTPREIMAGE_PLAYLISTBASED_PROPID_URI = 100;
 const int AIMP_PREIMAGEFACTORY_FLAG_CONTEXTDEPENDENT = 1;
 
 // Built-in Preimage Factories
-static const WCHAR* AIMP_PREIMAGEFACTORY_FOLDERS_ID = _T("TAIMPPlaylistFoldersPreimage");
-static const WCHAR* AIMP_PREIMAGEFACTORY_MUSICLIBRARY_ID = _T("TAIMPMLPlaylistPreimage");
-static const WCHAR* AIMP_PREIMAGEFACTORY_PLAYLIST_ID = _T("TAIMPPlaylistBasedPreimage");
+static const WCHAR* AIMP_PREIMAGEFACTORY_FOLDERS_ID = L"TAIMPPlaylistFoldersPreimage";
+static const WCHAR* AIMP_PREIMAGEFACTORY_MUSICLIBRARY_ID = L"TAIMPMLPlaylistPreimage";
+static const WCHAR* AIMP_PREIMAGEFACTORY_PLAYLIST_ID = L"TAIMPPlaylistBasedPreimage";
 
 /* IAIMPPlaylistItem */
 

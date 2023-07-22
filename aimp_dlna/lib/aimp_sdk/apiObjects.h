@@ -1,10 +1,10 @@
 /************************************************/
 /*                                              */
 /*          AIMP Programming Interface          */
-/*               v5.00 build 2300               */
+/*               v5.02 build 2360               */
 /*                                              */
 /*                Artem Izmaylov                */
-/*                (C) 2006-2020                 */
+/*                (C) 2006-2022                 */
 /*                 www.aimp.ru                  */
 /*               support@aimp.ru                */
 /*                                              */
@@ -117,8 +117,8 @@ class IAIMPString: public IUnknown
 		virtual HRESULT WINAPI ChangeCase(int Mode) = 0;
 		virtual HRESULT WINAPI Clone(IAIMPString **S) = 0;
 
-		virtual HRESULT WINAPI Compare(IAIMPString* S, int* CompareResult, bool IgnoreCase) = 0;
-		virtual HRESULT WINAPI Compare2(WCHAR* Chars, int CharsCount, int* CompareResult, bool IgnoreCase) = 0;
+		virtual HRESULT WINAPI Compare(IAIMPString* S, int* CompareResult, BOOL IgnoreCase) = 0;
+		virtual HRESULT WINAPI Compare2(WCHAR* Chars, int CharsCount, int* CompareResult, BOOL IgnoreCase) = 0;
 
 		virtual HRESULT WINAPI Delete(int Index, int Count) = 0;
 
@@ -222,7 +222,7 @@ class IAIMPImageContainer: public IUnknown
 class IAIMPProgressCallback: public IUnknown
 {
 	public:
-		virtual HRESULT WINAPI Process(float Progress, bool *Canceled) = 0;
+		virtual HRESULT WINAPI Process(float Progress, BOOL *Canceled) = 0;
 };
 
 /* IAIMPPropertyList */

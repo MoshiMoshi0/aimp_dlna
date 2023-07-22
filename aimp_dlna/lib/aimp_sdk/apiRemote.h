@@ -1,10 +1,10 @@
 /************************************************/
 /*                                              */
 /*          AIMP Programming Interface          */
-/*               v5.00 build 2300               */
+/*               v5.02 build 2360               */
 /*                                              */
 /*                Artem Izmaylov                */
-/*                (C) 2006-2020                 */
+/*                (C) 2006-2022                 */
 /*                 www.aimp.ru                  */
 /*               support@aimp.ru                */
 /*                                              */
@@ -186,6 +186,8 @@ const int AIMP_RA_CMD_OPEN_FOLDERS = AIMP_RA_CMD_BASE + 17;
 const int AIMP_RA_CMD_OPEN_PLAYLISTS = AIMP_RA_CMD_BASE + 18;
 
 // AlbumArt Request
+//   LParam: Window Handle, which will process WM_COPYDATA message from AIMP with CoverArt data
+//   Result: 0, if player doesn't play anything or cover art is unavailable
 const int AIMP_RA_CMD_GET_ALBUMART = AIMP_RA_CMD_BASE + 19;
 
 // Start First Visualization

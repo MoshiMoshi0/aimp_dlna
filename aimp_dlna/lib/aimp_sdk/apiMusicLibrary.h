@@ -1,10 +1,10 @@
 /************************************************/
 /*                                              */
 /*          AIMP Programming Interface          */
-/*               v5.00 build 2300               */
+/*               v5.02 build 2360               */
 /*                                              */
 /*                Artem Izmaylov                */
-/*                (C) 2006-2020                 */
+/*                (C) 2006-2022                 */
 /*                 www.aimp.ru                  */
 /*               support@aimp.ru                */
 /*                                              */
@@ -16,12 +16,14 @@
 #include <windows.h>
 #include <unknwn.h>
 #include "apiActions.h"
+#include "apiAlbumArt.h"
 #include "apiObjects.h"
-#include "apiPlaylists.h"
 #include "apiPlayer.h"
+#include "apiPlaylists.h"
 
 static const GUID IID_IAIMPServiceMusicLibraryUI = {0x41494D50, 0x5372, 0x764D, 0x4C, 0x55, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00};
 static const GUID IID_IAIMPMLAlbumArtProvider = {0x41494D50, 0x4D4C, 0x416C, 0x62, 0x41, 0x72, 0x74, 0x50, 0x72, 0x76, 0x00};
+static const GUID IID_IAIMPMLAlbumArtProvider2 = {0x41494D50, 0x4D4C, 0x416C, 0x62, 0x41, 0x72, 0x74, 0x50, 0x72, 0x76, 0x32};
 static const GUID IID_IAIMPMLDataField = {0x41494D50, 0x4D4C, 0x4461, 0x74, 0x61, 0x46, 0x6C, 0x64, 0x00, 0x00, 0x00};
 static const GUID IID_IAIMPMLDataFieldDisplayValue = {0x41494D50, 0x4D4C, 0x4461, 0x74, 0x61, 0x46, 0x6C, 0x64, 0x44, 0x56, 0x6C};
 static const GUID IID_IAIMPMLDataFieldFilter = {0x41494D50, 0x4D4C, 0x466C, 0x64, 0x46, 0x6C, 0x74, 0x00, 0x00, 0x00, 0x00};
@@ -104,6 +106,7 @@ const int AIMPML_FIELDTYPE_INT32       = 1;
 const int AIMPML_FIELDTYPE_INT64       = 2;
 const int AIMPML_FIELDTYPE_FLOAT       = 3;
 const int AIMPML_FIELDTYPE_STRING      = 4;
+const int AIMPML_FIELDTYPE_STRINGSET   = 5;
 const int AIMPML_FIELDTYPE_DATETIME    = 10;
 const int AIMPML_FIELDTYPE_DURATION    = 11;
 const int AIMPML_FIELDTYPE_FILESIZE    = 12;
@@ -116,15 +119,15 @@ const int AIMPML_FIELDFLAG_INTERNAL    = 4;
 const int AIMPML_FIELDFLAG_REQUIRED    = 8;
 
 // Built-in Reserved Field Names
-static const WCHAR* AIMPML_RESERVED_FIELD_ID       = _T("ID");       // !REQUIRED! unique record id (Int32, Int64 or String)
-static const WCHAR* AIMPML_RESERVED_FIELD_FILENAME = _T("FileName"); // !REQUIRED! string
-static const WCHAR* AIMPML_RESERVED_FIELD_FILESIZE = _T("FileSize"); // Int64, in bytes
-static const WCHAR* AIMPML_RESERVED_FIELD_DURATION = _T("Duration"); // double, in seconds
-static const WCHAR* AIMPML_RESERVED_FIELD_USERMARK = _T("UserMark"); // integer, 0.0 .. 5.0
+static const WCHAR* AIMPML_RESERVED_FIELD_ID       = L"ID";       // !REQUIRED! unique record id (Int32, Int64 or String)
+static const WCHAR* AIMPML_RESERVED_FIELD_FILENAME = L"FileName"; // !REQUIRED! string
+static const WCHAR* AIMPML_RESERVED_FIELD_FILESIZE = L"FileSize"; // Int64, in bytes
+static const WCHAR* AIMPML_RESERVED_FIELD_DURATION = L"Duration"; // double, in seconds
+static const WCHAR* AIMPML_RESERVED_FIELD_USERMARK = L"UserMark"; // integer, 0.0 .. 5.0
 
 // Property ID for IAIMPMLGroupingPreset
 const int AIMPML_GROUPINGPRESET_PROPID_CUSTOM   = 0;
-const int AIMPML_GROUPINGPRESET_PROPID_ID	    = 1;
+const int AIMPML_GROUPINGPRESET_PROPID_ID	= 1;
 const int AIMPML_GROUPINGPRESET_PROPID_NAME     = 2;
 
 // Property ID for IAIMPMLGroupingPresetStandard
@@ -187,41 +190,41 @@ const int AIMPML_GETFILES_FLAGS_SELECTED = 1;
 const int AIMPML_GETFILES_FLAGS_FOCUSED  = 2;
 
 // LocalDataStorage
-static const WCHAR* AIMPML_LOCALDATASTORAGE_ID = _T("TAIMPMLLocalDataStorage");
+static const WCHAR* AIMPML_LOCALDATASTORAGE_ID = L"TAIMPMLLocalDataStorage";
 
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_ID = _T("ID"); // Int32
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_ADDDED = _T("Added"); // DateTime (Float);
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_ALBUM = _T("Album"); // String, multiple values
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_ALBUMARTIST = _T("AlbumArtist"); // String, multiple values
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_ARTIST = _T("Artist"); // String, multiple values
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_BITDEPTH = _T("BitDepth"); // Int32;
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_BITRATE = _T("Bitrate"); // Int32
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_BPM = _T("BPM"); // Int32;
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_CHANNELS = _T("Channels"); // Int32;
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_COMMENT = _T("Comment"); // String (Memo)
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_COMPOSER = _T("Composer"); // String, multiple values
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_CONDUCTOR = _T("Conductor"); // String
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_COPYRIGHTS = _T("Copyrights"); // String
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_DISKNUMBER = _T("DiskNumber"); // String
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_DURATION = _T("Duration"); // = AIMPML_RESERVED_FIELD_DURATION; // Duration (Float)
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_FILEFORMAT = _T("FileFormat"); // String
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_FILENAME = _T("FileName"); // = AIMPML_RESERVED_FIELD_FILENAME; // FileName (String);
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_FILESIZE =_T("FileSize"); // = AIMPML_RESERVED_FIELD_FILESIZE; // FileSize (Int64);
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_GENRE = _T("Genre"); // String, multiple values
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_LABELS = _T("Labels"); // String, multiple values
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_LASTMODIFICATION = _T("LastModification"); // DateTime (Float)
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_LASTPLAYBACK = _T("LastPlayback"); // DateTime (Float);
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_LYRICIST = _T("Lyricist"); // String, multiple values
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_MOOD = _T("Mood"); // String, multiple values
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_PLAYBACKCOUNT = _T("PlaybackCount"); // Int32
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_PUBLISHER = _T("Publisher"); // String, multiple values
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_RATING = _T("Rating"); // Int32
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_SAMPLERATE = _T("SampleRate"); // Int32
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_TITLE = _T("Title"); // String
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_TRACKNUMBER = _T("TrackNumber"); // String
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_URL = _T("URL"); // String
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_USERMARK = _T("UserMark"); // = AIMPML_RESERVED_FIELD_USERMARK;
-static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_YEAR = _T("Year"); // String
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_ID = L"ID"; // Int32
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_ADDDED = L"Added"; // DateTime (Float);
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_ALBUM = L"Album"; // String, multiple values
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_ALBUMARTIST = L"AlbumArtist"; // String, multiple values
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_ARTIST = L"Artist"; // String, multiple values
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_BITDEPTH = L"BitDepth"; // Int32;
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_BITRATE = L"Bitrate"; // Int32
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_BPM = L"BPM"; // Int32;
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_CHANNELS = L"Channels"; // Int32;
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_COMMENT = L"Comment"; // String (Memo)
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_COMPOSER = L"Composer"; // String, multiple values
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_CONDUCTOR = L"Conductor"; // String
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_COPYRIGHTS = L"Copyrights"; // String
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_DISKNUMBER = L"DiskNumber"; // String
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_DURATION = L"Duration"; // = AIMPML_RESERVED_FIELD_DURATION; // Duration (Float)
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_FILEFORMAT = L"FileFormat"; // String
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_FILENAME = L"FileName"; // = AIMPML_RESERVED_FIELD_FILENAME; // FileName (String);
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_FILESIZE =L"FileSize"; // = AIMPML_RESERVED_FIELD_FILESIZE; // FileSize (Int64);
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_GENRE = L"Genre"; // String, multiple values
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_LABELS = L"Labels"; // String, multiple values
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_LASTMODIFICATION = L"LastModification"; // DateTime (Float)
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_LASTPLAYBACK = L"LastPlayback"; // DateTime (Float);
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_LYRICIST = L"Lyricist"; // String, multiple values
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_MOOD = L"Mood"; // String, multiple values
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_PLAYBACKCOUNT = L"PlaybackCount"; // Int32
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_PUBLISHER = L"Publisher"; // String, multiple values
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_RATING = L"Rating"; // Int32
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_SAMPLERATE = L"SampleRate"; // Int32
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_TITLE = L"Title"; // String
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_TRACKNUMBER = L"TrackNumber"; // String
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_URL = L"URL"; // String
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_USERMARK = L"UserMark"; // = AIMPML_RESERVED_FIELD_USERMARK;
+static const WCHAR* AIMPML_LOCALDATASTORAGE_FIELD_YEAR = L"Year"; // String
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -331,6 +334,14 @@ class IAIMPMLAlbumArtProvider : public IUnknown
 {
 	public:
 		virtual HRESULT WINAPI Get(IAIMPObjectList* Fields, VARIANT* Values, IAIMPPropertyList* Options, IAIMPImageContainer** Image) = 0;
+};
+
+/* IAIMPMLAlbumArtProvider2 */
+
+class IAIMPMLAlbumArtProvider2 : public IUnknown
+{
+	public:
+		virtual HRESULT WINAPI Get(IAIMPObjectList* Fields, VARIANT* Values, IAIMPAlbumArtRequest* Request, IAIMPImageContainer** Image) = 0;
 };
 
 /* IAIMPMLDataProvider */

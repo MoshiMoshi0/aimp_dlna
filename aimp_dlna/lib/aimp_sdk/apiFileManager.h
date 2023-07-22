@@ -1,10 +1,10 @@
 /************************************************/
 /*                                              */
 /*          AIMP Programming Interface          */
-/*               v5.00 build 2300               */
+/*               v5.02 build 2360               */
 /*                                              */
 /*                Artem Izmaylov                */
-/*                (C) 2006-2020                 */
+/*                (C) 2006-2022                 */
 /*                 www.aimp.ru                  */
 /*               support@aimp.ru                */
 /*                                              */
@@ -82,12 +82,13 @@ const int AIMP_FILEINFO_PROPID_ISRC              = 36; // IAIMPString
 const int AIMP_FILEINFO_PROPID_LYRICIST          = 37; // IAIMPString
 const int AIMP_FILEINFO_PROPID_ENCODEDBY         = 38; // IAIMPString
 const int AIMP_FILEINFO_PROPID_RATING            = 39; // Int32
-const int AIMP_FILEINFO_PROPID_STAT_ADDINGDATE      = 40; // Float (TDateTime)
-const int AIMP_FILEINFO_PROPID_STAT_LASTPLAYDATE    = 41; // Float (TDateTime)
-const int AIMP_FILEINFO_PROPID_STAT_MARK            = 42; // Int32
-const int AIMP_FILEINFO_PROPID_STAT_PLAYCOUNT       = 43; // Int32
-const int AIMP_FILEINFO_PROPID_STAT_RATING          = 44; // Float
-const int AIMP_FILEINFO_PROPID_STAT_DISPLAYING_MARK = 22; // Float
+const int AIMP_FILEINFO_PROPID_ML_ADDINGDATE      = 40; // Float (TDateTime)
+const int AIMP_FILEINFO_PROPID_ML_LASTPLAYDATE    = 41; // Float (TDateTime)
+const int AIMP_FILEINFO_PROPID_ML_MARK            = 42; // Int32
+const int AIMP_FILEINFO_PROPID_ML_PLAYCOUNT       = 43; // Int32
+const int AIMP_FILEINFO_PROPID_ML_RATING          = 44; // Float
+const int AIMP_FILEINFO_PROPID_ML_DISPLAYING_MARK = 22; // Float
+const int AIMP_FILEINFO_PROPID_ML_LABELS		  = 45; // IAIMPString, values divided by ";"
 
 // PropertyID for the IAIMPVirtualFile
 const int AIMP_VIRTUALFILE_PROPID_FILEURI          = 0;
@@ -103,8 +104,9 @@ const int AIMP_SERVICE_FILEFORMATS_CATEGORY_PLAYLISTS = 2;
 
 // Flags for the IAIMPServiceFileManager.CreateFileStream
 const int AIMP_SERVICE_FILESTREAMING_FLAG_CREATENEW   = 1;
+const int AIMP_SERVICE_FILESTREAMING_FLAG_READ        = 0;
 const int AIMP_SERVICE_FILESTREAMING_FLAG_READWRITE   = 2;
-const int AIMP_SERVICE_FILESTREAMING_FLAG_MAPTOMEMORY = 4;
+const int AIMP_SERVICE_FILESTREAMING_FLAG_BUFFERED    = 4;
 
 // Flags for the IAIMPServiceFileInfo.GetFileInfoXXX
 const int AIMP_SERVICE_FILEINFO_FLAG_DONTUSEAUDIODECODERS = 1;

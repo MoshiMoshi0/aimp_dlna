@@ -1,10 +1,10 @@
 /************************************************/
 /*                                              */
 /*          AIMP Programming Interface          */
-/*               v5.00 build 2300               */
+/*               v5.02 build 2360               */
 /*                                              */
 /*                Artem Izmaylov                */
-/*                (C) 2006-2021                 */
+/*                (C) 2006-2022                 */
 /*                 www.aimp.ru                  */
 /*               support@aimp.ru                */
 /*                                              */
@@ -37,6 +37,7 @@ static const GUID IID_IAIMPServiceWaveform = {0x41494D50, 0x5372, 0x7657, 0x61, 
 // PropIDs for IAIMPPlaybackQueueItem
 const int AIMP_PLAYBACKQUEUEITEM_PROPID_CUSTOM        = 0;
 const int AIMP_PLAYBACKQUEUEITEM_PROPID_PLAYLISTITEM  = 1;
+const int AIMP_PLAYBACKQUEUEITEM_PROPID_OFFSET 		  = 2; // v5.01
 
 // Flags for IAIMPExtensionPlaybackQueue.GetNext / GetPrev
 const int AIMP_PLAYBACKQUEUE_FLAGS_START_FROM_BEGINNING = 1;
@@ -148,8 +149,8 @@ class IAIMPServicePlayer: public IUnknown // + IAIMPPropertyList
 		virtual HRESULT WINAPI GetDuration(double* Seconds) = 0;
 		virtual HRESULT WINAPI GetPosition(double* Seconds) = 0;
 		virtual HRESULT WINAPI SetPosition(const double Seconds) = 0;
-		virtual HRESULT WINAPI GetMute(bool *Value) = 0;
-		virtual HRESULT WINAPI SetMute(const bool Value) = 0;
+		virtual HRESULT WINAPI GetMute(BOOL *Value) = 0;
+		virtual HRESULT WINAPI SetMute(const BOOL Value) = 0;
 		virtual HRESULT WINAPI GetVolume(float *Level) = 0;
 		virtual HRESULT WINAPI SetVolume(const float Level) = 0;
 		virtual HRESULT WINAPI GetInfo(IAIMPFileInfo** FileInfo) = 0;
